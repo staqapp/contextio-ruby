@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'contextio'
 
 describe Contextio do
-  it "should have a VERSION constant" do
-    subject.const_get('VERSION').should_not be_empty
+  it "reports its version" do
+    expect(subject.version).to_not be_empty
   end
 end
