@@ -19,7 +19,7 @@ describe ContextIO::API do
       subject { ContextIO::API.path('test_command', foo: 1, bar: %w(a b c)) }
 
       it "URL encodes the params" do
-        expect(subject).to eq('/2.0/test_command?foo=1&bar=a,b,c')
+        expect(subject).to eq('/2.0/test_command?foo=1&bar=a%2Cb%2Cc')
       end
     end
   end

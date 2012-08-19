@@ -19,6 +19,12 @@ module ContextIO
     end
 
     def self.paramaterize(params)
+      params = params.inject({}) do |memo, (k, v)|
+        memo[k] = Array(v).join(',')
+
+        memo
+      end
+
       URI.encode_www_form(params)
     end
   end
