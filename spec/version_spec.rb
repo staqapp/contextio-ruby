@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'contextio'
+require 'contextio/version'
 
-describe Contextio do
+describe ContextIO do
   it "reports its version" do
     expect(subject.version).to_not be_empty
   end
