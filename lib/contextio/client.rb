@@ -1,5 +1,6 @@
 require 'oauth'
 require 'net/http'
+require 'json'
 
 module ContextIO
   VERSION = "2.0"

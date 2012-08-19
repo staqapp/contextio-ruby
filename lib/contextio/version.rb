@@ -1,4 +1,4 @@
-module Contextio
+module ContextIO
   # contextio version
   VERSION = "0.5.0"
 
