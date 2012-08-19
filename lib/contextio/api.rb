@@ -27,5 +27,11 @@ module ContextIO
 
       URI.encode_www_form(params)
     end
+
+    %w(get delete put post).each do |action|
+      self.class.send(:define_method, action) do |token, command, params = {}|
+        token.send(action, path(command, params), 'Accept' => 'application/json')
+      end
+    end
   end
 end

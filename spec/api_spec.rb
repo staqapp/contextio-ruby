@@ -23,4 +23,18 @@ describe ContextIO::API do
       end
     end
   end
+
+  %w(get delete put post).each do |http_method|
+    describe ".#{http_method}" do
+      let(:token) { double(:token) }
+
+      it "delegates to the token passed in" do
+        token.should_receive(http_method).with(anything, 'Accept' => 'application/json')
+      end
+
+      after do
+        ContextIO::API.send(http_method, token, 'test_command')
+      end
+    end
+  end
 end
