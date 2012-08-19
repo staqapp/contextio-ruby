@@ -1,21 +1,16 @@
 # Context.IO
 
 * [Homepage](https://github.com/benhamill/contextio#readme)
-* [Issues](https://github.com/benhamill/contextio/issues)
-* [Documentation](http://rubydoc.info/gems/contextio/frames)
-* [Email](mailto:ben at benhamill.com)
+* [API Documentation](http://context.io/docs/2.0/)
+* [Sign Up](http://context.io)
 
 ## Description
 
-TODO: Description
-
-## Features
+Provides a Ruby interface to [Context.IO](http://context.io).
 
 ## Examples
 
   require 'contextio'
-
-## Requirements
 
 ## Install
 
