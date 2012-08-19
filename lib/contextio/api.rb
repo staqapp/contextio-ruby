@@ -1,3 +1,5 @@
+require 'uri'
+
 module ContextIO
   module API
     VERSION = '2.0'
