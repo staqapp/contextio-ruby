@@ -1,7 +1,5 @@
 module ContextIO
   class Client
-    get 'discovery', options: { source_type: 'imap' }
-
     get 'connect_tokens', as: :list_connect_tokens
     get 'connect_tokens/:token', as: :get_connect_tokens
     post 'connect_tokens', as: :add_connect_token, required: :callback_url
