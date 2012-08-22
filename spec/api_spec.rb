@@ -24,17 +24,21 @@ describe ContextIO::API do
     end
   end
 
-  %w(get delete put post).each do |http_method|
-    describe ".#{http_method}" do
-      let(:token) { double(:token) }
+  describe ".request" do
+    let(:token) { double(:token, :get => JSON.dump('a' => 'b', 'c' => 'd')) }
 
-      it "delegates to the token passed in" do
-        token.should_receive(http_method).with(anything, 'Accept' => 'application/json')
-      end
+    before do
+      ContextIO::API.stub(:token) { token }
+    end
 
-      after do
-        ContextIO::API.send(http_method, token, 'test_command')
-      end
+    it "delegates to the token passed in" do
+      token.should_receive(:get).with(anything, 'Accept' => 'application/json')
+      ContextIO::API.request(:get, 'test_command')
+    end
+
+    it "parses the JSON response" do
+      r = ContextIO::API.request(:get, 'test_command')
+      expect(r).to eq('a' => 'b', 'c' => 'd')
     end
   end
 end

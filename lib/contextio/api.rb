@@ -54,7 +54,7 @@ module ContextIO
     end
 
     def self.request(method, command, params = {})
-      JSON.decode(token.send(method, path(command, params), 'Accept' => 'application/json'))
+      JSON.parse(token.send(method, path(command, params), 'Accept' => 'application/json'))
     end
 
     private
