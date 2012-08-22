@@ -1,5 +1,5 @@
 require 'contextio/version'
 
+require 'contextio/errors'
+
 require 'contextio/api'
-require 'contextio/routing'
-require 'contextio/client'

@@ -1,16 +1,5 @@
-require 'oauth'
-
 module ContextIO
   class Client
-    extend ContextIO::Routing
-
-    attr_reader :consumer, :token
-
-    def initialize(key='', secret='', server='https://api.context.io')
-      @consumer = OAuth::Consumer.new(key, secret, site: server)
-      @token    = OAuth::AccessToken.new(@consumer)
-    end
-
     get 'discovery', options: { source_type: 'imap' }
 
     get 'connect_tokens', as: :list_connect_tokens

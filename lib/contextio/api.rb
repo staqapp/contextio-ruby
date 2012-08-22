@@ -1,12 +1,63 @@
 require 'uri'
+require 'oauth'
+require 'json'
 
 module ContextIO
   module API
-    VERSION = '2.0'
+    @@version = '2.0'
+    @@key = nil
+    @@secret = nil
+    @@base_url = 'https://api.context.io'
 
     def self.version
-      VERSION
+      @@version
     end
+
+    def self.version=(version)
+      @@version = version
+    end
+
+    def self.key
+      @@key
+    end
+
+    def self.key=(key)
+      @@key = key
+    end
+
+    def self.secret
+      @@secret
+    end
+
+    def self.secret=(secret)
+      @@secret = secret
+    end
+
+    def self.base_url
+      @@base_url
+    end
+
+    def self.base_url=(base_url)
+      @@base_url = base_url
+    end
+
+    def self.consumer
+      unless @@consumer || (key && secret)
+        raise ContextIO::ConfigurationError, 'You must provide a key and a secret. Assign them with "ContextIO::API.key = <KEY>" and "ContextIO::API.secret = <SECRET>".'
+      end
+
+      @@consumer ||= OAuth::Consumer.new(key, secret, site: base_url)
+    end
+
+    def self.token
+      @@token ||= OAuth::AccessToken.new(consumer)
+    end
+
+    def self.request(method, command, params = {})
+      JSON.decode(token.send(method, path(command, params), 'Accept' => 'application/json'))
+    end
+
+    private
 
     def self.path(command, params = {})
       path = "/#{ContextIO::API.version}/#{command}"
@@ -26,12 +77,6 @@ module ContextIO
       end
 
       URI.encode_www_form(params)
-    end
-
-    %w(get delete put post).each do |action|
-      self.class.send(:define_method, action) do |token, command, params = {}|
-        token.send(action, path(command, params), 'Accept' => 'application/json')
-      end
     end
   end
 end
