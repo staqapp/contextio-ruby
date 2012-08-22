@@ -9,6 +9,9 @@ module ContextIO
     @@secret = nil
     @@base_url = 'https://api.context.io'
 
+    @@consumer = nil
+    @@token = nil
+
     def self.version
       @@version
     end
@@ -54,7 +57,16 @@ module ContextIO
     end
 
     def self.request(method, command, params = {})
-      JSON.parse(token.send(method, path(command, params), 'Accept' => 'application/json'))
+      response = token.send(method, path(command, params), 'Accept' => 'application/json')
+      body = response.body
+
+      results = JSON.parse(body)
+
+      if results['type'] && results['type'] == 'error'
+        raise APIError, results['value']
+      end
+
+      results
     end
 
     private

@@ -25,7 +25,8 @@ describe ContextIO::API do
   end
 
   describe ".request" do
-    let(:token) { double(:token, :get => JSON.dump('a' => 'b', 'c' => 'd')) }
+    let(:http_response) { double(:http_response, :body => JSON.dump('a' => 'b', 'c' => 'd')) }
+    let(:token) { double(:token, :get => http_response) }
 
     before do
       ContextIO::API.stub(:token) { token }

@@ -3,6 +3,8 @@ require 'json'
 module ContextIO
   class APIResource
     def initialize(attributes)
+      puts attributes.inspect
+
       attributes.each do |name, value|
         unless self.respond_to?("#{name}")
           raise ArgumentError, "Unknown attribute '#{name}' for #{self.class.name}"
