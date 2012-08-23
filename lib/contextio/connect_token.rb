@@ -18,6 +18,11 @@ module ContextIO
       return result_hash['browser_redirect_url']
     end
 
+    def self.fetch(token)
+      attr_hash = ContextIO::API.request(:get, "connect_tokens/#{token}")
+      new(attr_hash)
+    end
+
     attr_reader :token, :email, :created, :used, :callback_url,
                 :service_level, :first_name, :last_name
 
