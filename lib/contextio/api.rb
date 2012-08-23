@@ -62,8 +62,14 @@ module ContextIO
 
       results = JSON.parse(body)
 
-      if results['type'] && results['type'] == 'error'
-        raise APIError, results['value']
+      if response.code =~ /[45]\d\d/
+        if results.is_a?(Hash) && results['type'] == 'error'
+          message = results['value']
+        else
+          message = response.message
+        end
+
+        raise APIError, message
       end
 
       results
