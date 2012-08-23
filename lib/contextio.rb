@@ -1,8 +1,8 @@
-require 'contextio/version'
+require_relative 'contextio/version'
 
-require 'contextio/errors'
+require_relative 'contextio/errors'
 
-require 'contextio/api'
+require_relative 'contextio/api'
 
-require 'contextio/api_resource'
-require 'contextio/email_settings'
+require_relative 'contextio/api_resource'
+require_relative 'contextio/email_settings'
