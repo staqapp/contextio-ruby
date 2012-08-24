@@ -6,3 +6,4 @@ require_relative 'contextio/api'
 
 require_relative 'contextio/api_resource'
 require_relative 'contextio/email_settings'
+require_relative 'contextio/connect_token'
