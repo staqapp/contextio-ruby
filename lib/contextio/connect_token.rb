@@ -1,11 +1,15 @@
 module ContextIO
   class ConnectToken < APIResource
-    def self.all
-      attr_hashes = ContextIO::API.request(:get, 'connect_tokens')
+    extend ContextIO::APIResource::All
+    extend ContextIO::APIResource::Fetch
+    include ContextIO::APIResource::Delete
 
-      attr_hashes.map do |attr_hash|
-        new(attr_hash)
-      end
+    def self.url
+      'connect_tokens'
+    end
+
+    def self.instance_url(key)
+      "#{url}/#{key}"
     end
 
     def self.new_redirect_url(callback_url, options = {})
@@ -18,16 +22,11 @@ module ContextIO
       return result_hash['browser_redirect_url']
     end
 
-    def self.fetch(token)
-      attr_hash = ContextIO::API.request(:get, "connect_tokens/#{token}")
-      new(attr_hash)
-    end
-
     attr_reader :token, :email, :created, :used, :callback_url,
                 :service_level, :first_name, :last_name
 
-    def delete
-      ContextIO::API.request(:delete, "connect_tokens/#{token}")['success']
+    def primary_key
+      token
     end
 
     def created_at
