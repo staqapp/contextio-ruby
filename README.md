@@ -10,14 +10,16 @@ Provides a Ruby interface to [Context.IO](http://context.io).
 
 ## Examples
 
-  require 'contextio'
+```ruby
+require 'contextio'
+```
 
 ## Install
 
-  $ gem install contextio
+    $ gem install contextio
 
 ## Copyright
 
 Copyright (c) 2012 Context.IO
 
-See LICENSE.txt for details.
+See LICENSE.md for details.
