@@ -1,5 +1,6 @@
-require 'json'
-
+# This will create an object that can be built from responses from
+# ContextIO::API. To use the submodules, you'll need to implement some simple
+# methods. See below.
 module ContextIO
   class APIResource
     def initialize(attributes)
@@ -8,10 +9,11 @@ module ContextIO
       end
     end
 
-    def url
-      self.class.instance_url(primary_key)
-    end
-
+    # Extend this into an APIResource to list all of it.
+    #
+    # Implement the class method `url` that returns a string, which is the last
+    # part of the list url. For instance, the listing url for accounts is
+    # 'https://api.context.io/2.0/accounts', so Account.url returns 'accounts'.
     module All
       def all
         attr_hashes = ContextIO::API.request(:get, url)
@@ -22,6 +24,14 @@ module ContextIO
       end
     end
 
+    # Extend this into an APIResource to fetch a specific instance of it.
+    #
+    # Implement the class method `instance_url(key)` that returns a string,
+    # which is the last part of the fetch url. For instance, the fetch url for
+    # accounts is 'https://api.context.io/2.0/accounts/<id>', so
+    # Account.instance_url('123') returns 'accounts/123'.
+    #
+    # Pro tip: define a url class method and use that.
     module Fetch
       def fetch(key)
         result_hash = ContextIO::API.request(:get, instance_url(key))
@@ -29,9 +39,26 @@ module ContextIO
       end
     end
 
+    # Include this into an APIResource to delete an instance of it.
+    #
+    # Implement an instance method `primary_key` that returns the calue of the
+    # primary key for the resource. For instance, the API uses the
+    # provider consumer key for the primary identifier for OAuth Providers, so
+    # OAuthProvider#primary_key returns the provider_consumer_key.
+    #
+    # Also, implement the class method `instance_url(key)` that returns a
+    # string, which is the last part of the fetch url. For instance, the fetch
+    # url for accounts is 'https://api.context.io/2.0/accounts/<id>', so
+    # Account.instance_url('123') returns 'accounts/123'.
+    #
+    # Pro tip: define a url class method and use that.
     module Delete
       def delete
-        ContextIO::API.request(:delete, url)
+        ContextIO::API.request(:delete, url)['success']
+      end
+
+      def url
+        self.class.instance_url(primary_key)
       end
     end
   end
