@@ -8,10 +8,6 @@ module ContextIO
       'connect_tokens'
     end
 
-    def self.instance_url(key)
-      "#{url}/#{key}"
-    end
-
     def self.new_redirect_url(callback_url, options = {})
       options.keep_if do |(key, value)|
         %w(service_level email first_name last_name).include?(key.to_s)

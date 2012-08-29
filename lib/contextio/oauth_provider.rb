@@ -8,10 +8,6 @@ module ContextIO
       'oauth_providers'
     end
 
-    def self.instance_url(key)
-      "#{url}/#{key}"
-    end
-
     def self.create(type, provider_consumer_key, provider_consumer_secret)
       result_hash = ContextIO::API.request(:post, 'oauth_providers', type: type, provider_consumer_key: provider_consumer_key, provider_consumer_secret: provider_consumer_secret)
 

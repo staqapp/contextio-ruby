@@ -15,8 +15,8 @@ module ContextIO
     # part of the list url. For instance, the listing url for accounts is
     # 'https://api.context.io/2.0/accounts', so Account.url returns 'accounts'.
     module All
-      def all
-        attr_hashes = ContextIO::API.request(:get, url)
+      def all(options = {})
+        attr_hashes = ContextIO::API.request(:get, url, options)
 
         attr_hashes.map do |attr_hash|
           new(attr_hash)
@@ -26,16 +26,17 @@ module ContextIO
 
     # Extend this into an APIResource to fetch a specific instance of it.
     #
-    # Implement the class method `instance_url(key)` that returns a string,
-    # which is the last part of the fetch url. For instance, the fetch url for
-    # accounts is 'https://api.context.io/2.0/accounts/<id>', so
-    # Account.instance_url('123') returns 'accounts/123'.
-    #
-    # Pro tip: define a url class method and use that.
+    # Implement the class method `url` that returns a string, which is the last
+    # part of the list url. For instance, the listing url for accounts is
+    # 'https://api.context.io/2.0/accounts', so Account.url returns 'accounts'.
     module Fetch
       def fetch(key)
         result_hash = ContextIO::API.request(:get, instance_url(key))
         new(result_hash)
+      end
+
+      def instance_url(key)
+        "#{url}/#{key}"
       end
     end
 
@@ -46,19 +47,17 @@ module ContextIO
     # provider consumer key for the primary identifier for OAuth Providers, so
     # OAuthProvider#primary_key returns the provider_consumer_key.
     #
-    # Also, implement the class method `instance_url(key)` that returns a
-    # string, which is the last part of the fetch url. For instance, the fetch
-    # url for accounts is 'https://api.context.io/2.0/accounts/<id>', so
-    # Account.instance_url('123') returns 'accounts/123'.
-    #
-    # Pro tip: define a url class method and use that.
+    # Also, implement the class method `url` that returns a string, which is
+    # the last part of the list url. For instance, the listing url for accounts
+    # is 'https://api.context.io/2.0/accounts', so Account.url returns
+    # 'accounts'.
     module Delete
       def delete
         ContextIO::API.request(:delete, url)['success']
       end
 
       def url
-        self.class.instance_url(primary_key)
+        "#{self.class.url}/#{primary_key}"
       end
     end
   end
