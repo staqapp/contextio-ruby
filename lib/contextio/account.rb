@@ -22,6 +22,17 @@ module ContextIO
       id
     end
 
+    def update(attributes = {})
+      attrs = {}
+
+      attrs[:first_name] = attributes[:first_name] if attributes[:first_name]
+      attrs[:last_name] = attributes[:last_name] if attributes[:last_name]
+
+      return nil if attrs.empty?
+
+      ContextIO::API.request(:post, url, attrs)['success']
+    end
+
     def created_at
       Time.at(created) if created
     end
