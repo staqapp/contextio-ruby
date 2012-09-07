@@ -3,7 +3,16 @@ require 'oauth'
 require 'json'
 
 class ContextIO
-  module API
+  class API
+    attr_reader :key, :secret
+
+    def initialize(key, secret)
+      @key = key
+      @secret = secret
+    end
+  end
+
+  module BS
     @@version = '2.0'
     @@key = nil
     @@secret = nil
