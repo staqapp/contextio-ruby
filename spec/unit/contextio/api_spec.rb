@@ -10,6 +10,18 @@ describe ContextIO::API do
     end
   end
 
+  describe ".new" do
+    subject { ContextIO::API.new('test_key', 'test_secret') }
+
+    it "takes a key" do
+      expect(subject.key).to eq('test_key')
+    end
+
+    it "takes a secret" do
+      expect(subject.secret).to eq('test_secret')
+    end
+  end
+
   describe ".path" do
     context "without params" do
       subject { ContextIO::API.path('test_command') }
