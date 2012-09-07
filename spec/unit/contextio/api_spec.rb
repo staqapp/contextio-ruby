@@ -75,8 +75,8 @@ describe ContextIO::API do
         )
       end
 
-      it "raises an APIError with the body message" do
-        expect { subject }.to raise_error(ContextIO::APIError, 'nope')
+      it "raises an API error with the body message" do
+        expect { subject }.to raise_error(ContextIO::API::Error, 'nope')
       end
     end
 
@@ -89,8 +89,8 @@ describe ContextIO::API do
         )
       end
 
-      it "raises an APIError with the header message" do
-        expect { subject }.to raise_error(ContextIO::APIError, 'Bad Request')
+      it "raises an API error with the header message" do
+        expect { subject }.to raise_error(ContextIO::API::Error, 'Bad Request')
       end
     end
   end

@@ -1,10 +1,11 @@
 require 'uri'
 require 'oauth'
 require 'json'
-require_relative 'errors'
 
 class ContextIO
   class API
+    class Error < StandardError; end
+
     VERSION = '2.0'
 
     def self.version
@@ -41,7 +42,7 @@ class ContextIO
           message = response.message
         end
 
-        raise APIError, message
+        raise API::Error, message
       end
 
       results
