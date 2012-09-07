@@ -4,10 +4,16 @@ require 'json'
 
 class ContextIO
   class API
-    @@version = '2.0'
+    VERSION = '2.0'
 
     def self.version
-      @@version
+      VERSION
+    end
+
+    BASE_URL = 'https://api.context.io'
+
+    def self.base_url
+      BASE_URL
     end
 
     attr_reader :key, :secret
@@ -21,66 +27,7 @@ class ContextIO
       "/#{ContextIO::API.version}/#{command.to_s}#{ContextIO::API.hash_to_url_params(params)}"
     end
 
-    private
-
-    def self.hash_to_url_params(params = {})
-      return '' if params.empty?
-
-      params = params.inject({}) do |memo, (k, v)|
-        memo[k] = Array(v).join(',')
-
-        memo
-      end
-
-      "?#{URI.encode_www_form(params)}"
-    end
-  end
-
-  module BS
-    @@key = nil
-    @@secret = nil
-    @@base_url = 'https://api.context.io'
-
-    @@consumer = nil
-    @@token = nil
-
-    def self.key
-      @@key
-    end
-
-    def self.key=(key)
-      @@key = key
-    end
-
-    def self.secret
-      @@secret
-    end
-
-    def self.secret=(secret)
-      @@secret = secret
-    end
-
-    def self.base_url
-      @@base_url
-    end
-
-    def self.base_url=(base_url)
-      @@base_url = base_url
-    end
-
-    def self.consumer
-      unless @@consumer || (key && secret)
-        raise ContextIO::ConfigurationError, 'You must provide a key and a secret. Assign them with "ContextIO::API.key = <KEY>" and "ContextIO::API.secret = <SECRET>".'
-      end
-
-      @@consumer ||= OAuth::Consumer.new(key, secret, site: base_url)
-    end
-
-    def self.token
-      @@token ||= OAuth::AccessToken.new(consumer)
-    end
-
-    def self.request(method, command, params = {})
+    def request(method, command, params = {})
       response = token.send(method, path(command, params), 'Accept' => 'application/json')
       body = response.body
 
@@ -100,5 +47,34 @@ class ContextIO
     end
 
     private
+
+    def self.hash_to_url_params(params = {})
+      return '' if params.empty?
+
+      params = params.inject({}) do |memo, (k, v)|
+        memo[k] = Array(v).join(',')
+
+        memo
+      end
+
+      "?#{URI.encode_www_form(params)}"
+    end
+  end
+
+  module BS
+    @@consumer = nil
+    @@token = nil
+
+    def self.consumer
+      unless @@consumer || (key && secret)
+        raise ContextIO::ConfigurationError, 'You must provide a key and a secret. Assign them with "ContextIO::API.key = <KEY>" and "ContextIO::API.secret = <SECRET>".'
+      end
+
+      @@consumer ||= OAuth::Consumer.new(key, secret, site: base_url)
+    end
+
+    def self.token
+      @@token ||= OAuth::AccessToken.new(consumer)
+    end
   end
 end

@@ -10,6 +10,14 @@ describe ContextIO::API do
     end
   end
 
+  describe ".base_url" do
+    subject { ContextIO::API }
+
+    it "is https://api.context.io" do
+      expect(subject.base_url).to eq('https://api.context.io')
+    end
+  end
+
   describe ".new" do
     subject { ContextIO::API.new('test_key', 'test_secret') }
 
@@ -40,21 +48,21 @@ describe ContextIO::API do
     end
   end
 
-  describe ".request" do
+  describe "#request" do
     let(:http_response) { double(:http_response, :body => JSON.dump('a' => 'b', 'c' => 'd')) }
     let(:token) { double(:token, :get => http_response) }
 
-    before do
-      ContextIO::API.stub(:token) { token }
-    end
+    subject { ContextIO::API.new(nil, nil) }
 
     it "delegates to the token passed in" do
       token.should_receive(:get).with(anything, 'Accept' => 'application/json')
-      ContextIO::API.request(:get, 'test_command')
+
+      subject.request(:get, 'test_command')
     end
 
     it "parses the JSON response" do
-      r = ContextIO::API.request(:get, 'test_command')
+      r = subject.request(:get, 'test_command')
+
       expect(r).to eq('a' => 'b', 'c' => 'd')
     end
   end
