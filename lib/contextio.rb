@@ -1,4 +1,11 @@
-require_relative 'contextio/version'
+module ContextIO
+  # contextio version
+  VERSION = "0.5.0"
+
+  def self.version
+    VERSION
+  end
+end
 
 require_relative 'contextio/errors'
 
