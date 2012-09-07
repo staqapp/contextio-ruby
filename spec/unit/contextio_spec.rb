@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'contextio'
 
-describe ContextIO, :focus do
+describe ContextIO do
   subject { ContextIO.new(nil, nil) }
 
   describe ".new" do
@@ -19,6 +19,10 @@ describe ContextIO, :focus do
   describe "#oauth_providers" do
     it "returns a new OAuthProviderCollection" do
       expect(subject.oauth_providers).to be_a(ContextIO::OAuthProviderCollection)
+    end
+
+    it "passes its API handle to the OAuthProviderCollection" do
+      expect(subject.oauth_providers.api).to eq(subject.api)
     end
   end
 end

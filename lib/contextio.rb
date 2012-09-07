@@ -6,7 +6,7 @@ class ContextIO
   end
 
   def oauth_providers
-    OAuthProviderCollection.new
+    OAuthProviderCollection.new(api)
   end
 end
 
