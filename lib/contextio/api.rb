@@ -16,6 +16,24 @@ class ContextIO
       @key = key
       @secret = secret
     end
+
+    def path(command, params = {})
+      "/#{ContextIO::API.version}/#{command.to_s}#{ContextIO::API.hash_to_url_params(params)}"
+    end
+
+    private
+
+    def self.hash_to_url_params(params = {})
+      return '' if params.empty?
+
+      params = params.inject({}) do |memo, (k, v)|
+        memo[k] = Array(v).join(',')
+
+        memo
+      end
+
+      "?#{URI.encode_www_form(params)}"
+    end
   end
 
   module BS
@@ -82,25 +100,5 @@ class ContextIO
     end
 
     private
-
-    def self.path(command, params = {})
-      path = "/#{ContextIO::API.version}/#{command}"
-
-      unless params.empty?
-        path << "?#{paramaterize(params)}"
-      end
-
-      path
-    end
-
-    def self.paramaterize(params)
-      params = params.inject({}) do |memo, (k, v)|
-        memo[k] = Array(v).join(',')
-
-        memo
-      end
-
-      URI.encode_www_form(params)
-    end
   end
 end
