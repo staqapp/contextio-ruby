@@ -5,8 +5,4 @@ class ContextIO
   def self.version
     VERSION
   end
-
-  def version
-    self.class.version
-  end
 end
