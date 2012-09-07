@@ -1,7 +1,4 @@
-module ContextIO
-  class ConfigurationError < StandardError
-  end
-
+class ContextIO
   class APIError < StandardError
   end
 end

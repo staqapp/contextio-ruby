@@ -49,18 +49,49 @@ describe ContextIO::API do
   end
 
   describe "#request" do
-    subject { ContextIO::API.new(nil, nil) }
+    subject { ContextIO::API.new(nil, nil).request(:get, 'test') }
 
-    before do
-      FakeWeb.register_uri(
-        :get,
-        'https://api.context.io/2.0/test_command',
-        body: JSON.dump('a' => 'b', 'c' => 'd')
-      )
+    context "with a good response" do
+      before do
+        FakeWeb.register_uri(
+          :get,
+          'https://api.context.io/2.0/test',
+          body: JSON.dump('a' => 'b', 'c' => 'd')
+        )
+      end
+
+      it "parses the JSON response" do
+        expect(subject).to eq('a' => 'b', 'c' => 'd')
+      end
     end
 
-    it "parses the JSON response" do
-      expect(subject.request(:get, 'test_command')).to eq('a' => 'b', 'c' => 'd')
+    context "with a bad response that has a body" do
+      before do
+        FakeWeb.register_uri(
+          :get,
+          'https://api.context.io/2.0/test',
+          status: ['400', 'Bad Request'],
+          body: JSON.dump('type' => 'error', 'value' => 'nope')
+        )
+      end
+
+      it "raises an APIError with the body message" do
+        expect { subject }.to raise_error(ContextIO::APIError, 'nope')
+      end
+    end
+
+    context "with a bad response that has no body" do
+      before do
+        FakeWeb.register_uri(
+          :get,
+          'https://api.context.io/2.0/test',
+          status: ['400', 'Bad Request']
+        )
+      end
+
+      it "raises an APIError with the header message" do
+        expect { subject }.to raise_error(ContextIO::APIError, 'Bad Request')
+      end
     end
   end
 end

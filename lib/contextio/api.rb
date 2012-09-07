@@ -1,6 +1,7 @@
 require 'uri'
 require 'oauth'
 require 'json'
+require_relative 'errors'
 
 class ContextIO
   class API
