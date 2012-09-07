@@ -4,6 +4,12 @@ require 'json'
 
 class ContextIO
   class API
+    @@version = '2.0'
+
+    def self.version
+      @@version
+    end
+
     attr_reader :key, :secret
 
     def initialize(key, secret)
@@ -13,21 +19,12 @@ class ContextIO
   end
 
   module BS
-    @@version = '2.0'
     @@key = nil
     @@secret = nil
     @@base_url = 'https://api.context.io'
 
     @@consumer = nil
     @@token = nil
-
-    def self.version
-      @@version
-    end
-
-    def self.version=(version)
-      @@version = version
-    end
 
     def self.key
       @@key
