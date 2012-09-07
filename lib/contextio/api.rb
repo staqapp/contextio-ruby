@@ -2,7 +2,7 @@ require 'uri'
 require 'oauth'
 require 'json'
 
-module ContextIO
+class ContextIO
   module API
     @@version = '2.0'
     @@key = nil
