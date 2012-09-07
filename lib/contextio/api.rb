@@ -32,7 +32,7 @@ class ContextIO
       response = token.send(method, path(command, params), 'Accept' => 'application/json')
       body = response.body
 
-      results = JSON.parse(body)
+      results = JSON.parse(body) unless response.body.empty?
 
       if response.code =~ /[45]\d\d/
         if results.is_a?(Hash) && results['type'] == 'error'
