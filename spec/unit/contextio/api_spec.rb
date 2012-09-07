@@ -49,21 +49,18 @@ describe ContextIO::API do
   end
 
   describe "#request" do
-    let(:http_response) { double(:http_response, :body => JSON.dump('a' => 'b', 'c' => 'd')) }
-    let(:token) { double(:token, :get => http_response) }
-
     subject { ContextIO::API.new(nil, nil) }
 
-    it "delegates to the token passed in" do
-      token.should_receive(:get).with(anything, 'Accept' => 'application/json')
-
-      subject.request(:get, 'test_command')
+    before do
+      FakeWeb.register_uri(
+        :get,
+        'https://api.context.io/2.0/test_command',
+        body: JSON.dump('a' => 'b', 'c' => 'd')
+      )
     end
 
     it "parses the JSON response" do
-      r = subject.request(:get, 'test_command')
-
-      expect(r).to eq('a' => 'b', 'c' => 'd')
+      expect(subject.request(:get, 'test_command')).to eq('a' => 'b', 'c' => 'd')
     end
   end
 end

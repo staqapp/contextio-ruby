@@ -59,22 +59,13 @@ class ContextIO
 
       "?#{URI.encode_www_form(params)}"
     end
-  end
 
-  module BS
-    @@consumer = nil
-    @@token = nil
-
-    def self.consumer
-      unless @@consumer || (key && secret)
-        raise ContextIO::ConfigurationError, 'You must provide a key and a secret. Assign them with "ContextIO::API.key = <KEY>" and "ContextIO::API.secret = <SECRET>".'
-      end
-
-      @@consumer ||= OAuth::Consumer.new(key, secret, site: base_url)
+    def consumer
+      @consumer ||= OAuth::Consumer.new(key, secret, site: ContextIO::API.base_url)
     end
 
-    def self.token
-      @@token ||= OAuth::AccessToken.new(consumer)
+    def token
+      @token ||= OAuth::AccessToken.new(consumer)
     end
   end
 end
