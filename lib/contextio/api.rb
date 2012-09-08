@@ -26,7 +26,7 @@ class ContextIO
     end
 
     def path(command, params = {})
-      "/#{ContextIO::API.version}/#{command.to_s}#{ContextIO::API.hash_to_url_params(params)}"
+      "/#{ContextIO::API.version}/#{ContextIO::API.strip_command(command)}#{ContextIO::API.hash_to_url_params(params)}"
     end
 
     def request(method, command, params = {})
@@ -49,6 +49,10 @@ class ContextIO
     end
 
     private
+
+    def self.strip_command(command)
+      command.to_s.gsub("#{base_url}/#{version}/", '')
+    end
 
     def self.hash_to_url_params(params = {})
       return '' if params.empty?

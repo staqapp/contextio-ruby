@@ -46,6 +46,14 @@ describe ContextIO::API do
         expect(subject).to eq('/2.0/test_command?foo=1&bar=a%2Cb%2Cc')
       end
     end
+
+    context "with a full URL" do
+      subject { ContextIO::API.new(nil, nil).path('https://api.context.io/2.0/test_command') }
+
+      it "strips out the command" do
+        expect(subject).to eq('/2.0/test_command')
+      end
+    end
   end
 
   describe "#request" do
