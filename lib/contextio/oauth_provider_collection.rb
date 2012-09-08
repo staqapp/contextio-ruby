@@ -15,5 +15,13 @@ class ContextIO
 
       ContextIO::OAuthProvider.new(result_hash)
     end
+
+    def each(&block)
+      result_array = api.request(:get, 'oauth_providers')
+
+      result_array.each do |attribute_hash|
+        yield OAuthProvider.new(api, attribute_hash)
+      end
+    end
   end
 end
