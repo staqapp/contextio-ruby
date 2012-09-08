@@ -13,7 +13,7 @@ class ContextIO
 
       result_hash.delete(:success)
 
-      ContextIO::OAuthProvider.new(result_hash)
+      ContextIO::OAuthProvider.new(api, result_hash)
     end
 
     def each(&block)
