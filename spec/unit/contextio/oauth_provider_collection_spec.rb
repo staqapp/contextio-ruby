@@ -14,7 +14,7 @@ describe ContextIO::OAuthProviderCollection do
 
   describe "#create" do
     before do
-      api.stub(:request).with(:post, anything, anything).and_return({})
+      api.stub(:request).with(:post, anything, anything).and_return({ provider_consumer_key: 'test_key' })
     end
 
     it "posts to /oauth_providers" do
