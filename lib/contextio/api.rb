@@ -4,7 +4,7 @@ require 'json'
 
 class ContextIO
   class API
-    class Error < StandardError; end
+    Error = Class.new(StandardError)
 
     VERSION = '2.0'
 
