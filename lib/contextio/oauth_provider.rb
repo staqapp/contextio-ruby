@@ -1,6 +1,11 @@
+require 'contextio/api/lazy_attributes'
+
 class ContextIO
   class OAuthProvider
+    extend ContextIO::API::LazyAttributes
+
     attr_reader :api
+    lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
 
     def initialize(api, options = {})
       required_options = [:provider_consumer_key, 'provider_consumer_key', :resource_url, 'resource_url']
@@ -18,30 +23,6 @@ class ContextIO
 
     def resource_url
       @resource_url ||= build_resource_url
-    end
-
-    def type
-      return @type if defined?(@type)
-
-      fetch_attributes
-
-      @type
-    end
-
-    def provider_consumer_key
-      return @provider_consumer_key if defined?(@provider_consumer_key)
-
-      fetch_attributes
-
-      @provider_consumer_key
-    end
-
-    def provider_consumer_secret
-      return @provider_consumer_secret if defined?(@provider_consumer_secret)
-
-      fetch_attributes
-
-      @provider_consumer_secret
     end
 
     private
