@@ -80,6 +80,27 @@ describe ContextIO::OAuthProvider do
     end
   end
 
+  describe "#provider_consumer_secret" do
+    context "when input at creation" do
+      subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234', provider_consumer_secret: '0987') }
+
+      it "uses the input provider_consumer_secret" do
+        api.should_not_receive(:request)
+
+        expect(subject.provider_consumer_secret).to eq('0987')
+      end
+    end
+
+    context "when not input at creation" do
+      subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234') }
+
+      it "loads it from the API" do
+        api.should_receive(:request).with(:get, anything).and_return({ 'provider_consumer_secret' => '1029' })
+        expect(subject.provider_consumer_secret).to eq('1029')
+      end
+    end
+  end
+
   describe "#type" do
     context "when input at creation" do
       subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234', type: 'GMAIL') }

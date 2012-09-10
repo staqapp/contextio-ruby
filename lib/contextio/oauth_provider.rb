@@ -36,6 +36,14 @@ class ContextIO
       @provider_consumer_key
     end
 
+    def provider_consumer_secret
+      return @provider_consumer_secret if defined?(@provider_consumer_secret)
+
+      fetch_attributes
+
+      @provider_consumer_secret
+    end
+
     private
 
     def build_resource_url
