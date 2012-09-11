@@ -135,4 +135,22 @@ describe ContextIO::OAuthProvider do
       expect(subject.foo).to eq('foo')
     end
   end
+
+  describe "#delete" do
+    subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234') }
+
+    before do
+      api.stub(:request).with(:delete, subject.resource_url).and_return({'success' => true})
+    end
+
+    it "issues a DELETE to the API" do
+      api.should_receive(:request).with(:delete, subject.resource_url)
+
+      subject.delete
+    end
+
+    it "returns the contents of the 'success' key" do
+      expect(subject.delete).to eq(true)
+    end
+  end
 end

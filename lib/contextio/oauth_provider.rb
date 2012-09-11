@@ -25,6 +25,10 @@ class ContextIO
       @resource_url ||= build_resource_url
     end
 
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
+
     private
 
     def build_resource_url
