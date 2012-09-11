@@ -89,4 +89,19 @@ describe ContextIO::OAuthProviderCollection do
       subject.each {}
     end
   end
+
+  describe "#[]" do
+    it "returns a ContextIO::OAuthProvider with the given key" do
+      provider = subject['1234']
+
+      expect(provider).to be_a(ContextIO::OAuthProvider)
+      expect(provider.provider_consumer_key).to eq('1234')
+    end
+
+    it "lazily loads, not hitting the API" do
+      api.should_not_receive(:request)
+
+      subject['1234']
+    end
+  end
 end

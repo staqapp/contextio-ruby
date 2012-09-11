@@ -23,5 +23,9 @@ class ContextIO
         yield OAuthProvider.new(api, attribute_hash)
       end
     end
+
+    def [](provider_consumer_key)
+      ContextIO::OAuthProvider.new(api, provider_consumer_key: provider_consumer_key)
+    end
   end
 end
