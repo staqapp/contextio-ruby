@@ -1,7 +1,7 @@
-# This will create an object that can be built from responses from
-# ContextIO::API. To use the submodules, you'll need to implement some simple
-# methods. See below.
-module ContextIO
+class ContextIO
+  # This will create an object that can be built from responses from
+  # ContextIO::API. To use the submodules, you'll need to implement some simple
+  # methods. See below.
   class APIResource
     def initialize(attributes = {})
       attributes.each do |name, value|

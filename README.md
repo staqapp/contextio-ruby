@@ -12,6 +12,8 @@ Provides a Ruby interface to [Context.IO](http://context.io).
 
 ```ruby
 require 'contextio'
+
+contextio = ContextIO.new('your_api_key', 'your_api_secret')
 ```
 
 ## Install

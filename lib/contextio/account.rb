@@ -1,4 +1,4 @@
-module ContextIO
+class ContextIO
   class Account < APIResource
     extend ContextIO::APIResource::All
     extend ContextIO::APIResource::Fetch
