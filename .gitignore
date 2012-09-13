@@ -1,5 +1,7 @@
 Gemfile.lock
 html/
 pkg/
+doc/
+.yardoc/
 vendor/cache/*.gem
 test_script.rb
