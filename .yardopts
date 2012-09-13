@@ -1,1 +1,1 @@
---no-cache - README.md LICENSE.md ChangeLog.md
+--markup markdown --no-cache - README.md LICENSE.md ChangeLog.md
