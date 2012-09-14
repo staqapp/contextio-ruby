@@ -6,7 +6,7 @@ class ContextIO
   # meaning that the API won't get hit until you ask for an attribute the object
   # doesn't already have (presumably from a previous API call).
   class OAuthProvider
-    extend ContextIO::API::LazyAttributes
+    extend API::LazyAttributes
 
     # (see ContextIO#api)
     attr_reader :api

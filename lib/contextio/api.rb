@@ -26,7 +26,7 @@ class ContextIO
     end
 
     def path(command, params = {})
-      "/#{ContextIO::API.version}/#{ContextIO::API.strip_command(command)}#{ContextIO::API.hash_to_url_params(params)}"
+      "/#{API.version}/#{API.strip_command(command)}#{API.hash_to_url_params(params)}"
     end
 
     def request(method, command, params = {})
@@ -67,7 +67,7 @@ class ContextIO
     end
 
     def consumer
-      @consumer ||= OAuth::Consumer.new(key, secret, site: ContextIO::API.base_url)
+      @consumer ||= OAuth::Consumer.new(key, secret, site: API.base_url)
     end
 
     def token
