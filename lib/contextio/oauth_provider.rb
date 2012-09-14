@@ -1,6 +1,10 @@
 require 'contextio/api/lazy_attributes'
 
 class ContextIO
+  # Represents a single OAuth provider for an account. You can use this to
+  # inspect or delete the provider. Most of the attributes are lazily loaded,
+  # meaning that the API won't get hit until you ask for an attribute the object
+  # doesn't already have (presumably from a previous API call).
   class OAuthProvider
     extend ContextIO::API::LazyAttributes
 
