@@ -3,34 +3,65 @@ require 'oauth'
 require 'json'
 
 class ContextIO
+  # **For internal use only.** Users of this gem should not be using this
+  # directly.  Represents the handle on the Context.IO API. It handles the
+  # user's OAuth credentials with Context.IO and signing requests, etc.
   class API
-    Error = Class.new(StandardError)
+    # For differentiating API errors from other errors that might happen during
+    # requests.
+    class Error < StandardError; end
 
+    # @private
     VERSION = '2.0'
 
+    # @return [String] The version of the Context.IO API this version of the
+    #   gem is intended for use with.
     def self.version
       VERSION
     end
 
+    # @private
     BASE_URL = 'https://api.context.io'
 
+    # @return [String] The base URL the API is served from.
     def self.base_url
       BASE_URL
     end
 
+    # @!attribute [r] key
+    #   @return [String] The OAuth key for the user's Context.IO account.
+    # @!attribute [r] secret
+    #   @return [String] The OAuth secret for the user's Context.IO account.
     attr_reader :key, :secret
 
+    # @param [String] key The user's OAuth key for their Context.IO account.
+    # @param [String] secret The user's OAuth secret for their Context.IO account.
     def initialize(key, secret)
       @key = key
       @secret = secret
     end
 
-    def path(command, params = {})
-      "/#{API.version}/#{API.strip_command(command)}#{API.hash_to_url_params(params)}"
+    # Generates the path for a resource_path and params hash for use with the API.
+    #
+    # @param [String] resource_path The resource_path or full resource URL for
+    #   the resource being acted on.
+    # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] params
+    #   A Hash of the query parameters for the action represented by this path.
+    def path(resource_path, params = {})
+      "/#{API.version}/#{API.strip_resource_path(resource_path)}#{API.hash_to_url_params(params)}"
     end
 
-    def request(method, command, params = {})
-      response = token.send(method, path(command, params), 'Accept' => 'application/json')
+    # Makes a request against the Context.IO API.
+    #
+    # @param [String, Symbol] method The HTTP verb for the request (lower case).
+    # @param [String] resource_path The path to the resource in question.
+    # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] params
+    #   A Hash of the query parameters for the action represented by this
+    #   request.
+    #
+    # @raise [API::Error] if the response code isn't in the 200 or 300 range.
+    def request(method, resource_path, params = {})
+      response = token.send(method, path(resource_path, params), 'Accept' => 'application/json')
       body = response.body
 
       results = JSON.parse(body) unless response.body.empty?
@@ -50,10 +81,24 @@ class ContextIO
 
     private
 
-    def self.strip_command(command)
-      command.to_s.gsub("#{base_url}/#{version}/", '')
+    # So that we can accept full URLs, this strips the domain and version number
+    # out and returns just the resource path.
+    #
+    # @param [#to_s] resource_path The full URL or path for a resource.
+    #
+    # @return [String] The resource path.
+    def self.strip_resource_path(resource_path)
+      resource_path.to_s.gsub("#{base_url}/#{version}/", '')
     end
 
+    # Context.IO's API expects query parameters that are arrays to be comma
+    # separated, rather than submitted more than once. This munges those arrays
+    # and then URL-encodes the whole thing into a query string.
+    #
+    # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] params
+    #   A Hash of the query parameters.
+    #
+    # @return [String] A URL-encoded version of the query parameters.
     def self.hash_to_url_params(params = {})
       return '' if params.empty?
 
@@ -66,10 +111,16 @@ class ContextIO
       "?#{URI.encode_www_form(params)}"
     end
 
+    # @!attribute [r] consumer
+    # @return [OAuth::Consumer] An Oauth consumer object for credentials
+    #   purposes.
     def consumer
       @consumer ||= OAuth::Consumer.new(key, secret, site: API.base_url)
     end
 
+    # @!attribute [r] token
+    # @return [Oauth::AccessToken] An Oauth token object for credentials
+    #   purposes.
     def token
       @token ||= OAuth::AccessToken.new(consumer)
     end
