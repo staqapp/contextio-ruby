@@ -29,6 +29,14 @@ class ContextIO
     OAuthProviderCollection.new(api)
   end
 
+  # Your entry point for dealing with connect tokens.
+  #
+  # @return [ConnectTokenCollection] Allows you to work with the tokens for
+  #   your account as a group.
+  def connect_tokens
+    ConnectTokenCollection.new(api)
+  end
+
   # Discover the IMAP settings for an email account.
   #
   # @param [String] email_address The email address in question.
@@ -48,6 +56,6 @@ require_relative 'contextio/api'
 
 require_relative 'contextio/oauth_provider_collection'
 require_relative 'contextio/email_settings'
+require_relative 'contextio/connect_token_collection'
 
-# require_relative 'contextio/connect_token'
 # require_relative 'contextio/account'

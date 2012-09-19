@@ -26,6 +26,17 @@ describe ContextIO do
     end
   end
 
+
+  describe "#connect_tokens" do
+    it "returns a new ConnectTokenCollection" do
+      expect(subject.connect_tokens).to be_a(ContextIO::ConnectTokenCollection)
+    end
+
+    it "passes its API handle to the ConnectTokenCollection" do
+      expect(subject.connect_tokens.api).to eq(subject.api)
+    end
+  end
+
   describe "#email_settings_for" do
     subject { ContextIO.new(nil, nil).email_settings_for('email@address.com') }
 
