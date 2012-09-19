@@ -46,6 +46,14 @@ class ContextIO
       'discovery'
     end
 
+    # Syntactic sugar around the `found` attribute.
+    #
+    # @return [Boolean] Whether the settings were able to be fetched. Will fetch
+    #   from the API if necessary.
+    def found?
+      !!found
+    end
+
     private
 
     # Fetches attributes from the API for the email settings.
@@ -74,15 +82,6 @@ class ContextIO
 
 
 
-
-    def self.discover_for(email_address, source_type = 'IMAP')
-      attrs = ContextIO::API.request(:get, 'discovery', email: email_address, source_type: source_type)
-      new(attrs)
-    end
-
-    def found?
-      !!found
-    end
 
     def server
       imap['server']

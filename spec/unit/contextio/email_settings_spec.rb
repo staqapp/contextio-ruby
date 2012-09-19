@@ -46,7 +46,32 @@ describe ContextIO::EmailSettings do
   describe "#found" do
     it "fetches it from the api" do
       api.should_receive(:request).with(:get, anything, anything).and_return({ 'found' => true })
-      expect(subject.found).to eq(true)
+      expect(subject.found).to be_true
+    end
+  end
+
+  describe "#found?" do
+    context "when found is set" do
+      before do
+        subject.instance_variable_set('@found', true)
+      end
+
+      it "returns the value of found" do
+        expect(subject).to be_found
+      end
+
+      it "doesn't hit the API" do
+        api.should_not_receive(:request)
+
+        subject.found?
+      end
+    end
+
+    context "when found is not set" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'found' => true })
+      expect(subject).to be_found
+    end
     end
   end
 
