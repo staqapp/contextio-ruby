@@ -11,9 +11,6 @@ class ContextIO
     # (see ContextIO#api)
     attr_reader :api
 
-    # @!attribute [r] found
-    #   @return [Boolean] Whether the settings were able to be fetched. Will
-    #     fetch from the API if necessary.
     # @!attribute [r] type
     #   @return [String] The type og the provider (like 'gmail'). Will fetch
     #     from the API if necessary.
@@ -21,7 +18,7 @@ class ContextIO
     #   @return [Array<String>] A list of documentation pages that pertain to
     #     the provider. Will fetch from the API if necessary.
     lazy_attributes :found, :type, :documentation, :imap
-    private :imap
+    private :imap, :found
 
     # @!attribute [r] email
     #   @return [String] The email address associated with these IMAP settings.
@@ -46,12 +43,11 @@ class ContextIO
       'discovery'
     end
 
-    # Syntactic sugar around the `found` attribute.
-    #
+    # @!attribute [r] found?
     # @return [Boolean] Whether the settings were able to be fetched. Will fetch
     #   from the API if necessary.
     def found?
-      !!found
+      found
     end
 
     private
