@@ -1,4 +1,5 @@
 require 'contextio/api/lazy_attributes'
+require 'contextio/api/fetch_attributes'
 
 class ContextIO
   # Represents a single OAuth provider for an account. You can use this to
@@ -7,6 +8,7 @@ class ContextIO
   # doesn't already have (presumably from a previous API call).
   class OAuthProvider
     extend API::LazyAttributes
+    include API::FetchAttributes
 
     # (see ContextIO#api)
     attr_reader :api
@@ -57,27 +59,6 @@ class ContextIO
     # @return [String] The path of the resource.
     def build_resource_url
       "oauth_providers/#{provider_consumer_key}"
-    end
-
-    # Fetches attributes from the API for this provider.
-    #
-    # Defines getter methods for any attributes that come back and don't already
-    # have them. This way, if the API expands, the gem will still let users get
-    # attributes we didn't explicitly declare as lazy.
-    def fetch_attributes
-      attr_hashes = api.request(:get, resource_url)
-
-      attr_hashes.each do |key, value|
-        instance_variable_set("@#{key}", value)
-
-        unless respond_to?(key)
-          instance_eval <<-RUBY
-            def #{key}
-              @#{key}
-            end
-          RUBY
-        end
-      end
     end
   end
 end
