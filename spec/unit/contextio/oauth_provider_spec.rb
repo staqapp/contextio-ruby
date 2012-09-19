@@ -122,20 +122,6 @@ describe ContextIO::OAuthProvider do
     end
   end
 
-  describe "#fetch_attributes" do
-    subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234') }
-
-    before do
-      api.stub(:request).with(:get, anything).and_return({ 'foo' => 'foo' })
-    end
-
-    it "defines a getter if one doesn't already exist" do
-      subject.send(:fetch_attributes)
-
-      expect(subject.foo).to eq('foo')
-    end
-  end
-
   describe "#delete" do
     subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234') }
 
