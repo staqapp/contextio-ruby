@@ -22,10 +22,14 @@ class ContextIO
 
     # @!attribute [r] email
     #   @return [String] The email address associated with these IMAP settings.
+    attr_reader :email, :source_type
+
+    # Not sure why, but the below comment has to be below the attr_reader call
+    # above.
+
     # @!attribute [r] source_type
     #   @return [String] The only source type currently supported by the API is
     #     'IMAP'.
-    attr_reader :email, :source_type
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     # @param [String] email The email address to fetch the settings for.
@@ -50,6 +54,41 @@ class ContextIO
       found
     end
 
+    # @!attribute [r] server
+    # @return [Boolean] FQDN of the IMAP server. Will fetch from the API if
+    #   necessary.
+    def server
+      imap['server']
+    end
+
+    # @!attribute [r] username
+    # @return [Boolean] The username for authentication purposes. Will fetch
+    #   from the API if necessary.
+    def username
+      imap['username']
+    end
+
+    # @!attribute [r] port
+    # @return [Boolean] The network port the IMAP server is listening on. Will
+    #   fetch from the API if necessary.
+    def port
+      imap['port']
+    end
+
+    # @!attribute [r] oauth?
+    # @return [Boolean] Whether the IMAP server supports OAuth or not. Will
+    #   fetch from the API if necessary.
+    def oauth?
+      !!imap['oauth']
+    end
+
+    # @!attribute [r] use_ssl?
+    # @return [Boolean] Whether the IMAP server uses SSL for connections. Will
+    #   fetch from the API if necessary.
+    def use_ssl?
+      !!imap['use_ssl']
+    end
+
     private
 
     # Fetches attributes from the API for the email settings.
@@ -71,32 +110,6 @@ class ContextIO
           RUBY
         end
       end
-    end
-
-
-
-
-
-
-
-    def server
-      imap['server']
-    end
-
-    def username
-      imap['username']
-    end
-
-    def port
-      imap['port']
-    end
-
-    def oauth?
-      !!imap['oauth']
-    end
-
-    def uses_ssl?
-      !!imap['use_ssl']
     end
   end
 end

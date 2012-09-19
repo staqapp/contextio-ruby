@@ -57,6 +57,41 @@ describe ContextIO::EmailSettings do
     end
   end
 
+  describe "#server" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'imap' => { 'server' => 'imap.gmail.com' }})
+      expect(subject.server).to eq('imap.gmail.com')
+    end
+  end
+
+  describe "#username" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'imap' => { 'username' => 'ben' }})
+      expect(subject.username).to eq('ben')
+    end
+  end
+
+  describe "#port" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'imap' => { 'port' => 993 }})
+      expect(subject.port).to eq(993)
+    end
+  end
+
+  describe "#oauth?" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'imap' => { 'oauth' => false }})
+      expect(subject).to_not be_oauth
+    end
+  end
+
+  describe "#use_ssl?" do
+    it "fetches it from the api" do
+      api.should_receive(:request).with(:get, anything, anything).and_return({ 'imap' => { 'use_ssl' => false }})
+      expect(subject).to_not be_use_ssl
+    end
+  end
+
   describe "#fetch_attributes" do
     before do
       api.stub(:request).with(:get, anything, anything).and_return({ 'foo' => 'bar' })
