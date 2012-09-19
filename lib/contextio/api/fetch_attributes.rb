@@ -7,7 +7,7 @@ class ContextIO
     module FetchAttributes
       private
 
-      # Fetches attributes from the API for this resource
+      # Fetches attributes from the API for this resource.
       #
       # Defines getter methods for any attributes that come back and don't
       # already have them. This way, if the API expands, the gem will still let
