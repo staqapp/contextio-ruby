@@ -25,4 +25,20 @@ describe ContextIO do
       expect(subject.oauth_providers.api).to eq(subject.api)
     end
   end
+
+  describe "#email_settings_for" do
+    subject { ContextIO.new(nil, nil).email_settings_for('email@address.com') }
+
+    it "returns a new EmailSettings" do
+      expect(subject).to be_a(ContextIO::EmailSettings)
+    end
+
+    it "passes its API handle to the EmailSettings" do
+      expect(subject.api).to eq(subject.api)
+    end
+
+    it "passes the email address to the EmailSettings" do
+      expect(subject.email).to eq('email@address.com')
+    end
+  end
 end

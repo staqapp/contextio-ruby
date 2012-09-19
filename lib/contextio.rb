@@ -28,6 +28,18 @@ class ContextIO
   def oauth_providers
     OAuthProviderCollection.new(api)
   end
+
+  # Discover the IMAP settings for an email account.
+  #
+  # @param [String] email_address The email address in question.
+  # @param [String] source_type The only source type currently supported by the
+  #   API is 'IMAP'.
+  #
+  # @return [EmailSettings] Allows you to inspec the settings for an account's
+  #   IMAP server.
+  def email_settings_for(email_address, source_type = 'IMAP')
+    EmailSettings.new(api, email_address, source_type)
+  end
 end
 
 require_relative 'contextio/version'
@@ -35,9 +47,7 @@ require_relative 'contextio/version'
 require_relative 'contextio/api'
 
 require_relative 'contextio/oauth_provider_collection'
+require_relative 'contextio/email_settings'
 
-# require_relative 'contextio/api_resource'
-# require_relative 'contextio/email_settings'
 # require_relative 'contextio/connect_token'
-# require_relative 'contextio/oauth_provider'
 # require_relative 'contextio/account'
