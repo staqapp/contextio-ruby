@@ -41,7 +41,7 @@ class ContextIO
     end
 
     # @!attribute [r] resource_url
-    #   @return [String] The path for discovering email settings.
+    # @return [String] The path for discovering email settings.
     def resource_url
       'discovery'
     end
