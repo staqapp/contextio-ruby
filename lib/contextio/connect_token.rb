@@ -1,6 +1,9 @@
 class ContextIO
   class ConnectToken
-    def initialize(*args)
+    attr_reader :token
+
+    def initialize(api, options={})
+      @token = options[:token]
     end
 
     def self.url

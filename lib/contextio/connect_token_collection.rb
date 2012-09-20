@@ -48,5 +48,20 @@ class ContextIO
         yield ConnectToken.new(api, attribute_hash)
       end
     end
+
+    # Returns a connect token with the given token.
+    #
+    # This is a lazy method, making no requests. When you try to access
+    # attributes on the object, or otherwise interact with it, it will actually
+    # make requests.
+    #
+    # @example
+    #   ct = contextio.connect_tokens['1234']
+    #
+    # @param [String] token The token associated with the connect token you want
+    #   to interact with.
+    def [](token)
+      ContextIO::ConnectToken.new(api, token: token)
+    end
   end
 end

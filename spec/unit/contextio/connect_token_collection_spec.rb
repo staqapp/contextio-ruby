@@ -123,4 +123,19 @@ describe ContextIO::ConnectTokenCollection do
       subject.each {}
     end
   end
+
+  describe "#[]" do
+    it "returns a ContextIO::ConnectToken with a given key" do
+      token = subject['1234']
+
+      expect(token).to be_a(ContextIO::ConnectToken)
+      expect(token.token).to eq('1234')
+    end
+
+    it "lazily loads, not hitting the API" do
+      api.should_not_receive(:request)
+
+      subject['1234']
+    end
+  end
 end
