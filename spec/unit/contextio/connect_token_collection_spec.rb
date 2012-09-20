@@ -82,9 +82,45 @@ describe ContextIO::ConnectTokenCollection do
     let(:response) do
       [
         {
-          # ...
+          'token' => '1234',
+          'email' => 'person@email.com'
+        },
+        {
+          'token' => '4321',
+          'email' => 'mammal@email.com'
         }
       ]
+    end
+
+    before do
+      api.stub(:request).with(:get, 'connect_tokens').and_return(response)
+    end
+
+    it "gets to /connect_tokens" do
+      api.should_receive(:request).with(:get, 'connect_tokens').and_return(response)
+
+      subject.each {}
+    end
+
+    it "yields ConnectTokens to the block" do
+      subject.each do |x|
+        expect(x).to be_a(ContextIO::ConnectToken)
+      end
+    end
+
+    it "passes the attributes to the ConnectToken" do
+      ContextIO::ConnectToken.should_receive(:new).with(
+        api,
+        'email' => 'person@email.com',
+        'token' => '1234'
+      )
+      ContextIO::ConnectToken.should_receive(:new).with(
+        api,
+        'email' => 'mammal@email.com',
+        'token' => '4321'
+      )
+
+      subject.each {}
     end
   end
 end

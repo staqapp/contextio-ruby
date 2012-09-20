@@ -34,5 +34,19 @@ class ContextIO
 
       ContextIO::ConnectToken.new(api, result_hash)
     end
+
+    # Iterates over the connect tokens in your account.
+    #
+    # @example
+    #   contextio.connect_tokens.each do |connect_token|
+    #     puts connect_token.email
+    #   end
+    def each(&block)
+      result_array = api.request(:get, 'connect_tokens')
+
+      result_array.each do |attribute_hash|
+        yield ConnectToken.new(api, attribute_hash)
+      end
+    end
   end
 end
