@@ -1,8 +1,7 @@
 class ContextIO
-  class ConnectToken < APIResource
-    extend ContextIO::APIResource::All
-    extend ContextIO::APIResource::Fetch
-    include ContextIO::APIResource::Delete
+  class ConnectToken
+    def initialize(*args)
+    end
 
     def self.url
       'connect_tokens'
