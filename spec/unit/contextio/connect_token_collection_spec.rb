@@ -21,7 +21,7 @@ describe ContextIO::ConnectTokenCollection do
       api.should_receive(:request).with(
         :post,
         'connect_tokens',
-        callback_url: 'http://callback.com'
+        hash_including(callback_url: 'http://callback.com')
       )
 
       subject.create('http://callback.com')
@@ -35,6 +35,56 @@ describe ContextIO::ConnectTokenCollection do
 
     it "returns a ConnectToken" do
       expect(subject.create('http://callback.com')).to be_a(ContextIO::ConnectToken)
+    end
+
+    it "takes an optional service level" do
+      api.should_receive(:request).with(
+        :post,
+        'connect_tokens',
+        hash_including(service_level: 'PRO')
+      )
+
+      subject.create('http://callback.com', service_level: 'PRO')
+    end
+
+    it "takes an optional email" do
+      api.should_receive(:request).with(
+        :post,
+        'connect_tokens',
+        hash_including(email: 'person@email.com')
+      )
+
+      subject.create('http://callback.com', email: 'person@email.com')
+    end
+
+    it "takes an optional first name" do
+      api.should_receive(:request).with(
+        :post,
+        'connect_tokens',
+        hash_including(first_name: 'Bruno')
+      )
+
+      subject.create('http://callback.com', first_name: 'Bruno')
+    end
+
+    it "takes an optional last name" do
+      api.should_receive(:request).with(
+        :post,
+        'connect_tokens',
+        hash_including(last_name: 'Morency')
+      )
+
+      subject.create('http://callback.com', last_name: 'Morency')
+    end
+  end
+
+  describe "#each" do
+    let(:response) do
+      [
+        {
+          # ...
+        }
+      ]
     end
   end
 end
