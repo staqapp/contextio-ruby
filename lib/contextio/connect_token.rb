@@ -1,10 +1,28 @@
 class ContextIO
+  # Represents a single connect token for an account. You can use this to
+  # inspect or delete the token. Most of the attributes are lazily loaded,
+  # meaning that the API won't get hit until you ask for an attribute the object
+  # doesn't already have (presumably from a previous API call).
   class ConnectToken
-    attr_reader :token
+    # (see ContextIO#api)
+    attr_reader :api
 
-    def initialize(api, options={})
-      @token = options[:token]
+    # (see ContextIO::OAuthProviderCollection#initialize)
+    def initialize(api, options = {})
+      required_options = [:token, 'token', :resource_url, 'resource_url']
+
+      if (options.keys & required_options).empty?
+        raise ArgumentError, 'Either a token or a resource_url is required'
+      end
+
+      @api = api
+
+      options.each do |key, value|
+        instance_variable_set("@#{key}", value)
+      end
     end
+
+    private
 
     def self.url
       'connect_tokens'
