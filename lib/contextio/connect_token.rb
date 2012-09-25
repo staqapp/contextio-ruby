@@ -1,6 +1,4 @@
-require 'contextio/api/lazy_attributes'
-require 'contextio/api/fetch_attributes'
-require 'contextio/api/resource_initializer'
+require 'contextio/api/resource'
 
 class ContextIO
   # Represents a single connect token for an account. You can use this to
@@ -8,9 +6,7 @@ class ContextIO
   # meaning that the API won't get hit until you ask for an attribute the object
   # doesn't already have (presumably from a previous API call).
   class ConnectToken
-    extend API::LazyAttributes
-    include API::FetchAttributes
-    include API::ResourceInitializer
+    include API::Resource
 
     # (see ContextIO#api)
     attr_reader :api
