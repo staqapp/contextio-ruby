@@ -13,9 +13,9 @@ class ContextIO
       # already have them. This way, if the API expands, the gem will still let
       # users get attributes we didn't explicitly declare as lazy.
       def fetch_attributes
-        attr_hashes = api.request(:get, resource_url)
+        @attr_hashes = api.request(:get, resource_url)
 
-        attr_hashes.each do |key, value|
+        @attr_hashes.each do |key, value|
           instance_variable_set("@#{key}", value)
 
           unless respond_to?(key)

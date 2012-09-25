@@ -26,7 +26,7 @@ describe ContextIO::API::FetchAttributes do
     end
 
     it "defines getter methods for new attributes returned" do
-      subject.api.stub(:request).and_return(:foo => 'bar')
+      subject.api.stub(:request).and_return(foo: 'bar')
 
       subject.send(:fetch_attributes)
 
@@ -34,7 +34,7 @@ describe ContextIO::API::FetchAttributes do
     end
 
     it "sets an instance variable from the attribute" do
-      subject.api.stub(:request).and_return(:foo => 'bar')
+      subject.api.stub(:request).and_return(foo: 'bar')
 
       subject.send(:fetch_attributes)
 
@@ -46,11 +46,19 @@ describe ContextIO::API::FetchAttributes do
         'hard coded value'
       end
 
-      subject.api.stub(:request).and_return(:foo => 'bar')
+      subject.api.stub(:request).and_return(foo: 'bar')
 
       subject.send(:fetch_attributes)
 
       expect(subject.foo).to eq('hard coded value')
+    end
+
+    it "stores the response hash in an instance variable" do
+      subject.api.stub(:request).and_return(foo: 'bar')
+
+      subject.send(:fetch_attributes)
+
+      expect(subject.instance_variable_get(:@attr_hashes)).to eq(foo: 'bar')
     end
   end
 end
