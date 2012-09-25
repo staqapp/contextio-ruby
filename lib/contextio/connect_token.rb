@@ -1,19 +1,27 @@
+require 'contextio/api/lazy_attributes'
+require 'contextio/api/fetch_attributes'
+require 'contextio/api/resource_initializer'
+
 class ContextIO
   # Represents a single connect token for an account. You can use this to
   # inspect or delete the token. Most of the attributes are lazily loaded,
   # meaning that the API won't get hit until you ask for an attribute the object
   # doesn't already have (presumably from a previous API call).
   class ConnectToken
+    extend API::LazyAttributes
+    include API::FetchAttributes
+    include API::ResourceInitializer
+
     # (see ContextIO#api)
     attr_reader :api
 
+    # @!attribute [r] token
+    #   @return [String] The token associated with this connect token.
+    lazy_attributes :token
+
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})
-      required_options = [:token, 'token', :resource_url, 'resource_url']
-
-      if (options.keys & required_options).empty?
-        raise ArgumentError, 'Either a token or a resource_url is required'
-      end
+      validate_required_options(options)
 
       @api = api
 
@@ -22,24 +30,28 @@ class ContextIO
       end
     end
 
+    # @!attribute [r] resource_url
+    # @return [String] The URL that will fetch attributes from the API.
+    def resource_url
+      @resource_url ||= build_resource_url
+    end
+
     private
 
-    def self.url
-      'connect_tokens'
+    # Required options for ResourceInitializer.
+    def required_options
+      %w(token resource_url)
     end
 
-    def self.new_redirect_url(callback_url, options = {})
-      options.keep_if do |(key, value)|
-        %w(service_level email first_name last_name).include?(key.to_s)
-      end
-
-      result_hash = ContextIO::API.request(:post, 'connect_tokens', options.merge('callback_url' => callback_url))
-
-      return result_hash['browser_redirect_url']
+    # Builds the path that will fetch the attributes for this provider.
+    #
+    # @return [String] The path of the resource.
+    def build_resource_url
+      "connect_tokens/#{token}"
     end
 
-    attr_reader :token, :email, :created, :used, :callback_url,
-                :service_level, :first_name, :last_name
+    # attr_reader :token, :email, :created, :used, :callback_url,
+    #             :service_level, :first_name, :last_name
 
     def primary_key
       token

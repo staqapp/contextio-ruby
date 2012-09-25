@@ -1,5 +1,6 @@
 require 'contextio/api/lazy_attributes'
 require 'contextio/api/fetch_attributes'
+require 'contextio/api/resource_initializer'
 
 class ContextIO
   # Represents a single OAuth provider for an account. You can use this to
@@ -9,6 +10,7 @@ class ContextIO
   class OAuthProvider
     extend API::LazyAttributes
     include API::FetchAttributes
+    include API::ResourceInitializer
 
     # (see ContextIO#api)
     attr_reader :api
@@ -26,11 +28,7 @@ class ContextIO
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})
-      required_options = [:provider_consumer_key, 'provider_consumer_key', :resource_url, 'resource_url']
-
-      if (options.keys & required_options).empty?
-        raise ArgumentError, "Either a provider_consumer_key or a resource_url is required"
-      end
+      validate_required_options(options)
 
       @api = api
 
@@ -53,6 +51,11 @@ class ContextIO
     end
 
     private
+
+    # Required options for ResourceInitializer.
+    def required_options
+      %w(provider_consumer_key resource_url)
+    end
 
     # Builds the path that will fetch the attributes for this provider.
     #
