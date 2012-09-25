@@ -8,12 +8,11 @@ class ContextIO
   class ConnectToken
     include API::Resource
 
-    # (see ContextIO#api)
-    attr_reader :api
-
     # @!attribute [r] token
     #   @return [String] The token associated with this connect token.
     lazy_attributes :token
+
+    required_options :token, :resource_url
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})
@@ -33,11 +32,6 @@ class ContextIO
     end
 
     private
-
-    # Required options for ResourceInitializer.
-    def required_options
-      %w(token resource_url)
-    end
 
     # Builds the path that will fetch the attributes for this provider.
     #

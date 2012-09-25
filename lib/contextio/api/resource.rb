@@ -3,6 +3,9 @@ class ContextIO
     # When `include`d into a class, this module provides some helper methods for
     # various things a singular resource will need or find useful.
     module Resource
+      # (see ContextIO#api)
+      attr_reader :api
+
       private
 
       # Make sure a Resource has the declarative syntax handy.

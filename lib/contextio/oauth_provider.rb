@@ -8,9 +8,6 @@ class ContextIO
   class OAuthProvider
     include API::Resource
 
-    # (see ContextIO#api)
-    attr_reader :api
-
     # @!attribute [r] provider_consumer_key
     #   @return [String] The consumer key associated with this provider. Will
     #     fetch from the API if necessary.
@@ -21,6 +18,8 @@ class ContextIO
     #   @return [String] The consumer key associated with this provider. Will
     #     fetch from the API if necessary.
     lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
+
+    required_options :provider_consumer_key, :resource_url
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})
@@ -47,11 +46,6 @@ class ContextIO
     end
 
     private
-
-    # Required options for ResourceInitializer.
-    def required_options
-      %w(provider_consumer_key resource_url)
-    end
 
     # Builds the path that will fetch the attributes for this provider.
     #
