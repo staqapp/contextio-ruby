@@ -32,6 +32,10 @@ describe ContextIO::API::Resource do
     it "raises with missing keys" do
       expect { subject.send(:validate_required_options, foo: 'bar') }.to raise_error
     end
+
+    it "doesn't raise if resource_url is set" do
+      expect { subject.send(:validate_required_options, resource_url: 'some url') }.to_not raise_error
+    end
   end
 
   describe ".lazy_attributes" do

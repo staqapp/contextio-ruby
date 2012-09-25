@@ -22,12 +22,6 @@ describe ContextIO::OAuthProvider do
       end
     end
 
-    context "with a resource_url passed in" do
-      it "doesn't raise an error" do
-        expect { ContextIO::OAuthProvider.new(api, resource_url: 'foo') }.to_not raise_error
-      end
-    end
-
     context "with neither a provider_consumer_key nor a resource_url passed in" do
       it "raises an ArgumentError" do
         expect { ContextIO::OAuthProvider.new(api, foo: 'bar') }.to raise_error(ArgumentError)

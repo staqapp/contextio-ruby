@@ -22,12 +22,6 @@ describe ContextIO::ConnectToken do
       end
     end
 
-    context "with a resource_url passed in" do
-      it "doesn't raise an error" do
-        expect { ContextIO::ConnectToken.new(api, resource_url: 'foo') }.to_not raise_error
-      end
-    end
-
     context "with neither a provider_token nor a resource_url passed in" do
       it "raises an ArgumentError" do
         expect { ContextIO::ConnectToken.new(api, foo: 'bar') }.to raise_error(ArgumentError)

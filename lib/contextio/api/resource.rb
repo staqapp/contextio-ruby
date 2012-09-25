@@ -22,7 +22,9 @@ class ContextIO
       # **Important**: This is an OR operation, so only one key needs to be
       # matched.
       def validate_required_options(options_hash)
-        normalized_required_options = required_options.inject([]) do |memo, key|
+        default_required_options = ['resource_url', :resource_url]
+
+        normalized_required_options = required_options.inject(default_required_options) do |memo, key|
           memo << key.to_s
           memo << key.to_sym
         end

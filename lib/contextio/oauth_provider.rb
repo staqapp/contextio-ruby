@@ -19,7 +19,7 @@ class ContextIO
     #     fetch from the API if necessary.
     lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
 
-    required_options :provider_consumer_key, :resource_url
+    required_options :provider_consumer_key
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})

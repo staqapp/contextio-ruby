@@ -12,7 +12,7 @@ class ContextIO
     #   @return [String] The token associated with this connect token.
     lazy_attributes :token
 
-    required_options :token, :resource_url
+    required_options :token
 
     # (see ContextIO::OAuthProviderCollection#initialize)
     def initialize(api, options = {})
