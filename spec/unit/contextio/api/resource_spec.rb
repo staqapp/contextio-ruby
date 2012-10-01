@@ -3,7 +3,7 @@ require 'contextio/api/resource'
 
 describe ContextIO::API::Resource do
   describe "#validate_required_options" do
-    let(:helper_class) do
+    subject do
       Class.new do
         include ContextIO::API::Resource
 
@@ -11,30 +11,28 @@ describe ContextIO::API::Resource do
       end
     end
 
-    subject { helper_class.new }
-
     it "matches strings to symbols" do
-      expect { subject.send(:validate_required_options, 'symbol' => 'foo') }.to_not raise_error
+      expect { subject.new(double('api'), 'symbol' => 'foo') }.to_not raise_error
     end
 
     it "matches symbols to strings" do
-      expect { subject.send(:validate_required_options, string: 'foo') }.to_not raise_error
+      expect { subject.new(double('api'), string: 'foo') }.to_not raise_error
     end
 
     it "matches strings to strings" do
-      expect { subject.send(:validate_required_options, 'string' => 'foo') }.to_not raise_error
+      expect { subject.new(double('api'), 'string' => 'foo') }.to_not raise_error
     end
 
     it "matches symbols to symbols" do
-      expect { subject.send(:validate_required_options,  symbol: 'bar') }.to_not raise_error
+      expect { subject.new(double('api'),  symbol: 'bar') }.to_not raise_error
     end
 
     it "raises with missing keys" do
-      expect { subject.send(:validate_required_options, foo: 'bar') }.to raise_error
+      expect { subject.new(double('api'), foo: 'bar') }.to raise_error
     end
 
     it "doesn't raise if resource_url is set" do
-      expect { subject.send(:validate_required_options, resource_url: 'some url') }.to_not raise_error
+      expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
     end
   end
 
@@ -51,7 +49,7 @@ describe ContextIO::API::Resource do
       end
     end
 
-    subject { helper_class.new }
+    subject { helper_class.new(double('api'), resource_url: 'foo') }
 
     it "defines a method for the attribute" do
       expect(subject).to respond_to(:foo)
@@ -90,17 +88,11 @@ describe ContextIO::API::Resource do
     let(:helper_class) do
       Class.new do
         include ContextIO::API::Resource
-
-        def resource_url
-          'resource_url'
-        end
       end
     end
 
     subject do
-      helper_class.new.tap do |s|
-        s.stub(:api).and_return(double('API'))
-      end
+      helper_class.new(double('api'), resource_url: 'resource_url')
     end
 
     it "makes a request to the API" do
@@ -143,6 +135,41 @@ describe ContextIO::API::Resource do
       subject.send(:fetch_attributes)
 
       expect(subject.instance_variable_get(:@attr_hashes)).to eq(foo: 'bar')
+    end
+  end
+
+  describe "#resource_url" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+
+        required_options :foo
+
+        def build_resource_url
+        end
+      end
+    end
+
+    context "when one is set at creation" do
+      subject do
+        helper_class.new(double('api'), resource_url: 'resource_url')
+      end
+
+      it "returns the one passed in" do
+        expect(subject.resource_url).to eq('resource_url')
+      end
+    end
+
+    context "when one is not set at creation" do
+      subject do
+        helper_class.new(double('api'), foo: 'bar')
+      end
+
+      it "calls build_resource_url" do
+        subject.should_receive(:build_resource_url)
+
+        subject.resource_url
+      end
     end
   end
 end

@@ -6,6 +6,23 @@ class ContextIO
       # (see ContextIO#api)
       attr_reader :api
 
+      # (see ContextIO::OAuthProviderCollection#initialize)
+      def initialize(api, options = {})
+        validate_required_options(options)
+
+        @api = api
+
+        options.each do |key, value|
+          instance_variable_set("@#{key}", value)
+        end
+      end
+
+      # @!attribute [r] resource_url
+      # @return [String] The URL that will fetch attributes from the API.
+      def resource_url
+        @resource_url ||= build_resource_url
+      end
+
       private
 
       # Make sure a Resource has the declarative syntax handy.
@@ -24,13 +41,15 @@ class ContextIO
       def validate_required_options(options_hash)
         default_required_options = ['resource_url', :resource_url]
 
-        normalized_required_options = required_options.inject(default_required_options) do |memo, key|
+        req_opts = self.respond_to?(:required_options) ? required_options : []
+
+        normalized_required_options = req_opts.inject(default_required_options) do |memo, key|
           memo << key.to_s
           memo << key.to_sym
         end
 
         if (options_hash.keys & normalized_required_options).empty?
-          raise ArgumentError, "Required option missing. Make sure you have one of: #{required_options.join(', ')}"
+          raise ArgumentError, "Required option missing. Make sure you have one of: #{(req_opts << 'resource_url').join(', ')}"
         end
       end
 

@@ -21,23 +21,6 @@ class ContextIO
 
     required_options :provider_consumer_key
 
-    # (see ContextIO::OAuthProviderCollection#initialize)
-    def initialize(api, options = {})
-      validate_required_options(options)
-
-      @api = api
-
-      options.each do |key, value|
-        instance_variable_set("@#{key}", value)
-      end
-    end
-
-    # @!attribute [r] resource_url
-    # @return [String] The URL that will fetch attributes from the API.
-    def resource_url
-      @resource_url ||= build_resource_url
-    end
-
     # Deletes the provider instance.
     #
     # @return [Boolean] Whether the deletion worked or not.
