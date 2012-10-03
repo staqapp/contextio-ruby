@@ -9,10 +9,41 @@ class ContextIO
     include API::Resource
 
     # @!attribute [r] token
-    #   @return [String] The token associated with this connect token.
-    lazy_attributes :token
+    #   @return [String] The token associated with this connect token. Will
+    #     fetch from the API if necessary.
+    # @!attribute [r] email
+    #   @return [String] The email address associated with this token. Will
+    #     fetch from the API if necessary.
+    # @!attribute [r] created
+    #   @return [Integer] The number of seconds since the epoch that this token
+    #     was created. Will fetch from the API if necessary.
+    # @!attribute [r] used
+    #   @return [Boolean] Whether this token has been used ot not. Will fetch
+    #     from the API if necessary.
+    # @!attribute [r] callback_url
+    #   @return [String] The url that..something something. Will fetch from the
+    #     API if necessary.
+    # @!attribute [r] service_level
+    #   @return [String] The Context.IO service level for this account. Will
+    #     fetch from the API if necessary.
+    # @!attribute [r] first_name
+    #   @return [String] The first name of the owner of the email account
+    #     associated with this token. Will fetch from the API if necessary.
+    # @!attribute [r] last_name
+    #   @return [String] The last name of the owner of the email account
+    #     associated with this token. Will fetch from the API if necessary.
+    lazy_attributes :token, :email, :created, :used, :callback_url,
+                    :service_level, :first_name, :last_name
+
 
     required_options :token
+
+    # @!attribute [r] created_at
+    #
+    # @return [Time] The time this token was created
+    def created_at
+      @created_at ||= Time.at(created)
+    end
 
     private
 
@@ -21,21 +52,6 @@ class ContextIO
     # @return [String] The path of the resource.
     def build_resource_url
       "connect_tokens/#{token}"
-    end
-
-    # attr_reader :token, :email, :created, :used, :callback_url,
-    #             :service_level, :first_name, :last_name
-
-    def primary_key
-      token
-    end
-
-    def created_at
-      @created_at ||= Time.at(created)
-    end
-
-    def account
-      # lazily create an Account object.
     end
   end
 end
