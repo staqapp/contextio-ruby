@@ -38,7 +38,8 @@ class ContextIO
 
     # @!attribute [r] created_at
     #
-    # @return [Time] The time this token was created
+    # @return [Time] The time this token was created. Will fetch from the API
+    #   if necessary.
     def created_at
       @created_at ||= Time.at(created)
     end
