@@ -56,7 +56,7 @@ class ContextIO
       def validate_required_options(options_hash)
         default_required_options = ['resource_url', :resource_url]
 
-        req_opts = self.respond_to?(:required_options) ? required_options : []
+        req_opts = self.respond_to?(:required_options) ? required_options.dup : []
 
         normalized_required_options = req_opts.inject(default_required_options) do |memo, key|
           memo << key.to_s
