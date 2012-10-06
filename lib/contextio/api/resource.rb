@@ -30,6 +30,14 @@ class ContextIO
         api.request(:delete, resource_url)['success']
       end
 
+      # @!attribute [r] api_attributes
+      # @return [{String => Numeric, String, Hash, Array, Boolean}] The
+      #   attributes returned from the API as a Hash. If it hasn't been
+      #   populated, it will ask the API and populate it.
+      def api_attributes
+        @api_attributes ||= fetch_attributes
+      end
+
       private
 
       # Make sure a Resource has the declarative syntax handy.
@@ -68,17 +76,11 @@ class ContextIO
       # already have them. This way, if the API expands, the gem will still let
       # users get attributes we didn't explicitly declare as lazy.
       def fetch_attributes
-        @attr_hashes = api.request(:get, resource_url)
-
-        @attr_hashes.each do |key, value|
-          instance_variable_set("@#{key}", value)
-
+        api.request(:get, resource_url).each do |key, value|
           unless respond_to?(key)
-            instance_eval <<-RUBY
-              def #{key}
-                @#{key}
-              end
-            RUBY
+            self.define_singleton_method(key) do
+              value
+            end
           end
         end
       end
@@ -101,16 +103,13 @@ class ContextIO
 
         # Declares a list of attributes to be lazily loaded from the API. Getter
         # methods are written for each attribute. If the user asks for one and
-        # the object in question doesn't have it already, then it will fetch it
-        # from the API, and save the attributes it gets back
+        # the object in question doesn't have it already, then it will look for
+        # it in the api_attributes Hash.
         #
         # @example an example of the generated methods
         #   def some_attribute
-        #     return @some_attribute if defined?(@some_attribute)
-        #
-        #     fetch_attributes
-        #
-        #     @some_attribute
+        #     return @some_attribute if instance_variable_defined?(@some_attribute)
+        #     api_attributes["some_attribute"]
         #   end
         #
         # @param [Array<String, Symbol>] attributes Attribute names.
@@ -118,10 +117,7 @@ class ContextIO
           attributes.each do |attribute_name|
             define_method(attribute_name) do
               return instance_variable_get("@#{attribute_name}") if instance_variable_defined?("@#{attribute_name}")
-
-              fetch_attributes
-
-              instance_variable_get("@#{attribute_name}")
+              api_attributes[attribute_name.to_s]
             end
           end
         end
