@@ -172,4 +172,26 @@ describe ContextIO::API::Resource do
       end
     end
   end
+
+  describe "#delete" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+      end
+    end
+
+    subject do
+      helper_class.new(double('api', :request => {'success' => true}), resource_url: 'resource_url')
+    end
+
+    it "makes a request to the API" do
+      subject.api.should_receive(:request).with(:delete, 'resource_url')
+
+      subject.delete
+    end
+
+    it "returns the contents of the 'success' key" do
+      expect(subject.delete).to eq(true)
+    end
+  end
 end

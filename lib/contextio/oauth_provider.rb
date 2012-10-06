@@ -21,13 +21,6 @@ class ContextIO
 
     required_options :provider_consumer_key
 
-    # Deletes the provider instance.
-    #
-    # @return [Boolean] Whether the deletion worked or not.
-    def delete
-      api.request(:delete, resource_url)['success']
-    end
-
     private
 
     # Builds the path that will fetch the attributes for this provider.

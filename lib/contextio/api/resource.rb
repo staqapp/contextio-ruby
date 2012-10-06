@@ -23,6 +23,13 @@ class ContextIO
         @resource_url ||= build_resource_url
       end
 
+      # Deletes the resource.
+      #
+      # @return [Boolean] Whether the deletion worked or not.
+      def delete
+        api.request(:delete, resource_url)['success']
+      end
+
       private
 
       # Make sure a Resource has the declarative syntax handy.
