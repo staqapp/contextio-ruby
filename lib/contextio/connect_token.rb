@@ -18,8 +18,8 @@ class ContextIO
     #   @return [Boolean] Whether this token has been used ot not. Will fetch
     #     from the API if necessary.
     # @!attribute [r] callback_url
-    #   @return [String] The url that..something something. Will fetch from the
-    #     API if necessary.
+    #   @return [String] The url that Context.IO will redirect the user to when
+    #     the account is created. Will fetch from the API if necessary.
     # @!attribute [r] service_level
     #   @return [String] The Context.IO service level for this account. Will
     #     fetch from the API if necessary.
