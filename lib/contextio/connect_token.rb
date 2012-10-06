@@ -1,4 +1,5 @@
 require 'contextio/api/resource'
+require 'contextio/account'
 
 class ContextIO
   # Represents a single connect token for an account. You can use this to
@@ -42,6 +43,14 @@ class ContextIO
     #   if necessary.
     def created_at
       @created_at ||= Time.at(created)
+    end
+
+    # @!attribute [r] account
+    #
+    # @return [ContextIO::Account, nil] The Account associated with this token,
+    #   if any. Will fetch from the API if necessary.
+    def account
+      @account ||= ContextIO::Account.new(api_attributes['account'])
     end
 
     private

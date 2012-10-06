@@ -55,4 +55,31 @@ describe ContextIO::ConnectToken do
       end
     end
   end
+
+  describe "#account" do
+    subject { ContextIO::ConnectToken.new(api, resource_url: 'resource_url') }
+
+    before do
+      api.stub(:request).and_return('account' => { 'id' => '1234' })
+    end
+
+    it "loads it from the API only once" do
+      api.should_receive(:request).with(
+        :get, 'resource_url'
+      ).exactly(:once).and_return({'account' => {'id' => '1234'}})
+
+      subject.account
+      subject.account
+    end
+
+    it "makes a new Account from the hash" do
+      ContextIO::Account.should_receive(:new).with('id' => '1234')
+
+      subject.account
+    end
+
+    it "returns an Account" do
+      expect(subject.account).to be_a(ContextIO::Account)
+    end
+  end
 end

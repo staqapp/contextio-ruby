@@ -1,56 +1,55 @@
 class ContextIO
-  class Account < APIResource
-    extend ContextIO::APIResource::All
-    extend ContextIO::APIResource::Fetch
-    include ContextIO::APIResource::Delete
-
-    def self.url
-      'accounts'
+  class Account
+    def initialize(*args)
     end
 
-    def self.create(email, options={})
-      result_hash = ContextIO::API.request(:post, url, email: email, first_name: options[:first_name], last_name: options[:last_name])
+    # def self.url
+    #   'accounts'
+    # end
 
-      fetch(result_hash['id'])
-    end
+    # def self.create(email, options={})
+    #   result_hash = ContextIO::API.request(:post, url, email: email, first_name: options[:first_name], last_name: options[:last_name])
 
-    attr_reader :id, :username, :created, :suspended, :email_addresses,
-                :first_name, :last_name, :password_expired, :sources,
-                :nb_messages, :nb_files
+    #   fetch(result_hash['id'])
+    # end
 
-    def primary_key
-      id
-    end
+    # attr_reader :id, :username, :created, :suspended, :email_addresses,
+    #             :first_name, :last_name, :password_expired, :sources,
+    #             :nb_messages, :nb_files
 
-    def update(attributes = {})
-      attrs = {}
+    # def primary_key
+    #   id
+    # end
 
-      attrs[:first_name] = attributes[:first_name] if attributes[:first_name]
-      attrs[:last_name] = attributes[:last_name] if attributes[:last_name]
+    # def update(attributes = {})
+    #   attrs = {}
 
-      return nil if attrs.empty?
+    #   attrs[:first_name] = attributes[:first_name] if attributes[:first_name]
+    #   attrs[:last_name] = attributes[:last_name] if attributes[:last_name]
 
-      ContextIO::API.request(:post, url, attrs)['success']
-    end
+    #   return nil if attrs.empty?
 
-    def created_at
-      Time.at(created) if created
-    end
+    #   ContextIO::API.request(:post, url, attrs)['success']
+    # end
 
-    def suspended_at
-      Time.at(suspended) if suspended_at
-    end
+    # def created_at
+    #   Time.at(created) if created
+    # end
 
-    def suspended?
-      !!suspended
-    end
+    # def suspended_at
+    #   Time.at(suspended) if suspended_at
+    # end
 
-    def password_expired_at
-      Time.at(password_expired) if password_expired
-    end
+    # def suspended?
+    #   !!suspended
+    # end
 
-    def password_expired?
-      !!password_expired
-    end
+    # def password_expired_at
+    #   Time.at(password_expired) if password_expired
+    # end
+
+    # def password_expired?
+    #   !!password_expired
+    # end
   end
 end
