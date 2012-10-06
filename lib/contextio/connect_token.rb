@@ -14,9 +14,6 @@ class ContextIO
     # @!attribute [r] email
     #   @return [String] The email address associated with this token. Will
     #     fetch from the API if necessary.
-    # @!attribute [r] created
-    #   @return [Integer] The number of seconds since the epoch that this token
-    #     was created. Will fetch from the API if necessary.
     # @!attribute [r] used
     #   @return [Boolean] Whether this token has been used ot not. Will fetch
     #     from the API if necessary.
@@ -34,6 +31,7 @@ class ContextIO
     #     associated with this token. Will fetch from the API if necessary.
     lazy_attributes :token, :email, :created, :used, :callback_url,
                     :service_level, :first_name, :last_name
+    private :created
 
 
     required_options :token
