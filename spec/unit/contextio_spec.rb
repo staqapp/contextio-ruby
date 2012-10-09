@@ -26,6 +26,15 @@ describe ContextIO do
     end
   end
 
+  describe "#accounts" do
+    it "returns a new AccountCollection" do
+      expect(subject.accounts).to be_a(ContextIO::AccountCollection)
+    end
+
+    it "passes its API handle to the AccountCollection" do
+      expect(subject.accounts.api).to eq(subject.api)
+    end
+  end
 
   describe "#connect_tokens" do
     it "returns a new ConnectTokenCollection" do

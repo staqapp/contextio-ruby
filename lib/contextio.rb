@@ -37,6 +37,14 @@ class ContextIO
     ConnectTokenCollection.new(api)
   end
 
+  # Your entry point for dealing with accounts.
+  #
+  # @return [AccountCollection] Allows you to work with the email accounts for
+  #   your account as a group.
+  def accounts
+    AccountCollection.new(api)
+  end
+
   # Discover the IMAP settings for an email account.
   #
   # @param [String] email_address The email address in question.
