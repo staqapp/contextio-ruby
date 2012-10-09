@@ -1,4 +1,5 @@
 require_relative 'connect_token'
+require_relative 'api/resource_collection'
 
 class ContextIO
   # Represents a collection of connect tokens for your account. You can use this

@@ -1,4 +1,5 @@
 require_relative 'oauth_provider'
+require_relative 'api/resource_collection'
 
 class ContextIO
   # Represents a collection of OAuth providers for an account. You can use this
