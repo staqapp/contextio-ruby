@@ -67,7 +67,7 @@ class ContextIO
         # the defeniiton of the class it wraps.
         #
         # @param [Class] klass The class that the collection, well, collects.
-        def resource_class(klass)
+        def resource_class=(klass)
           define_method(:resource_class) do
             klass
           end
@@ -77,7 +77,7 @@ class ContextIO
         #
         # @param [String] url The path that refers to this collection of
         #   resources.
-        def resource_url(url)
+        def resource_url=(url)
           define_method(:resource_url) do
             url
           end

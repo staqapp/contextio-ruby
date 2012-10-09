@@ -16,7 +16,7 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        resource_class SingularHelper
+        self.resource_class = SingularHelper
       end
     end
 
@@ -29,12 +29,12 @@ describe ContextIO::API::ResourceCollection do
     end
   end
 
-  describe ".resource_url" do
+  describe ".resource_url=" do
     let(:helper_class) do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        resource_url 'helper_class'
+        self.resource_url = 'helper_class'
       end
     end
 
@@ -68,8 +68,8 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        resource_url 'url'
-        resource_class SingularHelper
+        self.resource_url = 'url'
+        self.resource_class = SingularHelper
       end
     end
 
@@ -112,8 +112,8 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        resource_url 'url'
-        resource_class SingularHelper
+        self.resource_url = 'url'
+        self.resource_class = SingularHelper
       end
     end
 
