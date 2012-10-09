@@ -3,8 +3,19 @@ require_relative 'connect_token'
 class ContextIO
   # Represents a collection of connect tokens for your account. You can use this
   # to create a new token, fetch a specific one or iterate over them.
+  #
+  # @example You can iterate over them with `each`:
+  #   contextio.connect_tokens.each do |connect_token|
+  #     puts connect_token.email
+  #   end
+  #
+  # @example You can lazily access a specific one with square brackets:
+  #   connect_token = contextio.connect_tokens['some_token']
   class ConnectTokenCollection
     include ContextIO::API::ResourceCollection
+
+    resource_url 'connect_tokens'
+    resource_class ContextIO::ConnectToken
 
     # Creates a new connect token for your account.
     #
@@ -16,7 +27,7 @@ class ContextIO
     def create(callback_url, options={})
       result_hash = api.request(
         :post,
-        'connect_tokens',
+        resource_url,
         callback_url: callback_url,
         email: options[:email],
         service_level: options[:service_level],
@@ -26,22 +37,7 @@ class ContextIO
 
       result_hash.delete(:success)
 
-      ContextIO::ConnectToken.new(api, result_hash)
-    end
-
-    # Returns a connect token with the given token.
-    #
-    # This is a lazy method, making no requests. When you try to access
-    # attributes on the object, or otherwise interact with it, it will actually
-    # make requests.
-    #
-    # @example
-    #   ct = contextio.connect_tokens['1234']
-    #
-    # @param [String] token The token associated with the connect token you want
-    #   to interact with.
-    def [](token)
-      ContextIO::ConnectToken.new(api, token: token)
+      resource_class.new(api, result_hash)
     end
   end
 end

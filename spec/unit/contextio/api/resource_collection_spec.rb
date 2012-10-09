@@ -3,6 +3,7 @@ require 'contextio/api/resource_collection'
 
 class SingularHelper
   def initialize(*args); end
+  def self.primary_key; 'token'; end
 end
 
 describe ContextIO::API::ResourceCollection do
@@ -103,6 +104,43 @@ describe ContextIO::API::ResourceCollection do
       SingularHelper.should_receive(:new).exactly(:once).with(anything, key: 'value 2')
 
       subject.each { }
+    end
+  end
+
+  describe "#[]" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::ResourceCollection
+
+        resource_url 'url'
+        resource_class SingularHelper
+      end
+    end
+
+    subject do
+      helper_class.new(api)
+    end
+
+    it "returns a new instance of the resource class" do
+      expect(subject[1234]).to be_a(SingularHelper)
+    end
+
+    it "feeds the given key to the resource class" do
+      SingularHelper.should_receive(:new).with(anything, 'token' => 1234)
+
+      subject[1234]
+    end
+
+    it "feeds the api to the resource class" do
+      SingularHelper.should_receive(:new).with(api, anything)
+
+      subject[1234]
+    end
+
+    it "doesn't hit the API" do
+      api.should_not_receive(:request)
+
+      subject[1234]
     end
   end
 end

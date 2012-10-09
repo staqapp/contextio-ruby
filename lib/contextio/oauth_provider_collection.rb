@@ -3,9 +3,19 @@ require_relative 'oauth_provider'
 class ContextIO
   # Represents a collection of OAuth providers for an account. You can use this
   # to create a proider, fetch a specific one or iterate over them.
+  #
+  # @example You can iterate over them with `each`:
+  #   contextio.oauth_providers.each do |oauth_provider|
+  #     puts oauth_provider.type
+  #   end
+  #
+  # @example You can lazily access a specific one with square brackets:
+  #   provider = contextio.oauth_providers['some_provider_consumer_key']
   class OAuthProviderCollection
-    include Enumerable
     include ContextIO::API::ResourceCollection
+
+    resource_url 'oauth_providers'
+    resource_class ContextIO::OAuthProvider
 
     # Creates a new OAuth provider for your account.
     #
@@ -21,7 +31,7 @@ class ContextIO
     def create(type, provider_consumer_key, provider_consumer_secret)
       result_hash = api.request(
         :post,
-        'oauth_providers',
+        resource_url,
         type: type,
         provider_consumer_key: provider_consumer_key,
         provider_consumer_secret: provider_consumer_secret
@@ -29,36 +39,7 @@ class ContextIO
 
       result_hash.delete(:success)
 
-      ContextIO::OAuthProvider.new(api, result_hash)
-    end
-
-    # Iterates over the providers in your account.
-    #
-    # @example
-    #   contextio.oauth_providers.each do |provider|
-    #     puts provider.provider_consumer_key
-    #   end
-    def each(&block)
-      result_array = api.request(:get, 'oauth_providers')
-
-      result_array.each do |attribute_hash|
-        yield OAuthProvider.new(api, attribute_hash)
-      end
-    end
-
-    # Returns a provider with the given consumer key.
-    #
-    # This is a lazy method, making no requests. When you try to access
-    # attributes on the object, or otherwise interact with it, it will actually
-    # make requests.
-    #
-    # @example
-    #   provider = contextio.oauth_providers['1234']
-    #
-    # @param [String] provider_consumer_key The Provider Consumer Key for the
-    #   provider you want to interact with.
-    def [](provider_consumer_key)
-      ContextIO::OAuthProvider.new(api, provider_consumer_key: provider_consumer_key)
+      resource_class.new(api, result_hash)
     end
   end
 end
