@@ -65,5 +65,4 @@ require_relative 'contextio/api'
 require_relative 'contextio/oauth_provider_collection'
 require_relative 'contextio/email_settings'
 require_relative 'contextio/connect_token_collection'
-
-# require_relative 'contextio/account'
+require_relative 'contextio/account_collection'
