@@ -35,7 +35,7 @@ class ContextIO
     private :created
 
 
-    required_options :token
+    primary_key :token
 
     # @!attribute [r] created_at
     #
