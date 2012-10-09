@@ -2,38 +2,57 @@ require 'spec_helper'
 require 'contextio/api/resource'
 
 describe ContextIO::API::Resource do
-  describe "#validate_required_options" do
-    subject do
-      Class.new do
-        include ContextIO::API::Resource
+  describe "#validate_options" do
+    context "with a string primary key" do
+      subject do
+        Class.new do
+          include ContextIO::API::Resource
 
-        required_options 'string', :symbol
+          primary_key 'string'
+        end
+      end
+
+      it "matches a symbol" do
+        expect { subject.new(double('api'), string: 'foo') }.to_not raise_error
+      end
+
+      it "matches a string" do
+        expect { subject.new(double('api'), 'string' => 'foo') }.to_not raise_error
+      end
+
+      it "raises with missing keys" do
+        expect { subject.new(double('api'), foo: 'bar') }.to raise_error
+      end
+
+      it "doesn't raise if resource_url is set" do
+        expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
       end
     end
 
-    it "matches strings to symbols" do
-      expect { subject.new(double('api'), 'symbol' => 'foo') }.to_not raise_error
-    end
+    context "with a symbol primary key"
+      subject do
+        Class.new do
+          include ContextIO::API::Resource
 
-    it "matches symbols to strings" do
-      expect { subject.new(double('api'), string: 'foo') }.to_not raise_error
-    end
+          primary_key :symbol
+        end
+      end
 
-    it "matches strings to strings" do
-      expect { subject.new(double('api'), 'string' => 'foo') }.to_not raise_error
-    end
+      it "matches a string" do
+        expect { subject.new(double('api'), 'symbol' => 'foo') }.to_not raise_error
+      end
 
-    it "matches symbols to symbols" do
-      expect { subject.new(double('api'),  symbol: 'bar') }.to_not raise_error
-    end
+      it "matches a symbol" do
+        expect { subject.new(double('api'),  symbol: 'bar') }.to_not raise_error
+      end
 
-    it "raises with missing keys" do
-      expect { subject.new(double('api'), foo: 'bar') }.to raise_error
-    end
+      it "raises with missing keys" do
+        expect { subject.new(double('api'), foo: 'bar') }.to raise_error
+      end
 
-    it "doesn't raise if resource_url is set" do
-      expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
-    end
+      it "doesn't raise if resource_url is set" do
+        expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
+      end
   end
 
   describe ".lazy_attributes" do
@@ -163,7 +182,7 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        required_options :foo
+        primary_key :foo
 
         def build_resource_url
         end

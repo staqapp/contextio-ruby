@@ -8,7 +8,7 @@ class ContextIO
 
       # (see ContextIO::OAuthProviderCollection#initialize)
       def initialize(api, options = {})
-        validate_required_options(options)
+        validate_options(options)
 
         @api = api
 
@@ -45,26 +45,20 @@ class ContextIO
         other_mod.extend(DeclarativeClassSyntax)
       end
 
-      # Raises ArgumentError unless one of the required keys is supplied. Use
-      # this to ensure that the initializer has or can build the right URL to
-      # fetch its self. It relies on the `include`ing class to define a
-      # `required_options` hash which should return an Array of Strings or
-      # Symbols.
-      #
-      # **Important**: This is an OR operation, so only one key needs to be
-      # matched.
-      def validate_required_options(options_hash)
-        default_required_options = ['resource_url', :resource_url]
+      # Raises ArgumentError unless the primary key or the resource URL is
+      # supplied. Use this to ensure that the initializer has or can build the
+      # right URL to fetch its self. It relies on the `include`ing class to
+      # define a `primary_key` method which should return a String or Symbol.
+      def validate_options(options_hash)
+        required_keys = ['resource_url', :resource_url]
 
-        req_opts = self.respond_to?(:required_options) ? required_options.dup : []
-
-        normalized_required_options = req_opts.inject(default_required_options) do |memo, key|
-          memo << key.to_s
-          memo << key.to_sym
+        if self.respond_to?(:primary_key)
+          required_keys << primary_key.to_s
+          required_keys << primary_key.to_sym
         end
 
-        if (options_hash.keys & normalized_required_options).empty?
-          raise ArgumentError, "Required option missing. Make sure you have one of: #{(req_opts << 'resource_url').join(', ')}"
+        if (options_hash.keys & required_keys).empty?
+          raise ArgumentError, "Required option missing. Make sure you have one of: #{required_keys.join(', ')}"
         end
       end
 
@@ -91,13 +85,13 @@ class ContextIO
       module DeclarativeClassSyntax
         private
 
-        # Declares a list of options that are required. Consumed by
-        # `Resource#validate_required_options`.
+        # Declares the primary key used to build the resource URL. Consumed by
+        # `Resource#validate_options`.
         #
-        # @param [Array<String, Symbol>] args Option key names.
-        def required_options(*args)
-          define_method(:required_options) do
-            Array(args)
+        # @param [String, Symbol] key Primary key name.
+        def primary_key(key)
+          define_method(:primary_key) do
+            key
           end
         end
 
