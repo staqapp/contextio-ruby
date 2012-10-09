@@ -38,6 +38,13 @@ class ContextIO
         @api_attributes ||= fetch_attributes
       end
 
+      # @!attribute [r] primary_key
+      # @return [String, Symbol] The name of the key used to build the resource
+      #   URL.
+      def primary_key
+        self.class.primary_key
+      end
+
       private
 
       # Make sure a Resource has the declarative syntax handy.
@@ -47,12 +54,11 @@ class ContextIO
 
       # Raises ArgumentError unless the primary key or the resource URL is
       # supplied. Use this to ensure that the initializer has or can build the
-      # right URL to fetch its self. It relies on the `include`ing class to
-      # define a `primary_key` method which should return a String or Symbol.
+      # right URL to fetch its self.
       def validate_options(options_hash)
         required_keys = ['resource_url', :resource_url]
 
-        if self.respond_to?(:primary_key)
+        unless self.primary_key.nil?
           required_keys << primary_key.to_s
           required_keys << primary_key.to_sym
         end
@@ -95,10 +101,6 @@ class ContextIO
         # @param [String, Symbol] key Primary key name.
         def primary_key=(key)
           @primary_key = key
-
-          define_method(:primary_key) do
-            self.class.primary_key
-          end
         end
 
         # Declares a list of attributes to be lazily loaded from the API. Getter
