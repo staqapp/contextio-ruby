@@ -58,7 +58,7 @@ class ContextIO
         end
 
         if (options_hash.keys & required_keys).empty?
-          raise ArgumentError, "Required option missing. Make sure you have one of: #{required_keys.join(', ')}"
+          raise ArgumentError, "Required option missing. Make sure you have either resource_url or #{primary_key}."
         end
       end
 
@@ -83,15 +83,21 @@ class ContextIO
       # definitions. It gets `extend`ed into a class when `API::Resource` is
       # `include`d.
       module DeclarativeClassSyntax
+        def primary_key
+          @primary_key
+        end
+
         private
 
         # Declares the primary key used to build the resource URL. Consumed by
         # `Resource#validate_options`.
         #
         # @param [String, Symbol] key Primary key name.
-        def primary_key(key)
+        def primary_key=(key)
+          @primary_key = key
+
           define_method(:primary_key) do
-            key
+            self.class.primary_key
           end
         end
 

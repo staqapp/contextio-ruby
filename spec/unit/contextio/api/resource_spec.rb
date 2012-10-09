@@ -8,7 +8,7 @@ describe ContextIO::API::Resource do
         Class.new do
           include ContextIO::API::Resource
 
-          primary_key 'string'
+          self.primary_key = 'string'
         end
       end
 
@@ -34,7 +34,7 @@ describe ContextIO::API::Resource do
         Class.new do
           include ContextIO::API::Resource
 
-          primary_key :symbol
+          self.primary_key = :symbol
         end
       end
 
@@ -182,7 +182,7 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        primary_key :foo
+        self.primary_key = :foo
 
         def build_resource_url
         end

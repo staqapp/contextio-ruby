@@ -19,7 +19,7 @@ class ContextIO
     #     fetch from the API if necessary.
     lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
 
-    primary_key :provider_consumer_key
+    self.primary_key = :provider_consumer_key
 
     private
 

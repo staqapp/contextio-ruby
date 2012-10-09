@@ -35,7 +35,7 @@ class ContextIO
     private :created
 
 
-    primary_key :token
+    self.primary_key = :token
 
     # @!attribute [r] created_at
     #
