@@ -5,19 +5,7 @@ class ContextIO
   # to create a proider, fetch a specific one or iterate over them.
   class OAuthProviderCollection
     include Enumerable
-
-    # (see ContextIO#api)
-    attr_reader :api
-
-    # @private
-    #
-    # For internal use only. Users of this gem shouldn't be calling this
-    # directly.
-    #
-    # @param [API] api A handle on the Context.IO API.
-    def initialize(api)
-      @api = api
-    end
+    include ContextIO::API::ResourceCollection
 
     # Creates a new OAuth provider for your account.
     #
