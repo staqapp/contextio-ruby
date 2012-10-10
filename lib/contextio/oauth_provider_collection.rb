@@ -38,7 +38,7 @@ class ContextIO
         provider_consumer_secret: provider_consumer_secret
       )
 
-      result_hash.delete(:success)
+      result_hash.delete('success')
 
       resource_class.new(api, result_hash)
     end
