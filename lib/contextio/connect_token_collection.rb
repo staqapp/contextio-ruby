@@ -34,7 +34,7 @@ class ContextIO
         options.merge(callback_url: callback_url)
       )
 
-      result_hash.delete(:success)
+      result_hash.delete('success')
 
       resource_class.new(api, result_hash)
     end
