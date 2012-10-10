@@ -61,7 +61,7 @@ class ContextIO
       # @example
       #   provider = contextio.oauth_providers['1234']
       #
-      # @param [String] provider_consumer_key The Provider Consumer Key for the
+      # @param [String] key The Provider Consumer Key for the
       #   provider you want to interact with.
       def [](key)
         resource_class.new(api, resource_class.primary_key => key)

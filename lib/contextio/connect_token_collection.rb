@@ -22,7 +22,9 @@ class ContextIO
     #
     # @param [String] callback_url The url that the user will be redirected to
     #   after OAuthing their account with Context.IO.
-    # @param [Hash{String, Symbol => String}]
+    # @param [Hash{String, Symbol => String}] options Optional information you
+    #   can provide at creation: email, service level, first_name and/or
+    #   last_name.
     #
     # @return [ConnectToken] A new token instance based on the data you input.
     def create(callback_url, options={})
