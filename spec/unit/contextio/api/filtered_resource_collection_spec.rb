@@ -88,6 +88,14 @@ describe ContextIO::API::FilteredResourceCollection do
     it "returns a collection object" do
       expect(subject.where(foo: 'bar')).to be_a(helper_class)
     end
+
+    it "makes the constraints available" do
+      expect(subject.where(foo: 'bar').where_constraints).to eq(foo: 'bar')
+    end
+
+    it "overrides older constraints with newer ones" do
+      expect(subject.where(foo: 'bar').where(foo: 'baz').where_constraints).to eq(foo: 'baz')
+    end
   end
 
   describe "#each" do
