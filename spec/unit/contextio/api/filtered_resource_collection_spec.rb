@@ -61,6 +61,35 @@ describe ContextIO::API::FilteredResourceCollection do
     end
   end
 
+  describe ".where" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::FilteredResourceCollection
+
+        self.resource_url = 'url'
+        self.resource_class = SingularHelper
+      end
+    end
+
+    subject do
+      helper_class.new(api)
+    end
+
+    it "limits the scope of subsequent #each calls" do
+      api.should_receive(:request).with(anything, anything, foo: 'bar').and_return([])
+
+      subject.where(foo: 'bar').each { }
+    end
+
+    it "returns a new object, not the same one, modified" do
+      expect(subject.where(foo: 'bar')).to_not be(subject)
+    end
+
+    it "returns a collection object" do
+      expect(subject.where(foo: 'bar')).to be_a(helper_class)
+    end
+  end
+
   describe "#each" do
     let(:helper_class) do
       Class.new do
@@ -86,7 +115,7 @@ describe ContextIO::API::FilteredResourceCollection do
     end
 
     it "gets attributes for the resources from the api" do
-      api.should_receive(:request).exactly(:once).with(:get, 'url')
+      api.should_receive(:request).exactly(:once).with(:get, 'url', {})
 
       subject.each { }
     end
