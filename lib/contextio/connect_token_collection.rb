@@ -31,11 +31,7 @@ class ContextIO
       result_hash = api.request(
         :post,
         resource_url,
-        callback_url: callback_url,
-        email: options[:email],
-        service_level: options[:service_level],
-        first_name: options[:first_name],
-        last_name: options[:last_name]
+        options.merge(callback_url: callback_url)
       )
 
       result_hash.delete(:success)
