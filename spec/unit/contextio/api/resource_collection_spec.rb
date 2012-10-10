@@ -11,7 +11,7 @@ describe ContextIO::API::ResourceCollection do
     double('api')
   end
 
-  describe ".resource_class" do
+  describe ".resource_class=" do
     let(:helper_class) do
       Class.new do
         include ContextIO::API::ResourceCollection
