@@ -199,6 +199,38 @@ describe ContextIO::API::Resource do
     end
   end
 
+  describe ".has_many" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+
+        has_many :relations, RelationCollectionHelper
+      end
+    end
+
+    context "when a collection isn't passed in at creation" do
+      subject { helper_class.new(api, resource_url: 'resource_url') }
+
+      before do
+        api.stub(:request).and_return(
+          {
+            'relations' => [{
+              'resource_url' => 'relation_url'
+            }]
+          }
+        )
+      end
+
+      it "makes a related collection object available" do
+        expect(subject.relation).to be_a(RelationCollectionHelper)
+      end
+
+      it "passes keys from the api response to the new object" do
+        expect(subject.relation.resource_url).to eq('relation_url')
+      end
+    end
+  end
+
   describe "#fetch_attributes" do
     let(:helper_class) do
       Class.new do
