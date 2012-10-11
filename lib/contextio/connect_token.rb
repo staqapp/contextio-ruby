@@ -50,7 +50,7 @@ class ContextIO
     # @return [ContextIO::Account, nil] The Account associated with this token,
     #   if any. Will fetch from the API if necessary.
     def account
-      @account ||= ContextIO::Account.new(api_attributes['account'])
+      @account ||= ContextIO::Account.new(api, api_attributes['account'])
     end
 
     private

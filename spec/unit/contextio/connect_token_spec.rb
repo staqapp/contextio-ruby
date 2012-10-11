@@ -73,7 +73,7 @@ describe ContextIO::ConnectToken do
     end
 
     it "makes a new Account from the hash" do
-      ContextIO::Account.should_receive(:new).with('id' => '1234')
+      ContextIO::Account.should_receive(:new).with(api, 'id' => '1234')
 
       subject.account
     end
