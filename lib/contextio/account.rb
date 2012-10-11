@@ -6,6 +6,15 @@ class ContextIO
 
     self.primary_key = :id
 
+    private
+
+    # Builds the path that will fetch the attributes for this account.
+    #
+    # @return [String] The path of the resource.
+    def build_resource_url
+      "accounts/#{id}"
+    end
+
     # def self.url
     #   'accounts'
     # end
