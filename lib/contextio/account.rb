@@ -5,6 +5,7 @@ class ContextIO
     include ContextIO::API::Resource
 
     self.primary_key = :id
+    self.resource_url = :accounts
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.
@@ -60,13 +61,6 @@ class ContextIO
     end
 
     private
-
-    # Builds the path that will fetch the attributes for this account.
-    #
-    # @return [String] The path of the resource.
-    def build_resource_url
-      "accounts/#{id}"
-    end
 
     # def update(attributes = {})
     #   attrs = {}

@@ -245,7 +245,7 @@ describe ContextIO::API::Resource do
         helper_class.new(api, id: '33f1')
       end
 
-      it "calls build_resource_url" do
+      it "builds on from the primary key and class's resource url" do
         expect(subject.resource_url).to eq('helpers/33f1')
       end
     end

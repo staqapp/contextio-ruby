@@ -20,14 +20,6 @@ class ContextIO
     lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
 
     self.primary_key = :provider_consumer_key
-
-    private
-
-    # Builds the path that will fetch the attributes for this provider.
-    #
-    # @return [String] The path of the resource.
-    def build_resource_url
-      "oauth_providers/#{provider_consumer_key}"
-    end
+    self.resource_url = :oauth_providers
   end
 end

@@ -36,6 +36,7 @@ class ContextIO
 
 
     self.primary_key = :token
+    self.resource_url = :connect_tokens
 
     # @!attribute [r] created_at
     #
@@ -51,15 +52,6 @@ class ContextIO
     #   if any. Will fetch from the API if necessary.
     def account
       @account ||= ContextIO::Account.new(api, api_attributes['account'])
-    end
-
-    private
-
-    # Builds the path that will fetch the attributes for this provider.
-    #
-    # @return [String] The path of the resource.
-    def build_resource_url
-      "connect_tokens/#{token}"
     end
   end
 end
