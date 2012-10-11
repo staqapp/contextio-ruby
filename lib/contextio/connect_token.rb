@@ -9,6 +9,15 @@ class ContextIO
   class ConnectToken
     include API::Resource
 
+    self.primary_key = :token
+    self.resource_url = :connect_tokens
+
+    # @!attribute [r] account
+    #
+    # @return [ContextIO::Account, nil] The Account associated with this token,
+    #   if any. Will fetch from the API if necessary.
+    belongs_to :account, ContextIO::Account
+
     # @!attribute [r] token
     #   @return [String] The token associated with this connect token. Will
     #     fetch from the API if necessary.
@@ -34,24 +43,12 @@ class ContextIO
                     :service_level, :first_name, :last_name
     private :created
 
-
-    self.primary_key = :token
-    self.resource_url = :connect_tokens
-
     # @!attribute [r] created_at
     #
     # @return [Time] The time this token was created. Will fetch from the API
     #   if necessary.
     def created_at
       @created_at ||= Time.at(created)
-    end
-
-    # @!attribute [r] account
-    #
-    # @return [ContextIO::Account, nil] The Account associated with this token,
-    #   if any. Will fetch from the API if necessary.
-    def account
-      @account ||= ContextIO::Account.new(api, api_attributes['account'])
     end
   end
 end
