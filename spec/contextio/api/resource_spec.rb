@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'contextio/api/resource'
 
 class RelationHelper
-  include ContextIO::API::Resource
+  def initialize(*args); end
 end
 
 describe ContextIO::API::Resource do
@@ -178,7 +178,9 @@ describe ContextIO::API::Resource do
       end
 
       it "passes keys from the api response to the new object" do
-        expect(subject.relation.resource_url).to eq('relation_url')
+        RelationHelper.should_receive(:new).with(api, 'resource_url' => 'relation_url')
+
+        subject.relation
       end
     end
 
@@ -222,10 +224,12 @@ describe ContextIO::API::Resource do
       end
 
       it "makes a related collection object available" do
+        pending
         expect(subject.relation).to be_a(RelationCollectionHelper)
       end
 
       it "passes keys from the api response to the new object" do
+        pending
         expect(subject.relation.resource_url).to eq('relation_url')
       end
     end
