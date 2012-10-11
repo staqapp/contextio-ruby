@@ -17,4 +17,6 @@ describe ContextIO::Account do
       end
     end
   end
+
+  it "has sources as an association"
 end
