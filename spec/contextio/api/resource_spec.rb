@@ -1,6 +1,10 @@
 require 'spec_helper'
 require 'contextio/api/resource'
 
+class RelationHelper
+  include ContextIO::API::Resource
+end
+
 describe ContextIO::API::Resource do
   let(:api) { double('api') }
 
@@ -144,6 +148,54 @@ describe ContextIO::API::Resource do
 
     it "makes the calculated url available" do
       expect(subject.resource_url).to eq("helpers/33f1")
+    end
+  end
+
+  describe ".belongs_to" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+
+        belongs_to :relation, RelationHelper
+      end
+    end
+
+    context "when one isn't passed in at creation" do
+      subject { helper_class.new(api, resource_url: 'resource_url') }
+
+      before do
+        api.stub(:request).and_return(
+          {
+            'relation' => {
+              'resource_url' => 'relation_url'
+            }
+          }
+        )
+      end
+
+      it "makes a related object available" do
+        expect(subject.relation).to be_a(RelationHelper)
+      end
+
+      it "passes keys from the api response to the new object" do
+        expect(subject.relation.resource_url).to eq('relation_url')
+      end
+    end
+
+    context "when one is passed in at creation" do
+      let(:relation_object) { RelationHelper.new(api, resource_url: 'relation_url') }
+
+      subject { helper_class.new(api, resource_url: 'resource_url', relation: relation_object)}
+
+      it "makes the passed-in related object available" do
+        expect(subject.relation).to eq(relation_object)
+      end
+
+      it "doesn't make any API calls" do
+        api.should_not_receive(:request)
+
+        subject.relation
+      end
     end
   end
 
