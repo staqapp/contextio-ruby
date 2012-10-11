@@ -2,6 +2,32 @@ require 'spec_helper'
 require 'contextio/api/resource'
 
 describe ContextIO::API::Resource do
+  let(:api) { double('api') }
+
+  describe ".new" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+
+        self.primary_key = :foo
+
+        def foo
+          'defined in class'
+        end
+      end
+    end
+
+    subject { helper_class.new(api, foo: 'defined in method call', bar: 'baz') }
+
+    it "defines accessors for options passed in" do
+      expect(subject.bar).to eq('baz')
+    end
+
+    it "doesn't over-write accessors that already exist" do
+      expect(subject.foo).to eq('defined in class')
+    end
+  end
+
   describe "#validate_options" do
     context "with a string primary key" do
       subject do
@@ -13,19 +39,19 @@ describe ContextIO::API::Resource do
       end
 
       it "matches a symbol" do
-        expect { subject.new(double('api'), string: 'foo') }.to_not raise_error
+        expect { subject.new(api, string: 'foo') }.to_not raise_error
       end
 
       it "matches a string" do
-        expect { subject.new(double('api'), 'string' => 'foo') }.to_not raise_error
+        expect { subject.new(api, 'string' => 'foo') }.to_not raise_error
       end
 
       it "raises with missing keys" do
-        expect { subject.new(double('api'), foo: 'bar') }.to raise_error
+        expect { subject.new(api, foo: 'bar') }.to raise_error
       end
 
       it "doesn't raise if resource_url is set" do
-        expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
+        expect { subject.new(api, resource_url: 'some url') }.to_not raise_error
       end
     end
 
@@ -39,19 +65,19 @@ describe ContextIO::API::Resource do
       end
 
       it "matches a string" do
-        expect { subject.new(double('api'), 'symbol' => 'foo') }.to_not raise_error
+        expect { subject.new(api, 'symbol' => 'foo') }.to_not raise_error
       end
 
       it "matches a symbol" do
-        expect { subject.new(double('api'),  symbol: 'bar') }.to_not raise_error
+        expect { subject.new(api,  symbol: 'bar') }.to_not raise_error
       end
 
       it "raises with missing keys" do
-        expect { subject.new(double('api'), foo: 'bar') }.to raise_error
+        expect { subject.new(api, foo: 'bar') }.to raise_error
       end
 
       it "doesn't raise if resource_url is set" do
-        expect { subject.new(double('api'), resource_url: 'some url') }.to_not raise_error
+        expect { subject.new(api, resource_url: 'some url') }.to_not raise_error
       end
   end
 
@@ -104,6 +130,23 @@ describe ContextIO::API::Resource do
     end
   end
 
+  describe ".resource_url=" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::Resource
+
+        self.primary_key = :id
+        self.resource_url = 'helpers'
+      end
+    end
+
+    subject { helper_class.new(api, id: '33f1') }
+
+    it "makes the calculated url available" do
+      expect(subject.resource_url).to eq("helpers/33f1")
+    end
+  end
+
   describe "#fetch_attributes" do
     let(:helper_class) do
       Class.new do
@@ -112,7 +155,7 @@ describe ContextIO::API::Resource do
     end
 
     subject do
-      helper_class.new(double('api'), resource_url: 'resource_url')
+      helper_class.new(api, resource_url: 'resource_url')
     end
 
     it "makes a request to the API" do
@@ -182,16 +225,14 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        self.primary_key = :foo
-
-        def build_resource_url
-        end
+        self.primary_key = :id
+        self.resource_url = 'helpers'
       end
     end
 
     context "when one is set at creation" do
       subject do
-        helper_class.new(double('api'), resource_url: 'resource_url')
+        helper_class.new(api, resource_url: 'resource_url')
       end
 
       it "returns the one passed in" do
@@ -201,13 +242,11 @@ describe ContextIO::API::Resource do
 
     context "when one is not set at creation" do
       subject do
-        helper_class.new(double('api'), foo: 'bar')
+        helper_class.new(api, id: '33f1')
       end
 
       it "calls build_resource_url" do
-        subject.should_receive(:build_resource_url)
-
-        subject.resource_url
+        expect(subject.resource_url).to eq('helpers/33f1')
       end
     end
   end

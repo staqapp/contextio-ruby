@@ -14,6 +14,12 @@ class ContextIO
 
         options.each do |key, value|
           instance_variable_set("@#{key}", value)
+
+          unless self.respond_to?(key)
+            define_singleton_method(key) do
+              instance_variable_get("@#{key}")
+            end
+          end
         end
       end
 
@@ -46,6 +52,15 @@ class ContextIO
       end
 
       private
+
+      # Builds the URL for this resource from the components declared in the
+      # class.
+      #
+      # @return [String] The path the identifies this resource.
+      def build_resource_url
+        "#{self.class.resource_url}/#{self.send(primary_key)}"
+      end
+
 
       # Make sure a Resource has the declarative syntax handy.
       def self.included(other_mod)
@@ -93,6 +108,10 @@ class ContextIO
           @primary_key
         end
 
+        def resource_url
+          @resource_url
+        end
+
         private
 
         # Declares the primary key used to build the resource URL. Consumed by
@@ -101,6 +120,14 @@ class ContextIO
         # @param [String, Symbol] key Primary key name.
         def primary_key=(key)
           @primary_key = key
+        end
+
+        # Declares the root of the path for building the URL from the resource.
+        # The primary key will get appended to this string.
+        #
+        # @param [String, Symbol] path The root of the resource url.
+        def resource_url=(path)
+          @resource_url = path
         end
 
         # Declares a list of attributes to be lazily loaded from the API. Getter
