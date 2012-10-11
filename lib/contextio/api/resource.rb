@@ -90,6 +90,10 @@ class ContextIO
       # Defines getter methods for any attributes that come back and don't
       # already have them. This way, if the API expands, the gem will still let
       # users get attributes we didn't explicitly declare as lazy.
+      #
+      # @return [{String => Numeric, String, Hash, Array, Boolean}] The
+      #   attributes returned from the API as a Hash. If it hasn't been
+      #   populated, it will ask the API and populate it.
       def fetch_attributes
         api.request(:get, resource_url).each do |key, value|
           unless respond_to?(key)
