@@ -1,7 +1,10 @@
+require 'contextio/api/resource'
+
 class ContextIO
   class Account
-    def initialize(*args)
-    end
+    include ContextIO::API::Resource
+
+    self.primary_key = :id
 
     # def self.url
     #   'accounts'
