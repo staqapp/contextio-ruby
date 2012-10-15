@@ -57,11 +57,11 @@ describe ContextIO::OAuthProviderCollection do
     end
 
     before do
-      api.stub(:request).with(:get, 'oauth_providers').and_return(response)
+      api.stub(:request).and_return(response)
     end
 
     it "gets to /oauth_providers" do
-      api.should_receive(:request).with(:get, 'oauth_providers').and_return(response)
+      api.should_receive(:request).with(:get, 'oauth_providers', {}).and_return(response)
 
       subject.each {}
     end

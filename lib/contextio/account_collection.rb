@@ -1,4 +1,4 @@
-require_relative 'api/filtered_resource_collection'
+require_relative 'api/resource_collection'
 require_relative 'account'
 
 class ContextIO
@@ -22,7 +22,7 @@ class ContextIO
   # @example Lazily limit based on a hash of criteria with `where`:
   #   disabled_accounts = contextio.accounts.where(status: 'DISABLED')
   class AccountCollection
-    include ContextIO::API::FilteredResourceCollection
+    include ContextIO::API::ResourceCollection
 
     self.resource_url = 'accounts'
     self.resource_class = ContextIO::Account

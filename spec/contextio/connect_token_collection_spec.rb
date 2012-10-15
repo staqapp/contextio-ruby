@@ -93,11 +93,11 @@ describe ContextIO::ConnectTokenCollection do
     end
 
     before do
-      api.stub(:request).with(:get, 'connect_tokens').and_return(response)
+      api.stub(:request).and_return(response)
     end
 
     it "gets to /connect_tokens" do
-      api.should_receive(:request).with(:get, 'connect_tokens').and_return(response)
+      api.should_receive(:request).with(:get, 'connect_tokens', {}).and_return(response)
 
       subject.each {}
     end
