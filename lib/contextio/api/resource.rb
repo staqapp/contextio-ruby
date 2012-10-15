@@ -167,6 +167,20 @@ class ContextIO
             instance_variable_get("@#{relation_name}") || relation_class.new(api, api_attributes[relation_name.to_s])
           end
         end
+
+        # Declares that this resource is related to a collection of another
+        # resource. These related resources will be lazily created as they can
+        # be, but in some cases may cause an API call.
+        #
+        # @param [String, Symbol] relation_name The name of the relation. Must
+        #   be a valid Ruby method name.
+        # @param [Class] relation_class The class that the relation has. This
+        #   should be a collection class, not a bare resource.
+        def has_many(relation_name, relation_class)
+          define_method(relation_name) do
+            instance_variable_get("@#{relation_name}") || relation_class.new(api, api_attributes[relation_name.to_s])
+          end
+        end
       end
     end
   end

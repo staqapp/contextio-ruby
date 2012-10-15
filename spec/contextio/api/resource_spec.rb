@@ -5,6 +5,10 @@ class RelationHelper
   def initialize(*args); end
 end
 
+class RelationCollectionHelper
+  def initialize(*args); end
+end
+
 describe ContextIO::API::Resource do
   let(:api) { double('api') }
 
@@ -224,13 +228,13 @@ describe ContextIO::API::Resource do
       end
 
       it "makes a related collection object available" do
-        pending
-        expect(subject.relation).to be_a(RelationCollectionHelper)
+        expect(subject.relations).to be_a(RelationCollectionHelper)
       end
 
       it "passes keys from the api response to the new object" do
-        pending
-        expect(subject.relation.resource_url).to eq('relation_url')
+        RelationCollectionHelper.should_receive(:new).with(api, [{'resource_url' => 'relation_url'}])
+
+        subject.relations
       end
     end
   end
