@@ -198,7 +198,7 @@ describe ContextIO::API::Resource do
       subject { helper_class.new(api, resource_url: 'resource_url', relation: relation_object)}
 
       it "makes the passed-in related object available" do
-        expect(subject.relation).to eq(relation_object)
+        expect(subject.relation).to be(relation_object)
       end
 
       it "doesn't make any API calls" do
@@ -243,6 +243,22 @@ describe ContextIO::API::Resource do
 
       it "returns the same object each time" do
         expect(subject.relations).to be(subject.relations)
+      end
+    end
+
+    context "when one is passed in at creation" do
+      let(:relation_collection) { RelationCollectionHelper.new(api, [{resource_url: 'relation_url'}]) }
+
+      subject { helper_class.new(api, resource_url: 'resource_url', relations: relation_collection)}
+
+      it "makes the passed-in related collection available" do
+        expect(subject.relations).to be(relation_collection)
+      end
+
+      it "doesn't make any API calls" do
+        api.should_not_receive(:request)
+
+        subject.relations
       end
     end
   end
