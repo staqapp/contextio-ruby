@@ -21,6 +21,8 @@ class ContextIO
       # directly.
       #
       # @param [API] api A handle on the Context.IO API.
+      # @param [Hash] where_constraints The constraints on this collection that
+      #   control which resources belong to it.
       def initialize(api, where_constraints = {})
         @api = api
         @where_constraints = where_constraints

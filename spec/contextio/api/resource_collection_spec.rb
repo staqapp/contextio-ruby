@@ -7,9 +7,7 @@ class SingularHelper
 end
 
 describe ContextIO::API::ResourceCollection do
-  let(:api) do
-    double('api')
-  end
+  let(:api) { double('api') }
 
   describe ".resource_class=" do
     let(:helper_class) do
@@ -63,6 +61,43 @@ describe ContextIO::API::ResourceCollection do
     end
   end
 
+  describe ".where" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::ResourceCollection
+
+        self.resource_url = 'url'
+        self.resource_class = SingularHelper
+      end
+    end
+
+    subject do
+      helper_class.new(api)
+    end
+
+    it "limits the scope of subsequent #each calls" do
+      api.should_receive(:request).with(anything, anything, foo: 'bar').and_return([])
+
+      subject.where(foo: 'bar').each { }
+    end
+
+    it "returns a new object, not the same one, modified" do
+      expect(subject.where(foo: 'bar')).to_not be(subject)
+    end
+
+    it "returns a collection object" do
+      expect(subject.where(foo: 'bar')).to be_a(helper_class)
+    end
+
+    it "makes the constraints available" do
+      expect(subject.where(foo: 'bar').where_constraints).to eq(foo: 'bar')
+    end
+
+    it "overrides older constraints with newer ones" do
+      expect(subject.where(foo: 'bar').where(foo: 'baz').where_constraints).to eq(foo: 'baz')
+    end
+  end
+
   describe "#each" do
     let(:helper_class) do
       Class.new do
@@ -88,7 +123,7 @@ describe ContextIO::API::ResourceCollection do
     end
 
     it "gets attributes for the resources from the api" do
-      api.should_receive(:request).exactly(:once).with(:get, 'url')
+      api.should_receive(:request).exactly(:once).with(:get, 'url', {})
 
       subject.each { }
     end
