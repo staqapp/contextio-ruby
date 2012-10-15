@@ -18,8 +18,10 @@ class ContextIO
       # directly.
       #
       # @param [API] api A handle on the Context.IO API.
-      def initialize(api)
+      def initialize(api, options={})
         @api = api
+        @where_constraints = options[:where] || {}
+        @attribute_hashes = options[:attribute_hashes]
       end
 
       # Iterates over the resources in question.
@@ -45,7 +47,7 @@ class ContextIO
       # @param [Hash{String, Symbol => String, Integer}] constraints A Hash
       #   mapping keys to the desired limiting values.
       def where(constraints)
-        self.class.new(api, where_constraints.merge(constraints))
+        self.class.new(api, where: where_constraints.merge(constraints))
       end
 
       # Returns a resource with the given key.
