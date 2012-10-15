@@ -108,37 +108,46 @@ describe ContextIO::API::ResourceCollection do
       end
     end
 
-    subject do
-      helper_class.new(api)
-    end
+    context "when no attribute hashes are passed in at creation" do
+      subject do
+        helper_class.new(api)
+      end
 
-    before do
-      api.stub(:request).and_return([{key: 'value 1'}, {key: 'value 2'}])
-    end
+      before do
+        api.stub(:request).and_return([{key: 'value 1'}, {key: 'value 2'}])
+      end
 
-    it "yields instances of the singular resource class" do
-      subject.each do |x|
-        expect(x).to be_a(SingularHelper)
+      it "yields instances of the singular resource class" do
+        subject.each do |x|
+          expect(x).to be_a(SingularHelper)
+        end
+      end
+
+      it "gets attributes for the resources from the api" do
+        api.should_receive(:request).exactly(:once).with(:get, 'url', {})
+
+        subject.each { }
+      end
+
+      it "passes the api to the singular resource instances" do
+        SingularHelper.should_receive(:new).exactly(:twice).with(api, anything)
+
+        subject.each { }
+      end
+
+      it "passes attributes to the singular resource instances" do
+        SingularHelper.should_receive(:new).exactly(:once).with(anything, key: 'value 1')
+        SingularHelper.should_receive(:new).exactly(:once).with(anything, key: 'value 2')
+
+        subject.each { }
       end
     end
 
-    it "gets attributes for the resources from the api" do
-      api.should_receive(:request).exactly(:once).with(:get, 'url', {})
-
-      subject.each { }
-    end
-
-    it "passes the api to the singular resource instances" do
-      SingularHelper.should_receive(:new).exactly(:twice).with(api, anything)
-
-      subject.each { }
-    end
-
-    it "passes attributes to the singular resource instances" do
-      SingularHelper.should_receive(:new).exactly(:once).with(anything, key: 'value 1')
-      SingularHelper.should_receive(:new).exactly(:once).with(anything, key: 'value 2')
-
-      subject.each { }
+    context "when attribute hashes are passed in at creation" do
+      it "yields instances of the singular resource class"
+      it "doesn't hit the API"
+      it "passes the api to the singular resource instances"
+      it "passes attributes to the singular resource instances"
     end
   end
 

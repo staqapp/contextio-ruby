@@ -31,9 +31,7 @@ class ContextIO
       #     puts connect_token.email
       #   end
       def each(&block)
-        result_array = api.request(:get, resource_url, where_constraints)
-
-        result_array.each do |attribute_hash|
+        attribute_hashes.each do |attribute_hash|
           yield resource_class.new(api, attribute_hash)
         end
       end
@@ -66,6 +64,13 @@ class ContextIO
       end
 
       private
+
+      # @!attribute [r] attribute_hashes
+      #   @return [Array<Hash>] An array of attribute hashes that describe, at
+      #     least partially, the objects in this collection.
+      def attribute_hashes
+        @attribute_hashes ||= api.request(:get, resource_url, where_constraints)
+      end
 
       # Make sure a ResourceCollection has the declarative syntax handy.
       def self.included(other_mod)
