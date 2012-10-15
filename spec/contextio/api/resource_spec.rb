@@ -186,6 +186,10 @@ describe ContextIO::API::Resource do
 
         subject.relation
       end
+
+      it "returns the same object each time" do
+        expect(subject.relation).to be(subject.relation)
+      end
     end
 
     context "when one is passed in at creation" do
@@ -235,6 +239,10 @@ describe ContextIO::API::Resource do
         RelationCollectionHelper.should_receive(:new).with(api, [{'resource_url' => 'relation_url'}])
 
         subject.relations
+      end
+
+      it "returns the same object each time" do
+        expect(subject.relations).to be(subject.relations)
       end
     end
   end

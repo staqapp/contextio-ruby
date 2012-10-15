@@ -164,7 +164,7 @@ class ContextIO
         # @param [Class] relation_class The class that the relation has.
         def belongs_to(relation_name, relation_class)
           define_method(relation_name) do
-            instance_variable_get("@#{relation_name}") || relation_class.new(api, api_attributes[relation_name.to_s])
+            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, api_attributes[relation_name.to_s]))
           end
         end
 
@@ -178,7 +178,7 @@ class ContextIO
         #   should be a collection class, not a bare resource.
         def has_many(relation_name, relation_class)
           define_method(relation_name) do
-            instance_variable_get("@#{relation_name}") || relation_class.new(api, api_attributes[relation_name.to_s])
+            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, api_attributes[relation_name.to_s]))
           end
         end
       end
