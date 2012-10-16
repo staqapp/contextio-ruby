@@ -38,9 +38,19 @@ class ContextIO
 
       # Specify one or more constraints for limiting resources in this
       # collection. See individual classes for the list of valid constraints.
+      # Not all collections have valid where constraints at all.
       #
       # This can be chained at need and doesn't actually cause the API to get
       # hit until some iterator is called like `#each`.
+      #
+      # @example
+      #   accounts = contextio.accounts
+      #   accounts = accounts.where(email: 'some@email.com')
+      #   accounts = accounts.where(status: 'OK')
+      #
+      #   accounts.each do |account|
+      #     # API gets hit for this call
+      #   end
       #
       # @param [Hash{String, Symbol => String, Integer}] constraints A Hash
       #   mapping keys to the desired limiting values.
