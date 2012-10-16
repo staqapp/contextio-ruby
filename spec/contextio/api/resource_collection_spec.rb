@@ -144,10 +144,34 @@ describe ContextIO::API::ResourceCollection do
     end
 
     context "when attribute hashes are passed in at creation" do
-      it "yields instances of the singular resource class"
-      it "doesn't hit the API"
-      it "passes the api to the singular resource instances"
-      it "passes attributes to the singular resource instances"
+      subject do
+        helper_class.new(api, attribute_hashes: [{foo: 'bar'}, {foo: 'baz'}])
+      end
+
+      it "yields instances of the singular resource class" do
+        subject.each do |x|
+          expect(x).to be_a(SingularHelper)
+        end
+      end
+
+      it "doesn't hit the API" do
+        api.should_not_receive(:request)
+
+        subject.each { }
+      end
+
+      it "passes the api to the singular resource instances" do
+        SingularHelper.should_receive(:new).exactly(:twice).with(api, anything)
+
+        subject.each { }
+      end
+
+      it "passes attributes to the singular resource instances" do
+        SingularHelper.should_receive(:new).exactly(:once).with(anything, foo: 'bar')
+        SingularHelper.should_receive(:new).exactly(:once).with(anything, foo: 'baz')
+
+        subject.each { }
+      end
     end
   end
 
