@@ -219,30 +219,47 @@ describe ContextIO::API::Resource do
     end
 
     context "when a collection isn't passed in at creation" do
-      subject { helper_class.new(api, resource_url: 'resource_url') }
+      context "and a collection is returned from the API" do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
 
-      before do
-        api.stub(:request).and_return(
-          {
-            'relations' => [{
-              'resource_url' => 'relation_url'
-            }]
-          }
-        )
+        before do
+          api.stub(:request).and_return(
+            {
+              'relations' => [{
+                'resource_url' => 'relation_url'
+              }]
+            }
+          )
+        end
+
+        it "makes a related collection object available" do
+          expect(subject.relations).to be_a(RelationCollectionHelper)
+        end
+
+        it "passes keys from the api response to the new object" do
+          RelationCollectionHelper.should_receive(:new).with(api, [{'resource_url' => 'relation_url'}])
+
+          subject.relations
+        end
+
+        it "returns the same object each time" do
+          expect(subject.relations).to be(subject.relations)
+        end
       end
 
-      it "makes a related collection object available" do
-        expect(subject.relations).to be_a(RelationCollectionHelper)
-      end
+      context "and a collection isn't returned form the API", :focus do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
 
-      it "passes keys from the api response to the new object" do
-        RelationCollectionHelper.should_receive(:new).with(api, [{'resource_url' => 'relation_url'}])
+        before do
+          api.stub(:request).and_return({ 'foo' => 'bar' })
+        end
 
-        subject.relations
-      end
+        it "tries the API only once" do
+          api.should_receive(:request).exactly(:once).and_return({ 'foo' => 'bar' })
 
-      it "returns the same object each time" do
-        expect(subject.relations).to be(subject.relations)
+          subject.relations
+          subject.relations
+        end
       end
     end
 
