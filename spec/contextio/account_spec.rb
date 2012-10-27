@@ -4,6 +4,8 @@ require 'contextio/account'
 describe ContextIO::Account do
   let(:api) { double('api') }
 
+  subject { ContextIO::Account.new(api, id: '1234') }
+
   describe ".new" do
     context "with an id passed in" do
       it "doesn't raise an error" do
@@ -18,5 +20,9 @@ describe ContextIO::Account do
     end
   end
 
-  it "has sources as an association"
+  it "has sources as an association" do
+    api.stub(:request).and_return('sources' => [{'foo' => 'bar'}])
+
+    expect(subject.sources).to be_a(ContextIO::SourceCollection)
+  end
 end

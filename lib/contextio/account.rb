@@ -1,11 +1,15 @@
 require 'contextio/api/resource'
 
+require 'contextio/source_collection'
+
 class ContextIO
   class Account
     include ContextIO::API::Resource
 
     self.primary_key = :id
     self.resource_url = :accounts
+
+    has_many :sources, ContextIO::SourceCollection
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.
