@@ -260,6 +260,8 @@ describe ContextIO::API::Resource do
           subject.relations
           subject.relations
         end
+
+        it "still builds something"
       end
     end
 
