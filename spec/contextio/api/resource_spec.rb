@@ -247,7 +247,7 @@ describe ContextIO::API::Resource do
         end
       end
 
-      context "and a collection isn't returned form the API", :focus do
+      context "and a collection isn't returned form the API" do
         subject { helper_class.new(api, resource_url: 'resource_url') }
 
         before do
