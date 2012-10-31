@@ -102,4 +102,22 @@ describe ContextIO::API do
       end
     end
   end
+
+  describe ".url_for" do
+    it "delegates to ContextIO::API::URLBuilder" do
+      ContextIO::API::URLBuilder.should_receive(:url_for).with('foo')
+
+      ContextIO::API.url_for('foo')
+    end
+  end
+
+  describe "#url_for" do
+    subject { ContextIO::API.new('test_key', 'test_secret') }
+
+    it "delegates to the class" do
+      ContextIO::API.should_receive(:url_for).with('foo')
+
+      subject.url_for('foo')
+    end
+  end
 end

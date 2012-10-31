@@ -2,6 +2,8 @@ require 'uri'
 require 'oauth'
 require 'json'
 
+require 'contextio/api/url_builder'
+
 class ContextIO
   # **For internal use only.** Users of this gem should not be using this
   # directly.  Represents the handle on the Context.IO API. It handles the
@@ -26,6 +28,20 @@ class ContextIO
     # @return [String] The base URL the API is served from.
     def self.base_url
       BASE_URL
+    end
+
+    # @param [Object] resource The resource you want the URL for.
+    #
+    # @return [String] The URL for the resource in the API.
+    def self.url_for(resource)
+      ContextIO::API::URLBuilder.url_for(resource)
+    end
+
+    # @param [Object] resource The resource you want the URL for.
+    #
+    # @return [String] The URL for the resource in the API.
+    def url_for(resource)
+      ContextIO::API.url_for(resource)
     end
 
     # @!attribute [r] key
