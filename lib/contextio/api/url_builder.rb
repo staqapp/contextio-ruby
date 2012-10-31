@@ -1,5 +1,10 @@
 require 'contextio/connect_token'
+require 'contextio/connect_token_collection'
 require 'contextio/oauth_provider'
+require 'contextio/oauth_provider_collection'
+require 'contextio/email_settings'
+require 'contextio/account'
+require 'contextio/account_collection'
 
 class ContextIO
   class API
@@ -42,8 +47,28 @@ class ContextIO
         "connect_tokens/#{connect_token.token}"
       end
 
+      register_url ContextIO::ConnectTokenCollection do
+        'connect_tokens'
+      end
+
       register_url ContextIO::OAuthProvider do |oauth_provider|
         "oauth_providers/#{oauth_provider.provider_consumer_key}"
+      end
+
+      register_url ContextIO::OAuthProviderCollection do
+        'oauth_providers'
+      end
+
+      register_url ContextIO::EmailSettings do
+        'discovery'
+      end
+
+      register_url ContextIO::Account do |account|
+        "accounts/#{account.id}"
+      end
+
+      register_url ContextIO::AccountCollection do
+        'accounts'
       end
     end
   end
