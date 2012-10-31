@@ -20,6 +20,5 @@ class ContextIO
     lazy_attributes :provider_consumer_key, :provider_consumer_secret, :type
 
     self.primary_key = :provider_consumer_key
-    self.resource_url = :oauth_providers
   end
 end

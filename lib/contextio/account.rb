@@ -7,7 +7,6 @@ class ContextIO
     include ContextIO::API::Resource
 
     self.primary_key = :id
-    self.resource_url = :accounts
 
     has_many :sources, ContextIO::SourceCollection
 

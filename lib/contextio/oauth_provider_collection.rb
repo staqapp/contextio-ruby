@@ -15,7 +15,6 @@ class ContextIO
   class OAuthProviderCollection
     include ContextIO::API::ResourceCollection
 
-    self.resource_url = 'oauth_providers'
     self.resource_class = ContextIO::OAuthProvider
 
     # Creates a new OAuth provider for your account.

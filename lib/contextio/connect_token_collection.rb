@@ -15,7 +15,6 @@ class ContextIO
   class ConnectTokenCollection
     include ContextIO::API::ResourceCollection
 
-    self.resource_url = 'connect_tokens'
     self.resource_class = ContextIO::ConnectToken
 
     # Creates a new connect token for your account.

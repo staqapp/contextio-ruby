@@ -10,7 +10,6 @@ class ContextIO
     include API::Resource
 
     self.primary_key = :token
-    self.resource_url = :connect_tokens
 
     # @!attribute [r] account
     #

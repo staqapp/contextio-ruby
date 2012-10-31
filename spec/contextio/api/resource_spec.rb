@@ -138,23 +138,6 @@ describe ContextIO::API::Resource do
     end
   end
 
-  describe ".resource_url=" do
-    let(:helper_class) do
-      Class.new do
-        include ContextIO::API::Resource
-
-        self.primary_key = :id
-        self.resource_url = 'helpers'
-      end
-    end
-
-    subject { helper_class.new(api, id: '33f1') }
-
-    it "makes the calculated url available" do
-      expect(subject.resource_url).to eq("helpers/33f1")
-    end
-  end
-
   describe ".belongs_to" do
     let(:helper_class) do
       Class.new do
@@ -361,7 +344,6 @@ describe ContextIO::API::Resource do
         include ContextIO::API::Resource
 
         self.primary_key = :id
-        self.resource_url = 'helpers'
       end
     end
 
@@ -380,7 +362,9 @@ describe ContextIO::API::Resource do
         helper_class.new(api, id: '33f1')
       end
 
-      it "builds on from the primary key and class's resource url" do
+      it "delegates URL construction to the api" do
+        api.should_receive(:url_for).with(subject).and_return('helpers/33f1')
+
         expect(subject.resource_url).to eq('helpers/33f1')
       end
     end

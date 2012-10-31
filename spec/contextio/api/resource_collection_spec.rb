@@ -27,24 +27,6 @@ describe ContextIO::API::ResourceCollection do
     end
   end
 
-  describe ".resource_url=" do
-    let(:helper_class) do
-      Class.new do
-        include ContextIO::API::ResourceCollection
-
-        self.resource_url = 'helper_class'
-      end
-    end
-
-    subject do
-      helper_class.new(api)
-    end
-
-    it "makes the url available to instances of the collection" do
-      expect(subject.resource_url).to eq('helper_class')
-    end
-  end
-
   describe "#api" do
     let(:helper_class) do
       Class.new do
@@ -66,7 +48,6 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        self.resource_url = 'url'
         self.resource_class = SingularHelper
       end
     end
@@ -103,7 +84,6 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        self.resource_url = 'url'
         self.resource_class = SingularHelper
       end
     end
@@ -180,7 +160,6 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        self.resource_url = 'url'
         self.resource_class = SingularHelper
       end
     end
