@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'contextio/oauth_provider'
 
 describe ContextIO::OAuthProvider do
-  let(:api) { double('API') }
+  let(:api) { double('API', url_for: 'url from api') }
 
   describe ".new" do
     subject { ContextIO::OAuthProvider.new(api, resource_url: 'bar', baz: 'bot') }
@@ -41,8 +41,10 @@ describe ContextIO::OAuthProvider do
     context "when not input at creation" do
       subject { ContextIO::OAuthProvider.new(api, provider_consumer_key: '1234') }
 
-      it "builds its own URL" do
-        expect(subject.resource_url).to eq('oauth_providers/1234')
+      it "asks the api for a URL" do
+        api.should_receive(:url_for).with(subject)
+
+        subject.resource_url
       end
     end
   end
