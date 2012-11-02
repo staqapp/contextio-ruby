@@ -2,15 +2,9 @@ require 'spec_helper'
 require 'contextio/account_collection'
 
 describe ContextIO::AccountCollection do
-  let(:api) { double('API') }
+  let(:api) { double('API', url_for: 'url from api') }
 
   subject { ContextIO::AccountCollection.new(api) }
-
-  describe ".new" do
-    it "takes an api handle" do
-      expect(subject.api).to eq(api)
-    end
-  end
 
   describe "#create" do
     before do
@@ -26,10 +20,10 @@ describe ContextIO::AccountCollection do
         expect { subject.create(first_name: 'Bruno') }.to raise_error(ArgumentError)
       end
 
-      it "posts to /accounts" do
+      it "posts to the api" do
         api.should_receive(:request).with(
           :post,
-          'accounts',
+          'url from api',
           hash_including(email: 'hello@email.com')
         )
 
