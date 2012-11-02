@@ -2,25 +2,19 @@ require 'spec_helper'
 require 'contextio/connect_token_collection'
 
 describe ContextIO::ConnectTokenCollection do
-  let(:api) { double('API') }
+  let(:api) { double('API', url_for: 'url from api') }
 
   subject { ContextIO::ConnectTokenCollection.new(api) }
-
-  describe ".new" do
-    it "takes an api handle" do
-      expect(subject.api).to eq(api)
-    end
-  end
 
   describe "#create" do
     before do
       api.stub(:request).with(:post, anything, anything).and_return({ token: '1234' })
     end
 
-    it "posts to /connect_tokens" do
+    it "posts to the api" do
       api.should_receive(:request).with(
         :post,
-        'connect_tokens',
+        'url from api',
         hash_including(callback_url: 'http://callback.com')
       )
 
@@ -39,8 +33,8 @@ describe ContextIO::ConnectTokenCollection do
 
     it "takes an optional service level" do
       api.should_receive(:request).with(
-        :post,
-        'connect_tokens',
+        anything,
+        anything,
         hash_including(service_level: 'PRO')
       )
 
@@ -49,8 +43,8 @@ describe ContextIO::ConnectTokenCollection do
 
     it "takes an optional email" do
       api.should_receive(:request).with(
-        :post,
-        'connect_tokens',
+        anything,
+        anything,
         hash_including(email: 'person@email.com')
       )
 
@@ -59,8 +53,8 @@ describe ContextIO::ConnectTokenCollection do
 
     it "takes an optional first name" do
       api.should_receive(:request).with(
-        :post,
-        'connect_tokens',
+        anything,
+        anything,
         hash_including(first_name: 'Bruno')
       )
 
@@ -69,73 +63,12 @@ describe ContextIO::ConnectTokenCollection do
 
     it "takes an optional last name" do
       api.should_receive(:request).with(
-        :post,
-        'connect_tokens',
+        anything,
+        anything,
         hash_including(last_name: 'Morency')
       )
 
       subject.create('http://callback.com', last_name: 'Morency')
-    end
-  end
-
-  describe "#each" do
-    let(:response) do
-      [
-        {
-          'token' => '1234',
-          'email' => 'person@email.com'
-        },
-        {
-          'token' => '4321',
-          'email' => 'mammal@email.com'
-        }
-      ]
-    end
-
-    before do
-      api.stub(:request).and_return(response)
-    end
-
-    it "gets to /connect_tokens" do
-      api.should_receive(:request).with(:get, 'connect_tokens', {}).and_return(response)
-
-      subject.each {}
-    end
-
-    it "yields ConnectTokens to the block" do
-      subject.each do |x|
-        expect(x).to be_a(ContextIO::ConnectToken)
-      end
-    end
-
-    it "passes the attributes to the ConnectToken" do
-      ContextIO::ConnectToken.should_receive(:new).with(
-        api,
-        'email' => 'person@email.com',
-        'token' => '1234'
-      )
-      ContextIO::ConnectToken.should_receive(:new).with(
-        api,
-        'email' => 'mammal@email.com',
-        'token' => '4321'
-      )
-
-      subject.each {}
-    end
-  end
-
-  describe "#[]" do
-    it "returns a ContextIO::ConnectToken with a given key" do
-      token = subject['1234']
-
-      expect(token).to be_a(ContextIO::ConnectToken)
-      expect(token.token).to eq('1234')
-    end
-
-    it "lazily loads, not hitting the API" do
-      api.should_not_receive(:request)
-
-      subject['1234']
     end
   end
 end
