@@ -24,6 +24,12 @@ class ContextIO
         @attribute_hashes = options[:attribute_hashes]
       end
 
+      # @!attribute [r] resource_url
+      # @return [String] The URL that will fetch attributes from the API.
+      def resource_url
+        @resource_url ||= api.url_for(self)
+      end
+
       # Iterates over the resources in question.
       #
       # @example
@@ -103,16 +109,6 @@ class ContextIO
         def resource_class=(klass)
           define_method(:resource_class) do
             klass
-          end
-        end
-
-        # Declares the path that this resource collection lives at.
-        #
-        # @param [String] url The path that refers to this collection of
-        #   resources.
-        def resource_url=(url)
-          define_method(:resource_url) do
-            url
           end
         end
       end

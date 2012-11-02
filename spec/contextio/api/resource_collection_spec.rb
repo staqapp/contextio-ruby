@@ -7,7 +7,7 @@ class SingularHelper
 end
 
 describe ContextIO::API::ResourceCollection do
-  let(:api) { double('api') }
+  let(:api) { double('api', url_for: 'url from api') }
 
   describe ".resource_class=" do
     let(:helper_class) do
@@ -104,7 +104,7 @@ describe ContextIO::API::ResourceCollection do
       end
 
       it "gets attributes for the resources from the api" do
-        api.should_receive(:request).exactly(:once).with(:get, 'url', {})
+        api.should_receive(:request).exactly(:once).with(:get, 'url from api', {})
 
         subject.each { }
       end
