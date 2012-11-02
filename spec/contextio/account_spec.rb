@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'contextio/account'
 
 describe ContextIO::Account do
-  let(:api) { double('api') }
+  let(:api) { double('api', url_for: 'url from api') }
 
   subject { ContextIO::Account.new(api, id: '1234') }
 
