@@ -21,7 +21,7 @@ class ContextIO
         if (builder = @registered_urls[resource.class])
           builder.call(resource)
         else
-          raise Error, "URL could not be built for unregistered Class."
+          raise Error, "URL could not be built for unregistered Class: #{resource.class}."
         end
       end
 
