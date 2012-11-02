@@ -220,7 +220,7 @@ describe ContextIO::API::Resource do
         end
 
         it "passes keys from the api response to the new object" do
-          RelationCollectionHelper.should_receive(:new).with(api, [{'resource_url' => 'relation_url'}])
+          RelationCollectionHelper.should_receive(:new).with(api, attribute_hashes: [{'resource_url' => 'relation_url'}])
 
           subject.relations
         end
@@ -248,8 +248,8 @@ describe ContextIO::API::Resource do
       end
     end
 
-    context "when one is passed in at creation" do
-      let(:relation_collection) { RelationCollectionHelper.new(api, [{resource_url: 'relation_url'}]) }
+    context "when a collection is passed in at creation" do
+      let(:relation_collection) { RelationCollectionHelper.new }
 
       subject { helper_class.new(api, resource_url: 'resource_url', relations: relation_collection)}
 
