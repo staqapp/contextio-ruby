@@ -6,7 +6,14 @@ class ContextIO
       # (see ContextIO#api)
       attr_reader :api
 
-      # (see ContextIO::OAuthProviderCollection#initialize)
+      # @private
+      #
+      # For internal use only. Users of this gem shouldn't be calling this
+      # directly.
+      #
+      # @param [API] api A handle on the Context.IO API.
+      # @param [Hash{String, Symbol => String, Numeric, Boolean}] options A Hash
+      #   of attributes describing the resource.
       def initialize(api, options = {})
         validate_options(options)
 
@@ -61,6 +68,8 @@ class ContextIO
       # Raises ArgumentError unless the primary key or the resource URL is
       # supplied. Use this to ensure that the initializer has or can build the
       # right URL to fetch its self.
+      #
+      # @param [Hash] options_hash The hash of options to validate.
       def validate_options(options_hash)
         required_keys = ['resource_url', :resource_url]
 

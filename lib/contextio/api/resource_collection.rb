@@ -18,6 +18,11 @@ class ContextIO
       # directly.
       #
       # @param [API] api A handle on the Context.IO API.
+      # @param [Hash] options Optional params for the collection.
+      # @option options [Hash{Symbol => String, Numeric}] :where Where
+      #   constraints that limit the resources that belong to this collection.
+      # @option options [Array<Hash>] :attribute_hashes An array of hashes
+      #   describing the resources in this collection.
       def initialize(api, options={})
         @api = api
         @where_constraints = options[:where] || {}
