@@ -6,6 +6,12 @@ class SingularHelper
   def self.primary_key; 'token'; end
 end
 
+class Owner
+  def self.primary_key; 'id'; end
+  def id; 4; end
+  def initialize(*args); end
+end
+
 describe ContextIO::API::ResourceCollection do
   let(:api) { double('api', url_for: 'url from api') }
 
@@ -24,6 +30,26 @@ describe ContextIO::API::ResourceCollection do
 
     it "makes the class available to instances of the collection" do
       expect(subject.resource_class).to eq(SingularHelper)
+    end
+  end
+
+  describe ".belongs_to" do
+    let(:helper_class) do
+      Class.new do
+        include ContextIO::API::ResourceCollection
+
+        belongs_to Owner
+
+        self.resource_class = SingularHelper
+      end
+    end
+
+    let(:owner) { Owner.new }
+
+    subject { helper_class.new(api, owner: owner) }
+
+    it "makes the belonged-to object available" do
+      expect(subject.owner).to eq(owner)
     end
   end
 
@@ -121,6 +147,33 @@ describe ContextIO::API::ResourceCollection do
 
         subject.each { }
       end
+
+      context "with a belonged-to resource" do
+        let(:helper_class) do
+          Class.new do
+            include ContextIO::API::ResourceCollection
+
+            belongs_to Owner
+
+            self.resource_class = SingularHelper
+          end
+        end
+
+        let(:owner) { Owner.new }
+
+        subject do
+          helper_class.new(api, owner: owner)
+        end
+
+        it "passes the belonged-to resource to the singular resource instances" do
+          SingularHelper.should_receive(:new).exactly(:twice).with(
+            anything,
+            hash_including(owner: owner)
+          )
+
+          subject.each { }
+        end
+      end
     end
 
     context "when attribute hashes are passed in at creation" do
@@ -151,6 +204,37 @@ describe ContextIO::API::ResourceCollection do
         SingularHelper.should_receive(:new).exactly(:once).with(anything, foo: 'baz')
 
         subject.each { }
+      end
+
+      context "with a belonged-to resource" do
+        let(:helper_class) do
+          Class.new do
+            include ContextIO::API::ResourceCollection
+
+            belongs_to Owner
+
+            self.resource_class = SingularHelper
+          end
+        end
+
+        let(:owner) { Owner.new }
+
+        subject do
+          helper_class.new(
+            api,
+            attribute_hashes: [{foo: 'bar'}, {foo: 'baz'}],
+            owner: owner
+          )
+        end
+
+        it "passes the belonged-to resource to the singular resource instances" do
+          SingularHelper.should_receive(:new).exactly(:twice).with(
+            anything,
+            hash_including(owner: owner)
+          )
+
+          subject.each { }
+        end
       end
     end
   end

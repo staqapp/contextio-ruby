@@ -27,6 +27,10 @@ class ContextIO
         @api = api
         @where_constraints = options[:where] || {}
         @attribute_hashes = options[:attribute_hashes]
+
+        self.class.associations.each do |association_name|
+          instance_variable_set("@#{association_name}", options[association_name.to_sym])
+        end
       end
 
       # @!attribute [r] resource_url
@@ -43,7 +47,7 @@ class ContextIO
       #   end
       def each(&block)
         attribute_hashes.each do |attribute_hash|
-          yield resource_class.new(api, attribute_hash)
+          yield resource_class.new(api, attribute_hash.merge(associations_hash))
         end
       end
 
@@ -93,6 +97,16 @@ class ContextIO
         @attribute_hashes ||= api.request(:get, resource_url, where_constraints)
       end
 
+      # @!attribute [r] associations_hash
+      #   @return [Hash{Symbol => Resource}] A hash of association names to the
+      #     associated resource of that type.
+      def associations_hash
+        @associations_hash ||= self.class.associations.inject({}) do |memo, association_name|
+          memo[association_name.to_sym] = self.send(association_name)
+          memo
+        end
+      end
+
       # Make sure a ResourceCollection has the declarative syntax handy.
       def self.included(other_mod)
         other_mod.extend(DeclarativeClassSyntax)
@@ -116,6 +130,39 @@ class ContextIO
             klass
           end
         end
+
+        # Declares which class, if any, the collection belongs to. It defines an
+        # accessor for the belonged-to object.
+        #
+        # @param [Class] klass The class that the collection belongs to.
+        def belongs_to(klass)
+          association_name = class_to_association_name(klass.name)
+
+          define_method(association_name) do
+            instance_variable_get("@#{association_name}")
+          end
+
+          associations << association_name
+        end
+
+        # Utility method for turning class names into association names.
+        # Inspired by Rails's String#underscore.
+        #
+        # @param [String] class_name The name of the class to be transformed.
+        #
+        # @return [String] The class's name clipped to the last :: and
+        #   underscored.
+        def class_to_association_name(class_name)
+          class_name.split('::').last.gsub(/(?:([A-Za-z\d])|^)([A-Z])/) { "#{$1}#{$1 && '_'}#{$2.downcase}" }
+        end
+
+        # @!attribute [r] associations
+        #   @return [Array<String] An array of the belong_to associations for
+        #     the collection
+        def associations
+          @associations ||= []
+        end
+        public :associations
       end
     end
   end
