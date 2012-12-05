@@ -150,44 +150,30 @@ describe ContextIO::API::Resource do
     context "when one isn't passed in at creation" do
       subject { helper_class.new(api, resource_url: 'resource_url') }
 
-      before do
-        api.stub(:request).and_return(
-          {
-            'resource' => {
-              'resource_url' => 'relation_url'
-            }
-          }
-        )
+      it "returns nil" do
+        expect(subject.resource).to be_nil
       end
 
-      it "makes a related object available" do
-        expect(subject.resource).to be_a(Resource)
-      end
-
-      it "passes keys from the api response to the new object" do
-        Resource.should_receive(:new).with(api, 'resource_url' => 'relation_url')
+      it "does not hit the API" do
+        api.should_not_receive(:request)
 
         subject.resource
-      end
-
-      it "returns the same object each time" do
-        expect(subject.resource).to be(subject.resource)
       end
     end
 
     context "when one is passed in at creation" do
       let(:relation_object) { Resource.new(api, resource_url: 'relation_url') }
 
-      subject { helper_class.new(api, resource_url: 'resource_url', relation: relation_object)}
+      subject { helper_class.new(api, resource_url: 'resource_url', resource: relation_object)}
 
       it "makes the passed-in related object available" do
-        expect(subject.relation).to be(relation_object)
+        expect(subject.resource).to be(relation_object)
       end
 
       it "doesn't make any API calls" do
         api.should_not_receive(:request)
 
-        subject.relation
+        subject.resource
       end
     end
   end
