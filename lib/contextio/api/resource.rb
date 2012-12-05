@@ -166,7 +166,7 @@ class ContextIO
         #   should be a collection class, not a bare resource.
         def has_many(relation_name, relation_class)
           define_method(relation_name) do
-            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, attribute_hashes: api_attributes[relation_name.to_s]))
+            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, ContextIO::API.class_to_association_name(self.class.name) => self, attribute_hashes: api_attributes[relation_name.to_s]))
           end
         end
       end

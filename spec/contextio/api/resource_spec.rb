@@ -198,6 +198,10 @@ describe ContextIO::API::Resource do
         include ContextIO::API::Resource
 
         has_many :relations, RelationCollectionHelper
+
+        def self.name
+          'HelperClass'
+        end
       end
     end
 
@@ -220,13 +224,19 @@ describe ContextIO::API::Resource do
         end
 
         it "passes keys from the api response to the new object" do
-          RelationCollectionHelper.should_receive(:new).with(api, attribute_hashes: [{'resource_url' => 'relation_url'}])
+          RelationCollectionHelper.should_receive(:new).with(api, hash_including(attribute_hashes: [{'resource_url' => 'relation_url'}]))
 
           subject.relations
         end
 
         it "returns the same object each time" do
           expect(subject.relations).to be(subject.relations)
+        end
+
+        it "passes its self to the new collection" do
+          RelationCollectionHelper.should_receive(:new).with(anything, hash_including('helper_class' => subject))
+
+          subject.relations
         end
       end
 
@@ -244,7 +254,15 @@ describe ContextIO::API::Resource do
           subject.relations
         end
 
-        it "still builds something"
+        it "still builds a relation object" do
+          expect(subject.relations).to be_a(RelationCollectionHelper)
+        end
+
+        it "passes its self to the new collection" do
+          RelationCollectionHelper.should_receive(:new).with(anything, hash_including('helper_class' => subject))
+
+          subject.relations
+        end
       end
     end
 

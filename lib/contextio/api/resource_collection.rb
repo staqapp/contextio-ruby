@@ -136,24 +136,13 @@ class ContextIO
         #
         # @param [Class] klass The class that the collection belongs to.
         def belongs_to(klass)
-          association_name = class_to_association_name(klass.name)
+          association_name = ContextIO::API.class_to_association_name(klass.name)
 
           define_method(association_name) do
             instance_variable_get("@#{association_name}")
           end
 
           associations << association_name
-        end
-
-        # Utility method for turning class names into association names.
-        # Inspired by Rails's String#underscore.
-        #
-        # @param [String] class_name The name of the class to be transformed.
-        #
-        # @return [String] The class's name clipped to the last :: and
-        #   underscored.
-        def class_to_association_name(class_name)
-          class_name.split('::').last.gsub(/(?:([A-Za-z\d])|^)([A-Z])/) { "#{$1}#{$1 && '_'}#{$2.downcase}" }
         end
 
         # @!attribute [r] associations
