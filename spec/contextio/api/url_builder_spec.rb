@@ -20,7 +20,7 @@ describe ContextIO::API::URLBuilder do
         let(:account) { double('account', id: 'account_id') }
         let(:resource) { ContextIO::ConnectToken.new(api, token: 'token', account: account) }
 
-        it { pending; should eq('accounts/account_id/connect_tokens/token') }
+        it { should eq('accounts/account_id/connect_tokens/token') }
       end
 
       context "without an account" do
@@ -32,7 +32,10 @@ describe ContextIO::API::URLBuilder do
 
     context "when passed a ConnectTokenCollection" do
       context "with an account" do
-        it { pending; should eq('accounts/account_id/connect_tokens') }
+        let(:account) { double('account', id: 'account_id') }
+        let(:resource) { ContextIO::ConnectTokenCollection.new(api, account: account) }
+
+        it { should eq('accounts/account_id/connect_tokens') }
       end
 
       context "wiehout an account" do

@@ -1,3 +1,5 @@
+require_relative 'resource_helpers'
+
 class ContextIO
   class API
     # When `include`d into a class, this module provides some helper methods for
@@ -136,7 +138,7 @@ class ContextIO
         #
         # @param [Class] klass The class that the collection belongs to.
         def belongs_to(klass)
-          association_name = ContextIO::API.class_to_association_name(klass.name)
+          association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
 
           define_method(association_name) do
             instance_variable_get("@#{association_name}")

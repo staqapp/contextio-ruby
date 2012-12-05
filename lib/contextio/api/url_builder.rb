@@ -44,11 +44,19 @@ class ContextIO
       end
 
       register_url ContextIO::ConnectToken do |connect_token|
-        "connect_tokens/#{connect_token.token}"
+        if connect_token.account && connect_token.account.id
+          "accounts/#{connect_token.account.id}/connect_tokens/#{connect_token.token}"
+        else
+          "connect_tokens/#{connect_token.token}"
+        end
       end
 
-      register_url ContextIO::ConnectTokenCollection do
-        'connect_tokens'
+      register_url ContextIO::ConnectTokenCollection do |connect_tokens|
+        if connect_tokens.account && connect_tokens.account.id
+          "accounts/#{connect_tokens.account.id}/connect_tokens"
+        else
+          'connect_tokens'
+        end
       end
 
       register_url ContextIO::OAuthProvider do |oauth_provider|

@@ -1,3 +1,5 @@
+require_relative 'resource_helpers'
+
 class ContextIO
   class API
     # When `include`d into a class, this module provides some helper methods for
@@ -147,12 +149,12 @@ class ContextIO
         # resource. This related resource will be lazily created as it can be,
         # but in some cases may cause an API call.
         #
-        # @param [String, Symbol] relation_name The name of the relation. Must
-        #   be a valid Ruby method name.
-        # @param [Class] relation_class The class that the relation has.
-        def belongs_to(relation_name, relation_class)
-          define_method(relation_name) do
-            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, api_attributes[relation_name.to_s]))
+        # @param [Class] klass The class that the relation has.
+        def belongs_to(klass)
+          association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
+
+          define_method(association_name) do
+            instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", klass.new(api, api_attributes[association_name.to_s]))
           end
         end
 
@@ -160,13 +162,13 @@ class ContextIO
         # resource. These related resources will be lazily created as they can
         # be, but in some cases may cause an API call.
         #
-        # @param [String, Symbol] relation_name The name of the relation. Must
-        #   be a valid Ruby method name.
-        # @param [Class] relation_class The class that the relation has. This
+        # @param [Class] klass The class that the relation has. This
         #   should be a collection class, not a bare resource.
-        def has_many(relation_name, relation_class)
-          define_method(relation_name) do
-            instance_variable_get("@#{relation_name}") || instance_variable_set("@#{relation_name}", relation_class.new(api, ContextIO::API.class_to_association_name(self.class.name) => self, attribute_hashes: api_attributes[relation_name.to_s]))
+        def has_many(klass)
+          association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
+
+          define_method(association_name) do
+            instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", klass.new(api, ContextIO::API::ResourceHelpers.class_to_association_name(self.class.name) => self, attribute_hashes: api_attributes[association_name.to_s]))
           end
         end
       end

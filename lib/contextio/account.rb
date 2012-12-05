@@ -8,7 +8,7 @@ class ContextIO
 
     self.primary_key = :id
 
-    has_many :sources, ContextIO::SourceCollection
+    has_many ContextIO::SourceCollection
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.

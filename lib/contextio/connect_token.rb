@@ -15,7 +15,7 @@ class ContextIO
     #
     # @return [ContextIO::Account, nil] The Account associated with this token,
     #   if any. Will fetch from the API if necessary.
-    belongs_to :account, ContextIO::Account
+    belongs_to ContextIO::Account
 
     # @!attribute [r] token
     #   @return [String] The token associated with this connect token. Will

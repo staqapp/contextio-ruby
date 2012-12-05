@@ -17,6 +17,8 @@ class ContextIO
 
     self.resource_class = ContextIO::ConnectToken
 
+    belongs_to ContextIO::Account
+
     # Creates a new connect token for your account.
     #
     # @param [String] callback_url The url that the user will be redirected to

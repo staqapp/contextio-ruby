@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'contextio/api/resource'
 
-class RelationHelper
+class ResourceCollection
   def initialize(*args); end
 end
 
-class RelationCollectionHelper
+class Resource
   def initialize(*args); end
 end
 
@@ -143,7 +143,7 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        belongs_to :relation, RelationHelper
+        belongs_to Resource
       end
     end
 
@@ -153,7 +153,7 @@ describe ContextIO::API::Resource do
       before do
         api.stub(:request).and_return(
           {
-            'relation' => {
+            'resource' => {
               'resource_url' => 'relation_url'
             }
           }
@@ -161,22 +161,22 @@ describe ContextIO::API::Resource do
       end
 
       it "makes a related object available" do
-        expect(subject.relation).to be_a(RelationHelper)
+        expect(subject.resource).to be_a(Resource)
       end
 
       it "passes keys from the api response to the new object" do
-        RelationHelper.should_receive(:new).with(api, 'resource_url' => 'relation_url')
+        Resource.should_receive(:new).with(api, 'resource_url' => 'relation_url')
 
-        subject.relation
+        subject.resource
       end
 
       it "returns the same object each time" do
-        expect(subject.relation).to be(subject.relation)
+        expect(subject.resource).to be(subject.resource)
       end
     end
 
     context "when one is passed in at creation" do
-      let(:relation_object) { RelationHelper.new(api, resource_url: 'relation_url') }
+      let(:relation_object) { Resource.new(api, resource_url: 'relation_url') }
 
       subject { helper_class.new(api, resource_url: 'resource_url', relation: relation_object)}
 
@@ -197,7 +197,7 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        has_many :relations, RelationCollectionHelper
+        has_many ResourceCollection
 
         def self.name
           'HelperClass'
@@ -212,7 +212,7 @@ describe ContextIO::API::Resource do
         before do
           api.stub(:request).and_return(
             {
-              'relations' => [{
+              'resources' => [{
                 'resource_url' => 'relation_url'
               }]
             }
@@ -220,23 +220,23 @@ describe ContextIO::API::Resource do
         end
 
         it "makes a related collection object available" do
-          expect(subject.relations).to be_a(RelationCollectionHelper)
+          expect(subject.resources).to be_a(ResourceCollection)
         end
 
         it "passes keys from the api response to the new object" do
-          RelationCollectionHelper.should_receive(:new).with(api, hash_including(attribute_hashes: [{'resource_url' => 'relation_url'}]))
+          ResourceCollection.should_receive(:new).with(api, hash_including(attribute_hashes: [{'resource_url' => 'relation_url'}]))
 
-          subject.relations
+          subject.resources
         end
 
         it "returns the same object each time" do
-          expect(subject.relations).to be(subject.relations)
+          expect(subject.resources).to be(subject.resources)
         end
 
         it "passes its self to the new collection" do
-          RelationCollectionHelper.should_receive(:new).with(anything, hash_including('helper_class' => subject))
+          ResourceCollection.should_receive(:new).with(anything, hash_including('helper_class' => subject))
 
-          subject.relations
+          subject.resources
         end
       end
 
@@ -250,35 +250,35 @@ describe ContextIO::API::Resource do
         it "tries the API only once" do
           api.should_receive(:request).exactly(:once).and_return({ 'foo' => 'bar' })
 
-          subject.relations
-          subject.relations
+          subject.resources
+          subject.resources
         end
 
         it "still builds a relation object" do
-          expect(subject.relations).to be_a(RelationCollectionHelper)
+          expect(subject.resources).to be_a(ResourceCollection)
         end
 
         it "passes its self to the new collection" do
-          RelationCollectionHelper.should_receive(:new).with(anything, hash_including('helper_class' => subject))
+          ResourceCollection.should_receive(:new).with(anything, hash_including('helper_class' => subject))
 
-          subject.relations
+          subject.resources
         end
       end
     end
 
     context "when a collection is passed in at creation" do
-      let(:relation_collection) { RelationCollectionHelper.new }
+      let(:relation_collection) { ResourceCollection.new }
 
-      subject { helper_class.new(api, resource_url: 'resource_url', relations: relation_collection)}
+      subject { helper_class.new(api, resource_url: 'resource_url', resources: relation_collection)}
 
       it "makes the passed-in related collection available" do
-        expect(subject.relations).to be(relation_collection)
+        expect(subject.resources).to be(relation_collection)
       end
 
       it "doesn't make any API calls" do
         api.should_not_receive(:request)
 
-        subject.relations
+        subject.resources
       end
     end
   end
