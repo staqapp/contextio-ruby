@@ -74,12 +74,14 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
+        belongs_to Owner
+
         self.resource_class = SingularHelper
       end
     end
 
     subject do
-      helper_class.new(api)
+      helper_class.new(api, owner: :relation)
     end
 
     it "limits the scope of subsequent #each calls" do
@@ -102,6 +104,10 @@ describe ContextIO::API::ResourceCollection do
 
     it "overrides older constraints with newer ones" do
       expect(subject.where(foo: 'bar').where(foo: 'baz').where_constraints).to eq(foo: 'baz')
+    end
+
+    it "keeps collection relations from the old to new object" do
+      expect(subject.where(foo: 'bar').owner).to eq(subject.owner)
     end
   end
 

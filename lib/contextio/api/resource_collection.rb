@@ -70,7 +70,7 @@ class ContextIO
       # @param [Hash{String, Symbol => String, Integer}] constraints A Hash
       #   mapping keys to the desired limiting values.
       def where(constraints)
-        self.class.new(api, where: where_constraints.merge(constraints))
+        self.class.new(api, associations_hash.merge(where: where_constraints.merge(constraints)))
       end
 
       # Returns a resource with the given key.
