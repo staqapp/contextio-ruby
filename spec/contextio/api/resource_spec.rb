@@ -148,16 +148,76 @@ describe ContextIO::API::Resource do
     end
 
     context "when one isn't passed in at creation" do
-      subject { helper_class.new(api, resource_url: 'resource_url') }
+      context "and one is returned from the API" do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
 
-      it "returns nil" do
-        expect(subject.resource).to be_nil
+        before do
+          api.stub(:request).and_return(
+            {
+              'resource' => {
+                'resource_url' => 'relation_url'
+              }
+            }
+          )
+        end
+
+        it "makes a related object available" do
+          expect(subject.resource).to be_a(Resource)
+        end
+
+        it "passes keys from the api response to the new object" do
+          Resource.should_receive(:new).with(api, 'resource_url' => 'relation_url')
+
+          subject.resource
+        end
+
+        it "returns the same object each time" do
+          expect(subject.resource).to be(subject.resource)
+        end
       end
 
-      it "does not hit the API" do
-        api.should_not_receive(:request)
+      context "and one isn't returned from the API" do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
 
-        subject.resource
+        before do
+          api.stub(:request).and_return({ })
+        end
+
+        it "makes the resource nil" do
+          expect(subject.resource).to be_nil
+        end
+      end
+
+      context "and the API returns an empty hash" do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
+
+        before do
+          api.stub(:request).and_return(
+            {
+              'resource' => { }
+            }
+          )
+        end
+
+        it "makes the resource nil" do
+          expect(subject.resource).to be_nil
+        end
+      end
+
+      context "and the API returns an empty array" do
+        subject { helper_class.new(api, resource_url: 'resource_url') }
+
+        before do
+          api.stub(:request).and_return(
+            {
+              'resource' => [ ]
+            }
+          )
+        end
+
+        it "makes the resource nil" do
+          expect(subject.resource).to be_nil
+        end
       end
     end
 

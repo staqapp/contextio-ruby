@@ -24,7 +24,7 @@ describe ContextIO::API::URLBuilder do
       end
 
       context "without an account" do
-        let(:resource) { ContextIO::ConnectToken.new(api, token: 'token') }
+        let(:resource) { ContextIO::ConnectToken.new(api, token: 'token', api_attributes: { 'account' => { } }) }
 
         it { should eq('connect_tokens/token') }
       end

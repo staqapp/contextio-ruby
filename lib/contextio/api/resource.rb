@@ -154,10 +154,17 @@ class ContextIO
           association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
 
           define_method(association_name) do
-            association_attrs = @api_attributes[association_name] if @api_attributes
-            return instance_variable_get("@#{association_name}") unless association_attrs
+            if instance_variable_get("@#{association_name}")
+              instance_variable_get("@#{association_name}")
+            else
+              association_attrs = api_attributes[association_name]
 
-            instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", klass.new(api, association_attrs))
+              if association_attrs && !association_attrs.empty?
+                instance_variable_set("@#{association_name}", klass.new(api, association_attrs))
+              else
+                nil
+              end
+            end
           end
         end
 
