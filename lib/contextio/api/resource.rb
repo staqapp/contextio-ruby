@@ -1,4 +1,4 @@
-require_relative 'resource_helpers'
+require_relative 'association_helpers'
 
 class ContextIO
   class API
@@ -114,6 +114,12 @@ class ContextIO
           @primary_key
         end
 
+        # @!attribute [r] association_name
+        #   @return [Symbol] The association name registered for this resource.
+        def association_name
+          @association_name
+        end
+
         private
 
         # Declares the primary key used to build the resource URL. Consumed by
@@ -122,6 +128,14 @@ class ContextIO
         # @param [String, Symbol] key Primary key name.
         def primary_key=(key)
           @primary_key = key
+        end
+
+        # Declares the association name for the resource.
+        #
+        # @param [String, Symbol] association_name The name.
+        def association_name=(association_name)
+          @association_name = association_name.to_sym
+          ContextIO::API::AssociationHelpers.register_resource(self, @association_name)
         end
 
         # Declares a list of attributes to be lazily loaded from the API. Getter
@@ -172,13 +186,15 @@ class ContextIO
         # resource. These related resources will be lazily created as they can
         # be, but in some cases may cause an API call.
         #
-        # @param [Class] klass The class that the relation has. This
-        #   should be a collection class, not a bare resource.
-        def has_many(klass)
-          association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
+        # @param [Symbol] association_name The name of the association for the
+        #   class in question. Collection classes will have plural names
+        #   registered. For instance, :messages should reger to the Messages
+        #   resource.
+        def has_many(association_name)
+          association_class = ContextIO::API::AssociationHelpers.class_for_association_name(association_name)
 
           define_method(association_name) do
-            instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", klass.new(api, ContextIO::API::ResourceHelpers.class_to_association_name(self.class.name) => self, attribute_hashes: api_attributes[association_name.to_s]))
+            instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", association_class.new(api, self.class.association_name => self, attribute_hashes: api_attributes[association_name.to_s]))
           end
         end
       end
