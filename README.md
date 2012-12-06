@@ -9,8 +9,7 @@
 Provides a Ruby interface to [Context.IO](http://context.io). The general design
 was inspired by the wonderful [aws-sdk](https://github.com/aws/aws-sdk-ruby)
 gem. You start with an object that represents your account with Context.IO and
-then you deal with collections within that going forward. See the example, for
-more detail.
+then you deal with collections within that going forward. Check out the example.
 
 ## Example
 
