@@ -313,13 +313,13 @@ describe ContextIO::API::Resource do
       end
     end
 
-    context "when a collection is passed in at creation" do
-      let(:relation_collection) { ResourceCollection.new }
+    context "when an Array of Hashes is passed in at creation" do
+      subject do
+        helper_class.new(api, resource_url: 'resource_url', resources: [{'resource_url' => 'xxx'}])
+      end
 
-      subject { helper_class.new(api, resource_url: 'resource_url', resources: relation_collection)}
-
-      it "makes the passed-in related collection available" do
-        expect(subject.resources).to be(relation_collection)
+      it "makes a collection object available" do
+        expect(subject.resources).to be_a(ResourceCollection)
       end
 
       it "doesn't make any API calls" do

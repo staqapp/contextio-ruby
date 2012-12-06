@@ -22,6 +22,12 @@ class ContextIO
         @api = api
 
         options.each do |key, value|
+          if self.class.associations.include?(key.to_sym) && value.is_a?(Array)
+            association_class = ContextIO::API::AssociationHelpers.class_for_association_name(key.to_sym)
+
+            value = association_class.new(api, attribute_hashes: value)
+          end
+
           instance_variable_set("@#{key}", value)
 
           unless self.respond_to?(key)
@@ -120,6 +126,13 @@ class ContextIO
           @association_name
         end
 
+        # @!attribute [r] associations
+        #   @return [Array<String] An array of the belong_to associations for
+        #     the collection
+        def associations
+          @associations ||= []
+        end
+
         private
 
         # Declares the primary key used to build the resource URL. Consumed by
@@ -183,6 +196,8 @@ class ContextIO
               end
             end
           end
+
+          associations << association_name.to_sym
         end
 
         # Declares that this resource is related to a collection of another
@@ -199,6 +214,8 @@ class ContextIO
           define_method(association_name) do
             instance_variable_get("@#{association_name}") || instance_variable_set("@#{association_name}", association_class.new(api, self.class.association_name => self, attribute_hashes: api_attributes[association_name.to_s]))
           end
+
+          associations << association_name.to_sym
         end
       end
     end
