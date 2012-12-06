@@ -64,5 +64,29 @@ class ContextIO
     def password_expired?
       !!password_expired_at
     end
+
+    # Updates the account.
+    #
+    # @param [Hash{String, Symbol => String}] options You can update first_name
+    #   or last_name (or both).
+    def update(options={})
+      first_name = options[:first_name] || options['first_name']
+      last_name = options[:last_name] || options['last_name']
+
+      attrs = {}
+      attrs[:first_name] = first_name if first_name
+      attrs[:last_name] = last_name if last_name
+
+      return nil if attrs.empty?
+
+      it_worked = api.request(:post, resource_url, attrs)['success']
+
+      if it_worked
+        @first_name = first_name || @first_name
+        @last_name = last_name || @last_name
+      end
+
+      it_worked
+    end
   end
 end
