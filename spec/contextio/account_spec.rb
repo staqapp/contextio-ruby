@@ -25,4 +25,10 @@ describe ContextIO::Account do
 
     expect(subject.sources).to be_a(ContextIO::SourceCollection)
   end
+
+  it "has connect tokens as an association" do
+    api.stub(:request).and_return('connect_tokens' => [{'foo' => 'bar'}])
+
+    expect(subject.connect_tokens).to be_a(ContextIO::ConnectTokenCollection)
+  end
 end
