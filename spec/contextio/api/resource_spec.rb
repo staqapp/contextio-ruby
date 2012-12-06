@@ -243,7 +243,7 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        has_many ResourceCollection
+        has_many :resources
 
         def self.name
           'HelperClass'
