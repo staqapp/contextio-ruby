@@ -10,6 +10,8 @@ class Owner
   def self.primary_key; 'id'; end
   def id; 4; end
   def initialize(*args); end
+
+  ContextIO::API::AssociationHelpers.register_resource(self, :owner)
 end
 
 describe ContextIO::API::ResourceCollection do
@@ -38,8 +40,9 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        belongs_to Owner
+        belongs_to :owner
 
+        self.association_name = :helper_class
         self.resource_class = SingularHelper
       end
     end
@@ -74,7 +77,7 @@ describe ContextIO::API::ResourceCollection do
       Class.new do
         include ContextIO::API::ResourceCollection
 
-        belongs_to Owner
+        belongs_to :owner
 
         self.resource_class = SingularHelper
       end
@@ -159,7 +162,7 @@ describe ContextIO::API::ResourceCollection do
           Class.new do
             include ContextIO::API::ResourceCollection
 
-            belongs_to Owner
+            belongs_to :owner
 
             self.resource_class = SingularHelper
           end
@@ -217,7 +220,7 @@ describe ContextIO::API::ResourceCollection do
           Class.new do
             include ContextIO::API::ResourceCollection
 
-            belongs_to Owner
+            belongs_to :owner
 
             self.resource_class = SingularHelper
           end

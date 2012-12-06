@@ -1,4 +1,4 @@
-require_relative 'resource_helpers'
+require_relative 'association_helpers'
 
 class ContextIO
   class API
@@ -118,6 +118,19 @@ class ContextIO
       # class definitions. It gets `extend`ed into a class when
       # `API::ResourceCollection` is `include`d.
       module DeclarativeClassSyntax
+        # @!attribute [r] associations
+        #   @return [Array<String] An array of the belong_to associations for
+        #     the collection
+        def associations
+          @associations ||= []
+        end
+
+        # @!attribute [r] association_name
+        #   @return [Symbol] The association name registered for this resource.
+        def association_name
+          @association_name
+        end
+
         private
 
         # Declares which class the `ResourceCollection` is intended to wrap. For
@@ -136,10 +149,11 @@ class ContextIO
         # Declares which class, if any, the collection belongs to. It defines an
         # accessor for the belonged-to object.
         #
-        # @param [Class] klass The class that the collection belongs to.
-        def belongs_to(klass)
-          association_name = ContextIO::API::ResourceHelpers.class_to_association_name(klass.name)
-
+        # @param [Symbol] association_name The name of the association for the
+        #   class in question. Singular classes will have singular names
+        #   registered. For instance, :message should reger to the Message
+        #   resource.
+        def belongs_to(association_name)
           define_method(association_name) do
             instance_variable_get("@#{association_name}")
           end
@@ -147,13 +161,13 @@ class ContextIO
           associations << association_name
         end
 
-        # @!attribute [r] associations
-        #   @return [Array<String] An array of the belong_to associations for
-        #     the collection
-        def associations
-          @associations ||= []
+        # Declares the association name for the resource.
+        #
+        # @param [String, Symbol] association_name The name.
+        def association_name=(association_name)
+          @association_name = association_name.to_sym
+          ContextIO::API::AssociationHelpers.register_resource(self, @association_name)
         end
-        public :associations
       end
     end
   end
