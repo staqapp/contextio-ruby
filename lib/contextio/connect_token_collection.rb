@@ -16,8 +16,9 @@ class ContextIO
     include ContextIO::API::ResourceCollection
 
     self.resource_class = ContextIO::ConnectToken
+    self.association_name = :connect_tokens
 
-    belongs_to ContextIO::Account
+    belongs_to :account
 
     # Creates a new connect token for your account.
     #

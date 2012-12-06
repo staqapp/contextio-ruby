@@ -1,16 +1,16 @@
 require 'contextio/api/resource'
-
+require 'contextio/connect_token_collection'
 require 'contextio/source_collection'
-# require 'contextio/connect_token_collection'
 
 class ContextIO
   class Account
     include ContextIO::API::Resource
 
     self.primary_key = :id
+    self.association_name = :account
 
-    has_many ContextIO::SourceCollection
-    # has_many ContextIO::ConnectTokenCollection
+    has_many :sources
+    has_many :connect_tokens
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.

@@ -25,6 +25,7 @@ class ContextIO
     include ContextIO::API::ResourceCollection
 
     self.resource_class = ContextIO::Account
+    self.association_name = :accounts
 
     # Creates a new email account for your Context.IO account.
     #

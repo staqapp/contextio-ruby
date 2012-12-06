@@ -1,6 +1,7 @@
 class ContextIO
   class SourceCollection
-    def initialize(*args)
-    end
+    include ContextIO::API::ResourceCollection
+
+    self.association_name = :sources
   end
 end

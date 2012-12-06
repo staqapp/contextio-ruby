@@ -16,6 +16,7 @@ class ContextIO
     include ContextIO::API::ResourceCollection
 
     self.resource_class = ContextIO::OAuthProvider
+    self.association_name = :oauth_providers
 
     # Creates a new OAuth provider for your account.
     #

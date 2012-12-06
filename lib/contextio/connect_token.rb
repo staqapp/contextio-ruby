@@ -1,5 +1,4 @@
 require 'contextio/api/resource'
-require 'contextio/account'
 
 class ContextIO
   # Represents a single connect token for an account. You can use this to
@@ -10,12 +9,13 @@ class ContextIO
     include API::Resource
 
     self.primary_key = :token
+    self.association_name = :connect_token
 
     # @!attribute [r] account
     #
     # @return [ContextIO::Account, nil] The Account associated with this token,
     #   if any. Will fetch from the API if necessary.
-    belongs_to ContextIO::Account
+    belongs_to :account
 
     # @!attribute [r] token
     #   @return [String] The token associated with this connect token. Will
