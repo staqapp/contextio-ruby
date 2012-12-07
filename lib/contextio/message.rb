@@ -7,8 +7,9 @@ class ContextIO
     self.primary_key = :message_id
     self.association_name = :message
 
-    has_many :sources
     belongs_to :account
+    has_many :sources
+    has_many :body_parts
 
     lazy_attributes :date, :folders, :addresses, :subject, 'list-help',
                     'list-unsubscribe', :message_id, :email_message_id,

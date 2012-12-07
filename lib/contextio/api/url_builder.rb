@@ -5,6 +5,7 @@ require 'contextio/account_collection'
 require 'contextio/source_collection'
 require 'contextio/folder_collection'
 require 'contextio/message_collection'
+require 'contextio/body_part_collection'
 
 class ContextIO
   class API
@@ -97,6 +98,10 @@ class ContextIO
 
       register_url ContextIO::MessageCollection do |messages|
         "accounts/#{messages.account.id}/messages"
+      end
+
+      register_url ContextIO::BodyPartCollection do |parts|
+        "accounts/#{parts.message.account.id}/messages/#{parts.message.message_id}/body"
       end
     end
   end
