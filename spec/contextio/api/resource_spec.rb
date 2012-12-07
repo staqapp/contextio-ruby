@@ -98,12 +98,12 @@ describe ContextIO::API::Resource do
       Class.new do
         include ContextIO::API::Resource
 
-        lazy_attributes :foo
+        lazy_attributes :foo, :longer_name
       end
     end
 
     let(:api) do
-      double('api', request: {'foo' => 'set from API'})
+      double('api', request: {'foo' => 'set from API', 'longer-name' => 'bar'})
     end
 
     subject { helper_class.new(api, resource_url: 'resource_url') }
@@ -114,7 +114,7 @@ describe ContextIO::API::Resource do
 
     context "when the attribute is set at creation" do
       subject do
-        helper_class.new(api, resource_url: 'resource_url', foo: 'foo')
+        helper_class.new(api, resource_url: 'resource_url', foo: 'foo', 'longer-name' => 'bar')
       end
 
       it "returns the value set" do
@@ -126,18 +126,26 @@ describe ContextIO::API::Resource do
 
         subject.foo
       end
+
+      it "subs '-' for '_' in attribute names" do
+        expect(subject.longer_name).to eq('bar')
+      end
     end
 
     context "when the attributes is not set at creation" do
       it "tries to fetch from the API" do
         api.should_receive(:request).with(:get, 'resource_url').
-          and_return({'foo' => 'set from API'})
+          and_return({'foo' => 'set from API', 'longer-name' => 'bar'})
 
         subject.foo
       end
 
       it "returns the value from the API" do
         expect(subject.foo).to eq('set from API')
+      end
+
+      it "subs '-' for '_' in attribute names" do
+        expect(subject.longer_name).to eq('bar')
       end
     end
   end
@@ -368,11 +376,11 @@ describe ContextIO::API::Resource do
     end
 
     it "stores the response hash" do
-      subject.api.stub(:request).and_return(foo: 'bar')
+      subject.api.stub(:request).and_return('foo' => 'bar')
 
       subject.send(:fetch_attributes)
 
-      expect(subject.api_attributes).to eq(foo: 'bar')
+      expect(subject.api_attributes).to eq('foo' => 'bar')
     end
   end
 
@@ -384,7 +392,7 @@ describe ContextIO::API::Resource do
     end
 
     let(:api) do
-      double('api', request: { foo: 'bar', boolean: false })
+      double('api', request: { 'foo' => 'bar', 'boolean' => false })
     end
 
     subject do
@@ -399,7 +407,7 @@ describe ContextIO::API::Resource do
     end
 
     it "caches the api response hash" do
-      expect(subject.api_attributes).to eq(foo: 'bar', boolean: false)
+      expect(subject.api_attributes).to eq('foo' => 'bar', 'boolean' => false)
     end
   end
 

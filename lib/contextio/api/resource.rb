@@ -22,6 +22,8 @@ class ContextIO
         @api = api
 
         options.each do |key, value|
+          key = key.to_s.gsub('-', '_')
+
           if self.class.associations.include?(key.to_sym) && value.is_a?(Array)
             association_class = ContextIO::API::AssociationHelpers.class_for_association_name(key.to_sym)
 
@@ -103,12 +105,18 @@ class ContextIO
       #   attributes returned from the API as a Hash. If it hasn't been
       #   populated, it will ask the API and populate it.
       def fetch_attributes
-        api.request(:get, resource_url).each do |key, value|
+        api.request(:get, resource_url).inject({}) do |memo, (key, value)|
+          key = key.to_s.gsub('-', '_')
+
           unless respond_to?(key)
             self.define_singleton_method(key) do
               value
             end
           end
+
+          memo[key] = value
+
+          memo
         end
       end
 
