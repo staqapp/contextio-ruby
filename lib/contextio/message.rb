@@ -24,5 +24,9 @@ class ContextIO
     def indexed_at
       @indexed_at ||= Time.at(date_indexed)
     end
+
+    def flags
+      api.request(:get, "#{resource_url}/flags")
+    end
   end
 end
