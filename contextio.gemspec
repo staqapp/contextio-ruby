@@ -19,11 +19,10 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'oauth', '~> 0.4.5'
 
-  gem.add_development_dependency 'bundler',         '~> 1.0'
+  gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rubygems-tasks',  '~> 0.2'
   gem.add_development_dependency 'rspec',           '~> 2.4'
-  gem.add_development_dependency 'bundler',         '~> 1.0'
-  gem.add_development_dependency 'rake',            '~> 0.8'
+  gem.add_development_dependency 'rake'
   gem.add_development_dependency 'yard'
   gem.add_development_dependency 'redcarpet'
   gem.add_development_dependency 'pry-doc'
