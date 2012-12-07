@@ -46,5 +46,11 @@ class ContextIO
     def imap_attributes
       attributes
     end
+
+    def messages
+      association_class = ContextIO::API::AssociationHelpers.class_for_association_name(:messages)
+
+      @messages ||= association_class.new(api, folder: self, attribute_hashes: api_attributes['messages'])
+    end
   end
 end
