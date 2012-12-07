@@ -6,6 +6,7 @@ require 'contextio/source_collection'
 require 'contextio/folder_collection'
 require 'contextio/message_collection'
 require 'contextio/body_part_collection'
+require 'contextio/thread_collection'
 
 class ContextIO
   class API
@@ -102,6 +103,14 @@ class ContextIO
 
       register_url ContextIO::BodyPartCollection do |parts|
         "accounts/#{parts.message.account.id}/messages/#{parts.message.message_id}/body"
+      end
+
+      register_url ContextIO::Thread do |thread|
+        "accounts/#{thread.account.id}/threads/#{thread.gmail_thread_id}"
+      end
+
+      register_url ContextIO::ThreadCollection do |threads|
+        "accounts/#{threads.account.id}/threads"
       end
     end
   end

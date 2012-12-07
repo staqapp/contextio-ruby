@@ -11,8 +11,8 @@ class ContextIO
     has_many :sources
     has_many :body_parts
 
-    lazy_attributes :date, :folders, :addresses, :subject, 'list-help',
-                    'list-unsubscribe', :message_id, :email_message_id,
+    lazy_attributes :date, :folders, :addresses, :subject, :list_help,
+                    :list_unsubscribe, :message_id, :email_message_id,
                     :gmail_message_id, :gmail_thread_id, :person_info,
                     :date_received, :date_indexed
     private :date_received, :date_indexed

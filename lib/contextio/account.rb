@@ -10,6 +10,7 @@ class ContextIO
     has_many :sources
     has_many :connect_tokens
     has_many :messages
+    has_many :threads
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.
