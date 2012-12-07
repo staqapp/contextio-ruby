@@ -5,6 +5,7 @@ require 'contextio/oauth_provider_collection'
 require 'contextio/email_settings'
 require 'contextio/account'
 require 'contextio/account_collection'
+require 'contextio/folder_collection'
 
 class ContextIO
   class API
@@ -77,6 +78,10 @@ class ContextIO
 
       register_url ContextIO::AccountCollection do
         'accounts'
+      end
+
+      register_url ContextIO::FolderCollection do |folders|
+        "accounts/#{folders.source.account.id}/sources/#{folders.source.label}/folders"
       end
     end
   end

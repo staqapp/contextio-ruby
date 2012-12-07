@@ -8,6 +8,7 @@ class ContextIO
     self.association_name = :source
 
     belongs_to :account
+    has_many :folders
 
     lazy_attributes :server, :label, :username, :port, :authentication_type,
                     :status, :service_level, :sync_period, :use_ssl, :type
