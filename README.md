@@ -48,6 +48,12 @@ likely to get in (or get in faster) the closer you stick to these steps:
 If you don't know how to fix something, even just a Pull Request that includes a
 failing test can be helpful. If in doubt, make an Issue to discuss.
 
+## TODO
+
+1. Update and create methods on most resources. Want to figure out a good way to
+  generalize this and still do reasonable type conversions from Ruby-flavored to
+  the API's expectations.
+
 ## Copyright
 
 Copyright (c) 2012 Context.IO
