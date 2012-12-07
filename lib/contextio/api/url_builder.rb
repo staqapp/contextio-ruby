@@ -4,6 +4,7 @@ require 'contextio/email_settings'
 require 'contextio/account_collection'
 require 'contextio/source_collection'
 require 'contextio/folder_collection'
+require 'contextio/message_collection'
 
 class ContextIO
   class API
@@ -83,11 +84,19 @@ class ContextIO
       end
 
       register_url ContextIO::SourceCollection do |sources|
-        "accounts/#{sources.account.id}/sources/"
+        "accounts/#{sources.account.id}/sources"
       end
 
       register_url ContextIO::FolderCollection do |folders|
         "accounts/#{folders.source.account.id}/sources/#{folders.source.label}/folders"
+      end
+
+      register_url ContextIO::Message do |message|
+        "accounts/#{message.account.id}/messages/#{message.message_id}"
+      end
+
+      register_url ContextIO::MessageCollection do |messages|
+        "accounts/#{messages.account.id}/messages"
       end
     end
   end
