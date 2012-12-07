@@ -1,6 +1,4 @@
 require 'contextio/api/resource'
-require 'contextio/connect_token_collection'
-require 'contextio/source_collection'
 
 class ContextIO
   class Account

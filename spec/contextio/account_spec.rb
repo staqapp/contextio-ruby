@@ -49,16 +49,4 @@ describe ContextIO::Account do
       subject.update(first_name: 'new first name')
     end
   end
-
-  it "has sources as an association" do
-    api.stub(:request).and_return('sources' => [{'foo' => 'bar'}])
-
-    expect(subject.sources).to be_a(ContextIO::SourceCollection)
-  end
-
-  it "has connect tokens as an association" do
-    api.stub(:request).and_return('connect_tokens' => [{'foo' => 'bar'}])
-
-    expect(subject.connect_tokens).to be_a(ContextIO::ConnectTokenCollection)
-  end
 end
