@@ -19,4 +19,34 @@ describe ContextIO::Source do
       end
     end
   end
+
+  describe "#update" do
+    before do
+      api.stub(:request).and_return({'success' => true})
+    end
+
+    subject { ContextIO::Source.new(api, resource_url: 'resource_url', sync_period: '1h') }
+
+    it "posts to the api" do
+      api.should_receive(:request).with(
+        :post,
+        'resource_url',
+        sync_period: '4h'
+      )
+
+      subject.update(sync_period: '4h')
+    end
+
+    it "updates the object" do
+      subject.update(sync_period: '4h')
+
+      expect(subject.sync_period).to eq('4h')
+    end
+
+    it "doesn't make any more API calls than it needs to" do
+      api.should_not_receive(:request).with(:get, anything, anything)
+
+      subject.update(sync_period: '4h')
+    end
+  end
 end
