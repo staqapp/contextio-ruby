@@ -28,5 +28,17 @@ class ContextIO
     def flags
       api.request(:get, "#{resource_url}/flags")
     end
+
+    def folders
+      api.request(:get, "#{resource_url}/folders").collect { |f| f['name'] }
+    end
+
+    def headers
+      api.request(:get, "#{resource_url}/headers")
+    end
+
+    def raw
+      api.raw_request(:get, "#{resource_url}/source")
+    end
   end
 end

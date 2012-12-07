@@ -95,6 +95,16 @@ class ContextIO
       results
     end
 
+    def raw_request(method, resource_path, params={})
+      response = token.send(method, path(resource_path, params))
+
+      if response.code =~ /[45]\d\d/
+        raise API::Error, response.message
+      end
+
+      response.body
+    end
+
     private
 
     # So that we can accept full URLs, this strips the domain and version number
