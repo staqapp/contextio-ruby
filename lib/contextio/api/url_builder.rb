@@ -1,10 +1,8 @@
-require 'contextio/connect_token'
 require 'contextio/connect_token_collection'
-require 'contextio/oauth_provider'
 require 'contextio/oauth_provider_collection'
 require 'contextio/email_settings'
-require 'contextio/account'
 require 'contextio/account_collection'
+require 'contextio/source_collection'
 require 'contextio/folder_collection'
 
 class ContextIO
@@ -78,6 +76,14 @@ class ContextIO
 
       register_url ContextIO::AccountCollection do
         'accounts'
+      end
+
+      register_url ContextIO::Source do |source|
+        "accounts/#{source.account.id}/sources/#{source.label}"
+      end
+
+      register_url ContextIO::SourceCollection do |sources|
+        "accounts/#{sources.account.id}/sources/"
       end
 
       register_url ContextIO::FolderCollection do |folders|

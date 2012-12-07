@@ -8,6 +8,8 @@ class ContextIO
     self.resource_class = ContextIO::Source
     self.association_name = :sources
 
+    belongs_to :account
+
     # Creates a new source for an account.
     #
     # @param [String] email The email address for the new source.

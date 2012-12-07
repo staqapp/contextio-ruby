@@ -25,7 +25,7 @@ class ContextIO
           if self.class.associations.include?(key.to_sym) && value.is_a?(Array)
             association_class = ContextIO::API::AssociationHelpers.class_for_association_name(key.to_sym)
 
-            value = association_class.new(api, attribute_hashes: value)
+            value = association_class.new(api, self.class.association_name => self, attribute_hashes: value)
           end
 
           instance_variable_set("@#{key}", value)
