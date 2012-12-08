@@ -1,4 +1,5 @@
 require 'contextio/api/resource'
+require 'contextio/api/association_helpers'
 
 class ContextIO
   class Account
@@ -17,16 +18,33 @@ class ContextIO
     #   @return [String] The id assigned to this account by Context.IO.
     # @!attribute [r] username
     #   @return [String] The username assigned to this account by Context.IO.
-    # @!attribute [r] email_addresses
-    #   @return [Array<String] The email addresses associated with this account.
     # @!attribute [r] first_name
     #   @return [String] The account holder's first name.
     # @!attribute [r] last_name
     #   @return [String] The account holder's last name.
-    lazy_attributes :id, :username, :created, :suspended, :email_addresses,
-                    :first_name, :last_name, :password_expired, :nb_messages,
-                    :nb_files
+    lazy_attributes :id, :username, :created, :suspended, :first_name,
+                    :last_name, :password_expired, :nb_messages, :nb_files
     private :created, :suspended, :password_expired
+
+    def email_addresses
+      # It would be nice if the data returned from the API were formatted like
+      # other resources, but it isn't. So hacks.
+      @email_addresses = nil if @email_addresses.is_a?(Array)
+
+      return @email_addresses if @email_addresses
+
+      association_class = ContextIO::API::AssociationHelpers.class_for_association_name(:email_addresses)
+
+      reconstructed_email_hashes = api_attributes['email_addresses'].collect do |addy|
+        {'email' => addy}
+      end
+
+      @email_addresses = association_class.new(
+        api,
+        self.class.association_name => self,
+        attribute_hashes: reconstructed_email_hashes
+      )
+    end
 
     # @!attribute [r] created_at
     #   @return [Time] The time this account was created (with Context.IO).
