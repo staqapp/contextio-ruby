@@ -21,7 +21,7 @@ that can at least GET to the right URL.
         * <del>folders</del>
         * <del>headers</del>
         * <del>source</del>
-        * thread
+        * <del>thread</del>
     * <del>sources</del>
         * <del>folders</del>
             * <del>messages</del>

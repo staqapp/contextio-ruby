@@ -40,5 +40,14 @@ class ContextIO
     def raw
       api.raw_request(:get, "#{resource_url}/source")
     end
+
+    private
+
+    # The API doesn't return enough information to build a resource_url for this
+    # resource, or the resource_url its self, making this problematic. Marking
+    # this private until something is sorted on that front.
+    def thread
+      ContextIO::Thread.new(api, api.request(:get, "#{resource_url}/thread").merge(account: account))
+    end
   end
 end
