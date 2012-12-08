@@ -28,7 +28,7 @@ that can at least GET to the right URL.
         * sync
     * sync
     * <del>threads</del>
-    * webhooks
+    * <del>webhooks</del>
 * <del>connect tokens</del>
 * <del>discover</del>
 * <del>oauth providers</del>
