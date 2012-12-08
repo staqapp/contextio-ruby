@@ -9,7 +9,7 @@ that can at least GET to the right URL.
         * files
         * messages
         * threads
-    * email addresses
+    * <del>email addresses</del>
     * files
         * changes
         * content
