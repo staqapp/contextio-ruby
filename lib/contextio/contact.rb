@@ -24,5 +24,15 @@ class ContextIO
     def last_sent_at
       last_sent ? Time.at(last_sent) : nil
     end
+
+    # Poor man's has_many
+    def threads
+      account.threads.where(email: email)
+    end
+
+    # Poor man's has_many
+    def messages
+      account.messages.where(email: email)
+    end
   end
 end

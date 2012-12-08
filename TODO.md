@@ -7,8 +7,8 @@ that can at least GET to the right URL.
     * <del>connect tokens</del>
     * <del>contacts</del>
         * files
-        * messages
-        * threads
+        * <del>messages</del>
+        * <del>threads</del>
     * <del>email addresses</del>
     * files
         * changes
