@@ -7,6 +7,7 @@ require 'contextio/folder_collection'
 require 'contextio/message_collection'
 require 'contextio/body_part_collection'
 require 'contextio/thread_collection'
+require 'contextio/webhook_collection'
 
 class ContextIO
   class API
@@ -111,6 +112,14 @@ class ContextIO
 
       register_url ContextIO::ThreadCollection do |threads|
         "accounts/#{threads.account.id}/threads"
+      end
+
+      register_url ContextIO::Webhook do |webhook|
+        "accounts/#{webhook.account.id}/webhooks/#{webhook.webhook_id}"
+      end
+
+      register_url ContextIO::WebhookCollection do |webhooks|
+        "accounts/#{webhooks.account.id}/webhooks"
       end
     end
   end
