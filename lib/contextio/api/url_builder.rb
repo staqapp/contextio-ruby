@@ -9,6 +9,7 @@ require 'contextio/body_part_collection'
 require 'contextio/thread_collection'
 require 'contextio/webhook_collection'
 require 'contextio/email_address_collection'
+require 'contextio/contact_collection'
 
 class ContextIO
   class API
@@ -129,6 +130,14 @@ class ContextIO
 
       register_url ContextIO::EmailAddressCollection do |email_addresses|
         "accounts/#{email_addresses.account.id}/email_addresses"
+      end
+
+      register_url ContextIO::Contact do |contact|
+        "accounts/#{contact.account.id}/contacts/#{contact.email}"
+      end
+
+      register_url ContextIO::ContactCollection do |contacts|
+        "accounts/#{contacts.account.id}/contacts"
       end
     end
   end

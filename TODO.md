@@ -5,7 +5,7 @@ that can at least GET to the right URL.
 
 * <del>accounts</del>
     * <del>connect tokens</del>
-    * contacts
+    * <del>contacts</del>
         * files
         * messages
         * threads
