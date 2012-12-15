@@ -10,6 +10,7 @@ require 'contextio/thread_collection'
 require 'contextio/webhook_collection'
 require 'contextio/email_address_collection'
 require 'contextio/contact_collection'
+require 'contextio/file_collection'
 
 class ContextIO
   class API
@@ -138,6 +139,14 @@ class ContextIO
 
       register_url ContextIO::ContactCollection do |contacts|
         "accounts/#{contacts.account.id}/contacts"
+      end
+
+      register_url ContextIO::File do |file|
+        "accounts/#{file.account.id}/files/#{file.file_id}"
+      end
+
+      register_url ContextIO::FileCollection do |files|
+        "accounts/#{files.account.id}/files"
       end
     end
   end

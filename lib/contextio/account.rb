@@ -14,6 +14,7 @@ class ContextIO
     has_many :threads
     has_many :webhooks
     has_many :contacts
+    has_many :files
 
     # @!attribute [r] id
     #   @return [String] The id assigned to this account by Context.IO.

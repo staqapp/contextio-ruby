@@ -10,7 +10,7 @@ that can at least GET to the right URL.
         * <del>messages</del>
         * <del>threads</del>
     * <del>email addresses</del>
-    * files
+    * <del>files</del>
         * changes
         * content
         * related
