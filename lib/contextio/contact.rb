@@ -34,5 +34,10 @@ class ContextIO
     def messages
       account.messages.where(email: email)
     end
+
+    # Poor man's has_many
+    def files
+      account.files.where(email: email)
+    end
   end
 end

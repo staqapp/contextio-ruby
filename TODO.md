@@ -6,7 +6,7 @@ that can at least GET to the right URL.
 * <del>accounts</del>
     * <del>connect tokens</del>
     * <del>contacts</del>
-        * files
+        * <del>files</del>
         * <del>messages</del>
         * <del>threads</del>
     * <del>email addresses</del>
