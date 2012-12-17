@@ -7,8 +7,9 @@
 * <del>connect tokens</del>
 * <del>email addresses</del>
 * <del>email address</del>
-* messages
+* <del>messages</del>
 * message
+  * flags
 * <del>oauth providers</del>
 * <del>sources</del>
 * <del>source</del>
