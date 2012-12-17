@@ -24,8 +24,8 @@ that can at least GET to the right URL.
     * <del>sources</del>
         * <del>folders</del>
             * <del>messages</del>
-        * sync
-    * sync
+        * <del>sync</del>
+    * <del>sync</del>
     * <del>threads</del>
     * <del>webhooks</del>
 * <del>connect tokens</del>
