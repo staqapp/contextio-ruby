@@ -53,5 +53,15 @@ class ContextIO
     def content_link
       @content_link ||= api.raw_request(:get, "#{resource_url}/content", as_link: 1)
     end
+
+    def related_files
+      return @related_files if @related_files
+
+      attribute_hashes = api.request(:get, "#{resource_url}/related")
+
+      @related_files = FileCollection.new(api, attribute_hashes: attribute_hashes, account: account)
+
+      return @related_files
+    end
   end
 end

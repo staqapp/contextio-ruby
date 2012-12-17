@@ -12,7 +12,7 @@ that can at least GET to the right URL.
     * <del>email addresses</del>
     * <del>files</del>
         * <del>content</del>
-        * related
+        * <del>related</del>
         * revisions
     * <del>messages</del>
         * <del>body</del>
