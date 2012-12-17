@@ -9,7 +9,7 @@
 * <del>email address</del>
 * <del>messages</del>
 * <del>message</del>
-  * flags
+  * <del>flags</del>
 * <del>oauth providers</del>
 * <del>sources</del>
 * <del>source</del>
