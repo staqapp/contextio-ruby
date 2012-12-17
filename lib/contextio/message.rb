@@ -41,6 +41,38 @@ class ContextIO
       api.raw_request(:get, "#{resource_url}/source")
     end
 
+    # You can call this with a Folder object, in which case, the source from the
+    # folder will be used, or you can pass in a folder name and source label.
+    def copy_to(folder, source = nil)
+      if folder.is_a?(ContextIO::Folder)
+        folder_name = folder.name
+        source_label = folder.source.label
+      else
+        folder_name = folder.to_s
+        source_label = source.to_s
+      end
+
+      api.request(:post, resource_url, dst_folder: folder_name, dst_source: source_label)['success']
+    end
+
+    # You can call this with a Folder object, in which case, the source from the
+    # folder will be used, or you can pass in a folder name and source label.
+    def move_to(folder, source = nil)
+      if folder.is_a?(ContextIO::Folder)
+        folder_name = folder.name
+        source_label = folder.source.label
+      else
+        folder_name = folder.to_s
+        source_label = source.to_s
+      end
+
+      api.request(:post, resource_url, dst_folder: folder_name, dst_source: source_label, move: 1)['success']
+    end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
+
     private
 
     # The API doesn't return enough information to build a resource_url for this

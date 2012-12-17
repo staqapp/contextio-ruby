@@ -8,7 +8,7 @@
 * <del>email addresses</del>
 * <del>email address</del>
 * <del>messages</del>
-* message
+* <del>message</del>
   * flags
 * <del>oauth providers</del>
 * <del>sources</del>
@@ -21,7 +21,7 @@
 * account
 * connect token
 * <del>email address</del>
-* message
+* <del>message</del>
 * oauth provider
 * source
 * webhook
