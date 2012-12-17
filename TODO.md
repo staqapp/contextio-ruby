@@ -4,7 +4,7 @@
 
 * <del>accounts</del>
 * <del>account</del>
-* connect tokens
+* <del>connect tokens</del>
 * email addresses
 * email address
 * messages
