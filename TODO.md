@@ -11,7 +11,6 @@ that can at least GET to the right URL.
         * <del>threads</del>
     * <del>email addresses</del>
     * <del>files</del>
-        * changes
         * <del>content</del>
         * related
         * revisions
