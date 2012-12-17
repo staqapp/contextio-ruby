@@ -45,5 +45,13 @@ class ContextIO
     def embedded?
       !!is_embedded
     end
+
+    def content
+      @content ||= api.request(:get, "#{resource_url}/content")
+    end
+
+    def content_link
+      @content_link ||= api.raw_request(:get, "#{resource_url}/content", as_link: 1)
+    end
   end
 end
