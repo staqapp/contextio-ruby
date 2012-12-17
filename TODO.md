@@ -13,7 +13,7 @@ that can at least GET to the right URL.
     * <del>files</del>
         * <del>content</del>
         * <del>related</del>
-        * revisions
+        * <del>revisions</del>
     * <del>messages</del>
         * <del>body</del>
         * <del>flags</del>

@@ -63,5 +63,15 @@ class ContextIO
 
       return @related_files
     end
+
+    def revisions
+      return @revisions if @revisions
+
+      attribute_hashes = api.request(:get, "#{resource_url}/revisions")
+
+      @revisions = FileCollection.new(api, attribute_hashes: attribute_hashes, account: account)
+
+      return @revisions
+    end
   end
 end
