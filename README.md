@@ -11,6 +11,14 @@ was inspired by the wonderful [aws-sdk](https://github.com/aws/aws-sdk-ruby)
 gem. You start with an object that represents your account with Context.IO and
 then you deal with collections within that going forward. Check out the example.
 
+If you're looking at the Context.IO docs, it is important to note that there are
+some attributes that've been renamed to be a bit more Ruby-friendly. In general,
+if the API returns a number meant to be seconds-from-epoch, then it's been
+converted to return a `Time` (e.g. `updated` has changed to `updated_at`) and a
+boolean has converted to something with a `?` at the end (e.g. `HasChildren` and
+`initial_import_finished` are `has_children?` and `initial_import_finished?`, 
+respectively).
+
 ## Example
 
 ```ruby
@@ -22,6 +30,7 @@ account = contextio.accounts.where(email: 'some@email.com').first
 
 account.email_addresses # ['some@email.com', 'another@email.com']
 account.first_name # 'Bruno'
+account.suspended? # False
 
 account.messages.where(folder: '\Drafts').each do |m|
   puts m.subject
