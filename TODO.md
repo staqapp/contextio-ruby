@@ -6,7 +6,7 @@
 * <del>account</del>
 * <del>connect tokens</del>
 * <del>email addresses</del>
-* email address
+* <del>email address</del>
 * messages
 * message
 * <del>oauth providers</del>
@@ -19,7 +19,7 @@
 
 * account
 * connect token
-* email address
+* <del>email address</del>
 * message
 * oauth provider
 * source

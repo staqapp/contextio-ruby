@@ -41,5 +41,13 @@ class ContextIO
     def primary?
       !!primary
     end
+
+    def set_primary
+      api.request(:post, resource_url, primary: 1)['success']
+    end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end
