@@ -1,33 +1,30 @@
 # To Do
 
-This is a list of the API bits. Struck items have a class created or something
-that can at least GET to the right URL.
+## Items that have a POST component:
 
 * <del>accounts</del>
-    * <del>connect tokens</del>
-    * <del>contacts</del>
-        * <del>files</del>
-        * <del>messages</del>
-        * <del>threads</del>
-    * <del>email addresses</del>
-    * <del>files</del>
-        * <del>content</del>
-        * <del>related</del>
-        * <del>revisions</del>
-    * <del>messages</del>
-        * <del>body</del>
-        * <del>flags</del>
-        * <del>folders</del>
-        * <del>headers</del>
-        * <del>source</del>
-        * <del>thread</del>
-    * <del>sources</del>
-        * <del>folders</del>
-            * <del>messages</del>
-        * <del>sync</del>
-    * <del>sync</del>
-    * <del>threads</del>
-    * <del>webhooks</del>
-* <del>connect tokens</del>
-* <del>discover</del>
+* <del>account</del>
+* connect tokens
+* email addresses
+* email address
+* messages
+* message
 * <del>oauth providers</del>
+* <del>sources</del>
+* <del>source</del>
+* webhooks
+* webhook
+
+## Items that have a DELETE component:
+
+* account
+* connect token
+* email address
+* message
+* oauth provider
+* source
+* webhook
+
+## Items that have a PUT component:
+
+* folder
