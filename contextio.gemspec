@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.summary       = 'Provides interface to Context.IO'
   gem.description   = 'Provides Ruby interface to Context.IO'
   gem.license       = 'MIT'
-  gem.authors       = ['Gary Haran', 'Dominik Gehl', 'Ben Hamill']
-  gem.email         = %w(dominik@context.io ben@benhamill.com)
-  gem.homepage      = 'https://github.com/benhamill/contextio-ruby#readme'
+  gem.authors       = ['Ben Hamill']
+  gem.email         = %w(ben@benhamill.com)
+  gem.homepage      = 'https://github.com/contextio/contextio-ruby#readme'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
