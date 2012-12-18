@@ -14,7 +14,7 @@
 * <del>sources</del>
 * <del>source</del>
 * <del>webhooks</del>
-* webhook
+* <del>webhook</del>
 
 ## Items that have a DELETE component:
 
@@ -24,7 +24,7 @@
 * <del>message</del>
 * oauth provider
 * source
-* webhook
+* <del>webhook</del>
 
 ## Items that have a PUT component:
 

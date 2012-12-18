@@ -23,5 +23,17 @@ class ContextIO
     def failure?
       !!failure
     end
+
+    def activate
+      api.request(:post, resource_url, active: 1)['success']
+    end
+
+    def deactivate
+      api.request(:post, resource_url, active: 0)['success']
+    end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end
