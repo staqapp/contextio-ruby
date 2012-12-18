@@ -44,6 +44,14 @@ class ContextIO
       ContextIO::API.url_for(resource)
     end
 
+    def self.user_agent_string
+      "contextio-ruby-#{ContextIO.version}"
+    end
+
+    def user_agent_string
+      self.class.user_agent_string
+    end
+
     # @!attribute [r] key
     #   @return [String] The OAuth key for the user's Context.IO account.
     # @!attribute [r] secret
@@ -77,7 +85,7 @@ class ContextIO
     #
     # @raise [API::Error] if the response code isn't in the 200 or 300 range.
     def request(method, resource_path, params = {})
-      response = token.send(method, path(resource_path, params), 'Accept' => 'application/json')
+      response = token.send(method, path(resource_path, params), 'Accept' => 'application/json', 'User-Agent' => user_agent_string)
       body = response.body
 
       results = JSON.parse(body) unless response.body.empty?
@@ -96,7 +104,7 @@ class ContextIO
     end
 
     def raw_request(method, resource_path, params={})
-      response = token.send(method, path(resource_path, params))
+      response = token.send(method, path(resource_path, params), 'User-Agent' => user_agent_string)
 
       if response.code =~ /[45]\d\d/
         raise API::Error, response.message
