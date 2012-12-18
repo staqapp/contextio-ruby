@@ -16,7 +16,7 @@ some attributes that've been renamed to be a bit more Ruby-friendly. In general,
 if the API returns a number meant to be seconds-from-epoch, then it's been
 converted to return a `Time` (e.g. `updated` has changed to `updated_at`) and a
 boolean has converted to something with a `?` at the end (e.g. `HasChildren` and
-`initial_import_finished` are `has_children?` and `initial_import_finished?`, 
+`initial_import_finished` are `has_children?` and `initial_import_finished?`,
 respectively).
 
 ## Example
@@ -67,12 +67,6 @@ likely to get in (or get in faster) the closer you stick to these steps:
 
 If you don't know how to fix something, even just a Pull Request that includes a
 failing test can be helpful. If in doubt, make an Issue to discuss.
-
-## TODO
-
-1. Update and create methods on most resources. Want to figure out a good way to
-  generalize this and still do reasonable type conversions from Ruby-flavored to
-  the API's expectations.
 
 ## Copyright
 
