@@ -49,5 +49,9 @@ class ContextIO
     def created_at
       @created_at ||= Time.at(created)
     end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end

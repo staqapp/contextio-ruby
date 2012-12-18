@@ -19,7 +19,7 @@
 ## Items that have a DELETE component:
 
 * <del>account</del>
-* connect token
+* <del>connect token</del>
 * <del>email address</del>
 * <del>message</del>
 * oauth provider
