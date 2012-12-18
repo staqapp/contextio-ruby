@@ -41,6 +41,17 @@ end
 
     $ gem install contextio
 
+Or, of course, put this in your Gemfile:
+
+    gem contextio
+
+## Version Numbers
+
+This gem adheres to [SemVer](http://semver.org/). So you should be pretty safe
+upgrading from 1.0.0 to 1.9.9. Whatever as long as the major version doesn't
+bump. When the major version bumps, be warned; upgrading will take some kind of
+effort.
+
 ## Contributing
 
 Help is gladly welcomed. If you have a feature you'd like to add, it's much more
