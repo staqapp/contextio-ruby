@@ -47,5 +47,9 @@ class ContextIO
 
       it_worked
     end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end
