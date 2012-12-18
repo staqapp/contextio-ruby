@@ -124,5 +124,9 @@ class ContextIO
     def sync!
       api.request(:post, "#{resource_url}/sync")['success']
     end
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end
