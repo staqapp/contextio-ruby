@@ -21,5 +21,9 @@ class ContextIO
 
     self.primary_key = :provider_consumer_key
     self.association_name = :oauth_provider
+
+    def delete
+      api.request(:delete, resource_url)['success']
+    end
   end
 end

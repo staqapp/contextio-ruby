@@ -22,7 +22,7 @@
 * <del>connect token</del>
 * <del>email address</del>
 * <del>message</del>
-* oauth provider
+* <del>oauth provider</del>
 * source
 * <del>webhook</del>
 
