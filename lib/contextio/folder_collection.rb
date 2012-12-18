@@ -9,6 +9,10 @@ class ContextIO
     self.association_name = :folders
 
     belongs_to :source
+
+    def create(folder_name, folder_delimiter='/')
+      api.request(:put, "#{resource_url}/#{folder_name}", delim: folder_delimiter)['success']
+    end
   end
 end
 

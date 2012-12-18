@@ -28,4 +28,4 @@
 
 ## Items that have a PUT component:
 
-* folder
+* <del>folder</del>
