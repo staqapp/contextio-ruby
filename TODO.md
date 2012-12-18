@@ -13,7 +13,7 @@
 * <del>oauth providers</del>
 * <del>sources</del>
 * <del>source</del>
-* webhooks
+* <del>webhooks</del>
 * webhook
 
 ## Items that have a DELETE component:
