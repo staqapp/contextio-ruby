@@ -1,6 +1,6 @@
 # Context.IO
 
-* [Homepage](https://github.com/contextio/contextio#readme)
+* [Homepage](https://github.com/contextio-ruby/contextio#readme)
 * [API Documentation](http://context.io/docs/2.0/)
 * [Sign Up](http://context.io)
 
