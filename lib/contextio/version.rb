@@ -1,6 +1,6 @@
 class ContextIO
   # @private
-  VERSION = "1.0.0"
+  VERSION = "1.0.1"
 
   # The gem version.
   #
