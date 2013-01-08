@@ -19,7 +19,7 @@ boolean has converted to something with a `?` at the end (e.g. `HasChildren` and
 `initial_import_finished` are `has_children?` and `initial_import_finished?`,
 respectively).
 
-## Example
+## Examples
 
 ```ruby
 require 'contextio'
@@ -35,6 +35,19 @@ account.suspended? # False
 account.messages.where(folder: '\Drafts').each do |m|
   puts m.subject
 end
+```
+
+To grab some object you already know the primary key for, you'll use the `[]`
+method like you would for a `Hash` or `Array`. This is most helpful for
+accounts, but works for any resource collection.
+
+```ruby
+require 'contextio'
+
+contextio = ContextIO.new('your_api_key', 'your_api_secret')
+
+account = contextio.accounts[some_account_id]
+email_Address = account.messages[some_message_id]
 ```
 
 ## Install
