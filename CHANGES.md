@@ -1,5 +1,10 @@
 # Changes
 
+## dev
+
+* Add `#empty?` and `#size` to resource collections so you can treat them even
+  *more* like arrays! - Geoff Longman
+
 ## 1.1.0
 
 * Allow passing options to `OAuth` through the gem. Notably, `:timeout` and
