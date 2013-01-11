@@ -1,6 +1,6 @@
 # Changes
 
-## dev
+## 1.2.0
 
 * Add `#empty?` and `#size` to resource collections so you can treat them even
   *more* like arrays! - Geoff Longman
