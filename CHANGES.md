@@ -7,6 +7,10 @@
 * Moved erroneous `File.sync_data` and `File.sync!` over to `Source` where it
   belonged in the first place. - Bram Plessers
 
+## 1.2.1
+
+* Fixed syntax error typo in previous release. - Geoff Longman
+
 ## 1.2.0
 
 * Add `#empty?` and `#size` to resource collections so you can treat them even
