@@ -4,6 +4,8 @@
 
 * Fix `PUT` and `POST` parameter submission. - Ben Hamill
 * Added missing `server` argument to `SourceCollection.create`. - Dominik Gehl
+* Moved erroneous `File.sync_data` and `File.sync!` over to `Source` where it
+  belonged in the first place. - Bram Plessers
 
 ## 1.2.0
 
