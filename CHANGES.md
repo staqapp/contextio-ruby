@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.2.2
 
 * Fix `PUT` and `POST` parameter submission. - Ben Hamill
 * Added missing `server` argument to `SourceCollection.create`. - Dominik Gehl
