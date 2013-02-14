@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.2.3
 
 * Fix infinite loop in ConnectToken URL building. - Ben Hamill
 
