@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+* Add link to gem documentation to top of README. - Ben Hamill
+
 ## 1.2.3
 
 * Fix infinite loop in ConnectToken URL building. - Ben Hamill

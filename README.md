@@ -2,6 +2,7 @@
 
 * [Homepage](https://github.com/contextio/contextio-ruby#readme)
 * [API Documentation](http://context.io/docs/2.0/)
+* [Gem Documentation](http://rubydoc.info/gems/contextio/frames)
 * [Sign Up](http://context.io)
 
 ## Description
