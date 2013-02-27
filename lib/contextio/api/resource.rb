@@ -190,7 +190,7 @@ class ContextIO
         #   resource.
         def belongs_to(association_name)
           define_method(association_name) do
-            if instance_variable_get("@#{association_name}")
+            if instance_variable_defined?("@#{association_name}")
               instance_variable_get("@#{association_name}")
             else
               association_attrs = api_attributes[association_name.to_s]
