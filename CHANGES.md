@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Add link to gem documentation to top of README. - Ben Hamill
+* Expand README to clarify gem usage. - Ben Hamill
 
 ## 1.2.3
 

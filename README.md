@@ -5,22 +5,48 @@
 * [Gem Documentation](http://rubydoc.info/gems/contextio/frames)
 * [Sign Up](http://context.io)
 
+
 ## Description
 
 Provides a Ruby interface to [Context.IO](http://context.io). The general design
 was inspired by the wonderful [aws-sdk](https://github.com/aws/aws-sdk-ruby)
 gem. You start with an object that represents your account with Context.IO and
-then you deal with collections within that going forward. Check out the example.
+then you deal with collections within that going forward (see the [Usage
+section](#usage)).
 
-If you're looking at the Context.IO docs, it is important to note that there are
-some attributes that've been renamed to be a bit more Ruby-friendly. In general,
-if the API returns a number meant to be seconds-from-epoch, then it's been
-converted to return a `Time` (e.g. `updated` has changed to `updated_at`) and a
-boolean has converted to something with a `?` at the end (e.g. `HasChildren` and
-`initial_import_finished` are `has_children?` and `initial_import_finished?`,
-respectively).
 
-## Examples
+## A Note On Method Names
+
+If you're looking at the [Context.IO
+docs](https://github.com/borismus/markdown-preview), it is important to note
+that there are some attributes that've been renamed to be a bit more
+Ruby-friendly. In general, if the API returns a number meant to be
+seconds-from-epoch, then it's been converted to return a `Time` (e.g. `updated`
+has changed to `updated_at`) and a boolean has converted to something with a `?`
+at the end (e.g. `HasChildren` and `initial_import_finished` are `has_children?`
+and `initial_import_finished?`, respectively). See the [gem
+docs](http://rubydoc.info/gems/contextio/frames) for a specific class when in
+doubt.
+
+
+## Install
+
+    $ gem install contextio
+
+Or, of course, put this in your Gemfile:
+
+    gem contextio
+
+
+## Version Numbers
+
+This gem adheres to [SemVer](http://semver.org/). So you should be pretty safe
+upgrading from 1.0.0 to 1.9.9. Whatever as long as the major version doesn't
+bump. When the major version bumps, be warned; upgrading will take some kind of
+effort.
+
+
+## Usage
 
 ```ruby
 require 'contextio'
@@ -48,23 +74,53 @@ require 'contextio'
 contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
 account = contextio.accounts[some_account_id]
-email_Address = account.messages[some_message_id]
+message = account.messages[some_message_id]
 ```
 
-## Install
 
-    $ gem install contextio
+### On Laziness
 
-Or, of course, put this in your Gemfile:
+This gem is architected to be as lazy as possible. It won't make an HTTP request
+until you ask it for some data that it knows it needs to fetch. An example might
+be illustrative:
 
-    gem contextio
+```ruby
+require 'contextio'
 
-## Version Numbers
+contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
-This gem adheres to [SemVer](http://semver.org/). So you should be pretty safe
-upgrading from 1.0.0 to 1.9.9. Whatever as long as the major version doesn't
-bump. When the major version bumps, be warned; upgrading will take some kind of
-effort.
+account = contextio.accounts['1234'] # No request made here.
+account.last_name # Request made here.
+account.first_name # No request made here.
+```
+
+Note that when it made the request, it stored the data it got back, which
+included the first name, so it didn't need to make a second request. Asking for
+the value of any attribute listed in the [gem
+docs](http://rubydoc.info/gems/contextio/frames) will trigger the request.
+
+
+### On Requests and Methods
+
+There are some consistent mappings between the requests documented in the [API
+docs](http://context.io/docs/2.0/) and the methods implemented in the gem.
+
+**For collections of resources:**
+
+* the object its self sort of represents the collection-level `GET` (treat it
+  like any other `Enumerable`).
+* `#where` is how you set up the filters on the collection-level `GET`.
+* `#create` maps to the collection-level `POST` or `PUT`, as appropriate.
+* `#[]` maps to the individual-level `GET`, but (as mentioned above) is lazy.
+
+**For individual resources**
+
+* the object its self sort of represents the individual-level `GET` (but see
+  `#[]` above).
+* `#delete` maps to the individual-level `DELETE`.
+* `#update` maps to the individual-level `POST` (except in a few cases like
+  `Message#copy_to` and `Message#move_to`).
+
 
 ## Contributing
 
@@ -82,8 +138,9 @@ likely to get in (or get in faster) the closer you stick to these steps:
 If you don't know how to fix something, even just a Pull Request that includes a
 failing test can be helpful. If in doubt, make an Issue to discuss.
 
+
 ## Copyright
 
 Copyright (c) 2012 Context.IO
 
-See LICENSE.md for details.
+This gem is distributed under the MIT License. See LICENSE.md for details.
