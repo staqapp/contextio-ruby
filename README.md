@@ -17,10 +17,9 @@ section](#usage)).
 
 ## A Note On Method Names
 
-If you're looking at the [Context.IO
-docs](https://github.com/borismus/markdown-preview), it is important to note
-that there are some attributes that've been renamed to be a bit more
-Ruby-friendly. In general, if the API returns a number meant to be
+If you're looking at the [Context.IO docs](http://context.io/docs/2.0/), it is
+important to note that there are some attributes that've been renamed to be a
+bit more Ruby-friendly. In general, if the API returns a number meant to be
 seconds-from-epoch, then it's been converted to return a `Time` (e.g. `updated`
 has changed to `updated_at`) and a boolean has converted to something with a `?`
 at the end (e.g. `HasChildren` and `initial_import_finished` are `has_children?`
