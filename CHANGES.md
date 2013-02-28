@@ -6,6 +6,8 @@
 * Expand README to clarify gem usage. - Ben Hamill
 * Make `ResourceCollection#[]` correctly pass down the "owning" associated
   object to instances created with it. - Ben Hamill
+* Work around the OAuth gem handling PUT request signing a bit oddly. - Ben
+  Hamill
 
 ## 1.2.3
 
