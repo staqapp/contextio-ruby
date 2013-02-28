@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+* Add sugar `Message#from` method. - Andrew Harrison
+
 ## 1.2.4
 
 * Add link to gem documentation to top of README. - Ben Hamill
