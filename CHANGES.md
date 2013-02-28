@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.2.4
 
 * Add link to gem documentation to top of README. - Ben Hamill
 * Expand README to clarify gem usage. - Ben Hamill
