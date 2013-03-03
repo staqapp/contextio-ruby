@@ -33,6 +33,7 @@ task :doc => :yard
 desc "Fire up an interactive terminal to play with"
 task :console do
   require 'pry'
+  require 'yaml'
   require File.expand_path(File.dirname(__FILE__) + '/lib/contextio')
 
   config = YAML.load_file File.expand_path(File.dirname(__FILE__) + '/spec/config.yml')
