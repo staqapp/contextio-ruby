@@ -61,6 +61,7 @@ account = contextio.accounts.where(email: 'some@email.com').first
 account.messages.where(limit: 5).each do |message|
   puts message.subject
 end
+```
 
 ### Primary Key Queries
 
