@@ -47,6 +47,10 @@ effort.
 
 ## Usage
 
+### Quick Start
+
+Print the subject of the first five messages in the some@email.com account.
+
 ```ruby
 require 'contextio'
 
@@ -54,27 +58,191 @@ contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
 account = contextio.accounts.where(email: 'some@email.com').first
 
-account.email_addresses # ['some@email.com', 'another@email.com']
-account.first_name # 'Bruno'
-account.suspended? # False
-
-account.messages.where(folder: '\Drafts').each do |m|
-  puts m.subject
+account.messages.where(limit: 5).each do |message|
+  puts message.subject
 end
-```
 
-To grab some object you already know the primary key for, you'll use the `[]`
-method like you would for a `Hash` or `Array`. This is most helpful for
-accounts, but works for any resource collection.
+### Primary Key Queries
+
+To grab some object you already know the primary key for, you'll use the `[]` method like you would for a `Hash` or `Array`. This is most helpful for accounts, but works for any resource collection.
 
 ```ruby
 require 'contextio'
 
 contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
+some_account_id = "513b6b103z697g3148000021"
+some_account_id.class # => String
+
 account = contextio.accounts[some_account_id]
 message = account.messages[some_message_id]
 ```
+
+#### Message By Key
+
+```ruby
+message = account.messages[some_message_id]
+
+message.message_id # => "513b6b103z697g3148000021"
+message.subject # => "My Email's Subject"
+message.from.class # => Hash
+message.from['email'] # => "from@domain.com"
+message.from['name'] # => "John Doe"
+
+message.delete # => true
+```
+
+Body content must be accessed through each body part (eg: html, text, etc.). Context.io does not store body content and so each call will source it directly from the mail box associated with the account. This will be slow relative to the context.io API. 
+
+```ruby
+
+message = account.messages[some_message_id]
+
+message.body_parts.class # => ContextIO::BodyPartCollection
+message.body_parts.count # => 2
+
+message.body_parts.each do |part|
+	puts part.type # => text/plain
+	puts part.content # => body content of text/plain body_part 
+end
+```
+
+#### Account By Key
+
+You may have multiple email addresses associated with a given context.io account. As a result, you need to specific which email address or addresses you are referencing ahead of querying for message collections. 
+
+```ruby
+account = contextio.accounts[some_account_id]
+
+account.email_addresses # ['some@email.com', 'another@email.com']
+account.id # => 512433023f757e5860000111
+account.first_name # => 'Bruno'
+account.suspended? # => False
+```
+
+### Message Collections
+
+#### Query Basics
+
+Queries to Messages return ContextIO::MessageCollection objects which can be iterated on. 
+
+The where method allows you to refine search results based on [available filters](http://context.io/docs/2.0/accounts/messages#get). 
+
+```ruby
+account.messages #the 25 most recent messages by default, you can specify a higher limit
+
+account.messages.where(limit: 50) #the 50 most recent messages
+
+account.messages.where(from: 'another@email.com') #recent messages sent to the account by another@email.com
+
+account.messages.where(from: 'third@email.com', subject: 'hello') #multiple parameters accepted in hash format
+
+account.messages.where(from: 'third@email.com', subject: '/h.llo/') #regexp accepted as a string like '/regexp/'
+
+account.messages.where(from: 'third@email.com', subject: '/h.llo/i') #regexp options are supported, the /i case insensitive is often useful
+```
+
+#### Querying Dates
+
+Ruby Time objects are supported by this gem and work like so:
+
+```ruby
+
+date_before = Time.now
+date_after = Time.now - 10.days
+
+date_before.class # => Time
+date_after.class # => Time
+
+account.messages.where(date_before: date_before, date_after: date_after).each do |message|
+	puts "#{message.subject} #{message.date}"
+end
+```
+
+Here is an example using Unix Epoch integers:
+
+```ruby
+require 'date'
+
+before_date_epoc = Date.parse('2013-02-23').to_time.to_i # 1361599200
+after_date_epoc = Date.parse('2013-02-21').to_time.to_i # 1361426400
+
+before_date_epoc.class # => Fixnum
+after_date_epoc.class # => Fixnum
+
+account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc).each do |message|
+	puts "#{message.subject} #{message.date}"
+end
+```
+
+You can mix date and non-date parameters.
+
+```ruby
+account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc,											subject: 'subject of email', from: 'foo@email.com').each do |message|
+		puts "#{message.subject} #{message.date}"
+end
+```
+
+### Individual Messages
+
+#### Message Basics
+
+account.messages.where(limit: 1).class # ContextIO::MessageCollection 
+
+message = account.messages.where(limit: 1).first 
+
+message.class # ContextIO::Message
+message.subject # "subject of message"
+message.date # 1361828599
+Time.at(message.date).strftime('%m-%d-%Y') # 02-25-2013
+
+
+#### Messages with Body Data
+
+By default, context.io's API does not return message queries with body data. 
+
+You can include the body attribute in each individual message returned and access it by doing this...
+
+```ruby
+account.messages.where(include_body: 1, limit: 1).each do |message|
+
+	puts "#{message.subject} #{message.date} #{message.body[0]['content']}"
+
+end
+```
+
+If you are working with multipart messages, you will likely want to check each body part's content in turn...
+
+```ruby
+account.messages.where(include_body: 1, limit: 1).each do |message|
+
+	message.body_parts.each do |body_part|
+
+		puts body_part.content
+		
+	end
+
+end
+```
+
+include_body calls query the IMAP box directly and result in slower return times. 
+
+### Files 
+
+The email attachment resource in context.io is named Files. 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### On Laziness
