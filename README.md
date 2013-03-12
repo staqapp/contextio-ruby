@@ -45,7 +45,7 @@ bump. When the major version bumps, be warned; upgrading will take some kind of
 effort.
 
 
-## Usage
+## Examples
 
 ### Quick Start
 
@@ -65,7 +65,9 @@ end
 
 ### Primary Key Queries
 
-To grab some object you already know the primary key for, you'll use the `[]` method like you would for a `Hash` or `Array`. This is most helpful for accounts, but works for any resource collection.
+To grab some object you already know the primary key for, you'll use the `[]` method like you would for a `Hash` or `Array`. 
+
+This is most helpful for accounts, but works for any resource collection.
 
 ```ruby
 require 'contextio'
@@ -179,7 +181,7 @@ end
 You can mix date and non-date parameters.
 
 ```ruby
-account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc,											subject: 'subject of email', from: 'foo@email.com').each do |message|
+account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc, subject: 'subject of email', from: 'foo@email.com').each do |message|
 		puts "#{message.subject} #{message.date}"
 end
 ```
@@ -188,6 +190,7 @@ end
 
 #### Message Basics
 
+```ruby
 account.messages.where(limit: 1).class # ContextIO::MessageCollection 
 
 message = account.messages.where(limit: 1).first 
@@ -196,7 +199,7 @@ message.class # ContextIO::Message
 message.subject # "subject of message"
 message.date # 1361828599
 Time.at(message.date).strftime('%m-%d-%Y') # 02-25-2013
-
+```
 
 #### Messages with Body Data
 
@@ -206,9 +209,7 @@ You can include the body attribute in each individual message returned and acces
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
-
 	puts "#{message.subject} #{message.date} #{message.body[0]['content']}"
-
 end
 ```
 
@@ -216,13 +217,9 @@ If you are working with multipart messages, you will likely want to check each b
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
-
 	message.body_parts.each do |body_part|
-
 		puts body_part.content
-		
 	end
-
 end
 ```
 
@@ -231,9 +228,6 @@ include_body calls query the IMAP box directly and result in slower return times
 ### Files 
 
 The email attachment resource in context.io is named Files. 
-
-
-
 
 
 
