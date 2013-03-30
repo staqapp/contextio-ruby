@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.4.0
 
 * Normalize key names from the API to be valid Ruby variable names. - Ben Hamill
 * Fix how `Folder` objects create their associated `MessageCollection` objects,
