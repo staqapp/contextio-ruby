@@ -6,6 +6,8 @@
 * Fix how `Folder` objects create their associated `MessageCollection` objects,
   specifically with respect to passing around the handle to an appropriate
   `Account` object. - Ben Hamill
+* Convenience methods: `Message#to`,`#bcc`, `#cc` and `#reply_to`. - Aubrey
+  Holland
 
 ## 1.3.0
 
