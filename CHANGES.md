@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.5.0
 
 * Make `Source#sync!` and `Account#sync!` take an options hash that will be
   passed as parameters in the resulting HTTP request. This is just to aid in
