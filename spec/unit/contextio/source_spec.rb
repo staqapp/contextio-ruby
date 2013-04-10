@@ -60,7 +60,8 @@ describe ContextIO::Source do
     it "syncs to the api" do
       api.should_receive(:request).with(
         :post,
-        'resource_url/sync'
+        'resource_url/sync',
+        {}
       )
 
       subject.sync!

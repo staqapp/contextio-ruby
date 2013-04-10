@@ -64,8 +64,8 @@ class ContextIO
       return @sync_data
     end
 
-    def sync!
-      api.request(:post, "#{resource_url}/sync")['success']
+    def sync!(options={})
+      api.request(:post, "#{resource_url}/sync", options)['success']
     end
   end
 end

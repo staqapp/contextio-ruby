@@ -1,5 +1,11 @@
 # Changes
 
+## Unreleased
+
+* Make `Source#sync!` and `Account#sync!` take an options hash that will be
+  passed as parameters in the resulting HTTP request. This is just to aid in
+  debugging. - Ben Hamill
+
 ## 1.4.0
 
 * Normalize key names from the API to be valid Ruby variable names. - Ben Hamill
