@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-* Added `version` and `base_url` instance variables to API. - Dominik Gehl
+* Add `version` and `base_url` instance variables to API. - Dominik Gehl
+* Don't try to JSON parse raw attachments. - Dominik Gehl
 
 ## 1.5.0
 
