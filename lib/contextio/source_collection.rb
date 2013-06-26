@@ -24,12 +24,12 @@ class ContextIO
     #   required and what's optional.
     def create(email, server, username, use_ssl, port, type, options={})
       api_args = options.merge(
-        'email' => email,
-        'server' => server,
-        'username' => username,
-        'use_ssl' => use_ssl ? '1' : '0',
-        'port' => port.to_s,
-        'type' => type
+        :email => email,
+        :server => server,
+        :username => username,
+        :use_ssl => use_ssl ? '1' : '0',
+        :port => port.to_s,
+        :type => type
       )
 
       result_hash = api.request(:post, resource_url, api_args)

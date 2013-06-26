@@ -28,7 +28,7 @@ describe ContextIO::SourceCollection do
       api.should_receive(:request).with(
         anything,
         anything,
-        hash_including('use_ssl' => '1')
+        hash_including(:use_ssl => '1')
       )
 
       subject.create('hello@gmail.com', 'imap.email.com', 'hello', true, 993, 'IMAP')
@@ -38,7 +38,7 @@ describe ContextIO::SourceCollection do
       api.should_receive(:request).with(
         anything,
         anything,
-        hash_including('port' => '993')
+        hash_including(:port => '993')
       )
 
       subject.create('hello@gmail.com', 'imap.email.com', 'hello', true, 993, 'IMAP')
