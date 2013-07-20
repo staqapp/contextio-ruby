@@ -15,6 +15,15 @@ then you deal with collections within that going forward (see the [Usage
 section](#usage)).
 
 
+## Install
+
+    $ gem install contextio
+
+Or, of course, put this in your Gemfile:
+
+    gem 'contextio'
+
+
 ## A Note On Method Names
 
 If you're looking at the [Context.IO docs](http://context.io/docs/2.0/), it is
@@ -26,15 +35,6 @@ at the end (e.g. `HasChildren` and `initial_import_finished` are `has_children?`
 and `initial_import_finished?`, respectively). See the [gem
 docs](http://rubydoc.info/gems/contextio/frames) for a specific class when in
 doubt.
-
-
-## Install
-
-    $ gem install contextio
-
-Or, of course, put this in your Gemfile:
-
-    gem 'contextio'
 
 
 ## Version Numbers
@@ -152,13 +152,13 @@ Ruby Time objects are supported by this gem and work like so:
 ```ruby
 require 'active_support/all'
 
-date_before = Time.now
-date_after = Time.now - 10.days
+date_before = Time.now.utc
+date_after = Time.now.utc - 10.days
 
 date_before.class # => Time
 date_after.class # => Time
 
-account.messages.where(date_before: date_before, date_after: date_after).each do |message|
+account.messages.where(date_before: date_before.to_i, date_after: date_after.to_i).each do |message|
 	puts "#{message.subject} #{message.date}"
 end
 ```
@@ -168,8 +168,8 @@ Here is an example using Unix Epoch integers:
 ```ruby
 require 'date'
 
-before_date_epoc = Date.parse('2013-02-23').to_time.to_i # 1361599200
-after_date_epoc = Date.parse('2013-02-21').to_time.to_i # 1361426400
+before_date_epoc = Date.parse('2013-02-23').to_time.to_i # => 1361599200
+after_date_epoc = Date.parse('2013-02-21').to_time.to_i # => 1361426400
 
 before_date_epoc.class # => Fixnum
 after_date_epoc.class # => Fixnum
@@ -196,10 +196,10 @@ account.messages.where(limit: 1).class # ContextIO::MessageCollection
 
 message = account.messages.where(limit: 1).first 
 
-message.class # ContextIO::Message
-message.subject # "subject of message"
-message.date # 1361828599
-Time.at(message.date).strftime('%m-%d-%Y') # 02-25-2013
+message.class # => ContextIO::Message
+message.subject # => "subject of message"
+message.date # => 1361828599
+Time.at(message.date).strftime('%m-%d-%Y') # => 02-25-2013
 ```
 
 #### Messages with Body Data
@@ -252,9 +252,9 @@ if message.api_attributes['files'].count > 0
     #  "is_embedded"=>false, 
     #  "resource_url"=>"https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/62ea0935c6358abe24030004"}
         
-    puts file['file_id'] #61ea094526358abe24000005
-    puts file['file_name'] #My_File.pdf
-    puts file['resource_url'] #https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/61ea094526358abe24000005
+    puts file['file_id'] # => 61ea094526358abe24000005
+    puts file['file_name'] # => My_File.pdf
+    puts file['resource_url'] # => https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/61ea094526358abe24000005
   end
 end
 ```
@@ -325,6 +325,6 @@ failing test can be helpful. If in doubt, make an Issue to discuss.
 
 ## Copyright
 
-Copyright (c) 2012 Context.IO
+Copyright (c) 2012-2013 Context.IO
 
 This gem is distributed under the MIT License. See LICENSE.md for details.
