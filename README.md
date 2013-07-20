@@ -112,7 +112,7 @@ end
 
 #### Account By Key
 
-You may have multiple email addresses associated with a given context.io account. As a result, you need to specific which email address or addresses you are referencing ahead of querying for message collections. 
+You may have multiple email addresses associated with a given context.io account. As a result, you need specify which email address or addresses you are referencing ahead of querying for message collections. 
 
 ```ruby
 account = contextio.accounts[some_account_id]
@@ -150,6 +150,7 @@ account.messages.where(from: 'third@email.com', subject: '/h.llo/i') #regexp opt
 Ruby Time objects are supported by this gem and work like so:
 
 ```ruby
+require 'active_support/all'
 
 date_before = Time.now
 date_after = Time.now - 10.days
@@ -227,17 +228,38 @@ include_body calls query the IMAP box directly and result in slower return times
 
 ### Files 
 
-The email attachment resource in context.io is named Files. 
+#### Files Per Message ID
 
+```ruby
+message = account.messages[message_id]
 
+if message.api_attributes['files'].count > 0
+  
+  message.api_attributes['files'].each do |file|
+  
+    p file
+    
+    # {"size"=>10812, 
+    #  "type"=>"application/pdf", 
+    #  "file_name"=>"My_File.pdf", 
+    #  "file_name_structure"=>[["My_File", "main"], [".pdf", "ext"]], 
+    #  "body_section"=>"2", 
+    #  "content_disposition"=>"attachment", 
+    #  "file_id"=>"61ea094526358abe24000005", 
+    #  "is_tnef_part"=>false, 
+    #  "supports_preview"=>true, 
+    #  "main_file_name"=>"Nadine_Henson", 
+    #  "is_embedded"=>false, 
+    #  "resource_url"=>"https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/62ea0935c6358abe24030004"}
+        
+    puts file['file_id'] #61ea094526358abe24000005
+    puts file['file_name'] #My_File.pdf
+    puts file['resource_url'] #https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/61ea094526358abe24000005
+  end
+end
+```
 
-
-
-
-
-
-
-
+The file['resource_url'] url is a S3 backed temporary link. It is intended to be used promptly after being called. Do not store off this link. Instead, store off the message_id and request on demand.
 
 
 ### On Laziness
