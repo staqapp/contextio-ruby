@@ -117,7 +117,7 @@ You may have multiple email addresses associated with a given context.io account
 ```ruby
 account = contextio.accounts[some_account_id]
 
-account.email_addresses # ['some@email.com', 'another@email.com']
+account.email_addresses # => ['some@email.com', 'another@email.com']
 account.id # => 512433023f757e5860000111
 account.first_name # => 'Bruno'
 account.suspended? # => False
@@ -147,42 +147,22 @@ account.messages.where(from: 'third@email.com', subject: '/h.llo/i') #regexp opt
 
 #### Querying Dates
 
-Ruby Time objects are supported by this gem and work like so:
+Pass dates in to message queries as Unix Epoch integers.
 
 ```ruby
 require 'active_support/all'
+date_before = (Time.now - 3.hours).to_i
+date_after = (Time.now - 5.hours).to_i
 
-date_before = Time.now.utc
-date_after = Time.now.utc - 10.days
-
-date_before.class # => Time
-date_after.class # => Time
-
-account.messages.where(date_before: date_before.to_i, date_after: date_after.to_i).each do |message|
-	puts "#{message.subject} #{message.date}"
-end
-```
-
-Here is an example using Unix Epoch integers:
-
-```ruby
-require 'date'
-
-before_date_epoc = Date.parse('2013-02-23').to_time.to_i # => 1361599200
-after_date_epoc = Date.parse('2013-02-21').to_time.to_i # => 1361426400
-
-before_date_epoc.class # => Fixnum
-after_date_epoc.class # => Fixnum
-
-account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc).each do |message|
-	puts "#{message.subject} #{message.date}"
+account.messages.where(date_before: date_before, date_after: date_after).each do |message|
+  puts "(#{message.date}) #{message.subject}"
 end
 ```
 
 You can mix date and non-date parameters.
 
 ```ruby
-account.messages.where(date_before: before_date_epoc, date_after: after_date_epoc, subject: 'subject of email', from: 'foo@email.com').each do |message|
+account.messages.where(date_before: date_before, date_after: date_after, subject: 'subject of email', from: 'foo@email.com').each do |message|
 		puts "#{message.subject} #{message.date}"
 end
 ```
@@ -204,9 +184,9 @@ Time.at(message.date).strftime('%m-%d-%Y') # => 02-25-2013
 
 #### Messages with Body Data
 
-By default, context.io's API does not return message queries with body data. 
+By default, Context.io's API does not return message queries with body data. 
 
-You can include the body attribute in each individual message returned and access it by doing this...
+You can include the body attribute in each individual message returned.
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
@@ -214,7 +194,7 @@ account.messages.where(include_body: 1, limit: 1).each do |message|
 end
 ```
 
-If you are working with multipart messages, you will likely want to check each body part's content in turn...
+If you are working with multipart messages, you will likely want to check each body part's content in turn.
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
@@ -224,7 +204,7 @@ account.messages.where(include_body: 1, limit: 1).each do |message|
 end
 ```
 
-include_body calls query the IMAP box directly and result in slower return times. 
+The include_body method queries the source IMAP box directly, which results in slower return times. 
 
 ### Files 
 
