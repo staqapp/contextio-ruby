@@ -5,6 +5,7 @@
 * Add `version` and `base_url` instance variables to API. - Dominik Gehl
 * Don't try to JSON parse raw attachments. - Dominik Gehl
 * Use symbols for options internally to avoid OAuth gem failure. - Ben Hamill
+* Add `in_reply_to` to`Message`'s lazy attributes. - Asa Wilson
 
 ## 1.5.0
 
