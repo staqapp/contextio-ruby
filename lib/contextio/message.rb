@@ -10,6 +10,7 @@ class ContextIO
     belongs_to :account
     has_many :sources
     has_many :body_parts
+    has_many :files
 
     lazy_attributes :date, :folders, :addresses, :subject, :list_help,
                     :list_unsubscribe, :message_id, :email_message_id,
