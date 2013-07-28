@@ -65,7 +65,8 @@ end
 
 ### Primary Key Queries
 
-To grab some object you already know the primary key for, you'll use the `[]` method like you would for a `Hash` or `Array`. 
+To grab some object you already know the primary key for, you'll use the `[]` 
+method like you would for a `Hash` or `Array`. 
 
 This is most helpful for accounts, but works for any resource collection.
 
@@ -74,8 +75,7 @@ require 'contextio'
 
 contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
-some_account_id = "513b6b103z697g3148000021"
-some_account_id.class # => String
+some_account_id = "exampleaccountid12345678"
 
 account = contextio.accounts[some_account_id]
 message = account.messages[some_message_id]
@@ -86,7 +86,7 @@ message = account.messages[some_message_id]
 ```ruby
 message = account.messages[some_message_id]
 
-message.message_id # => "513b6b103z697g3148000021"
+message.message_id # => "examplemessageid12345678"
 message.subject # => "My Email's Subject"
 message.from.class # => Hash
 message.from['email'] # => "from@domain.com"
@@ -95,31 +95,51 @@ message.from['name'] # => "John Doe"
 message.delete # => true
 ```
 
-Body content must be accessed through each body part (eg: html, text, etc.). Context.io does not store body content and so each call will source it directly from the mail box associated with the account. This will be slow relative to the context.io API. 
+Body content must be accessed through each body part (eg: html, text, etc.). 
+Context.io does not store body content and so each call will source it 
+directly from the mail box associated with the account. This will be slow 
+relative to the context.io API. 
+
+You can specify and receive a single body content type. 
 
 ```ruby
+message = account.messages[some_message_id]
 
+message_part = message.body_parts.where(type: 'text/plain').first
+
+message_part.class #=> ContextIO::BodyPart
+message_part.type => "text/plain"
+message_part.content => "body content of text/plain body_part"
+```
+
+You can determine how many body content types are available and iterate
+over each type. 
+
+```ruby
 message = account.messages[some_message_id]
 
 message.body_parts.class # => ContextIO::BodyPartCollection
 message.body_parts.count # => 2
 
 message.body_parts.each do |part|
-	puts part.type # => text/plain
-	puts part.content # => body content of text/plain body_part 
+	puts part.class #=> ContextIO::BodyPart
+	puts part.type # => "text/html"
+	puts part.content # => "body content of text/html body_part" 
 end
 ```
 
 #### Account By Key
 
-You may have multiple email addresses associated with a given context.io account. As a result, you need specify which email address or addresses you are referencing ahead of querying for message collections. 
+You may have multiple email addresses associated with a given context.io 
+account. As a result, you need specify which email address or addresses 
+you are referencing ahead of querying for message collections. 
 
 ```ruby
 account = contextio.accounts[some_account_id]
 
 account.email_addresses # => ['some@email.com', 'another@email.com']
-account.id # => 512433023f757e5860000111
-account.first_name # => 'Bruno'
+account.id # => "exampleaccountid12345678"
+account.first_name # => "Bruno"
 account.suspended? # => False
 ```
 
@@ -127,7 +147,8 @@ account.suspended? # => False
 
 #### Query Basics
 
-Queries to Messages return ContextIO::MessageCollection objects which can be iterated on. 
+Queries to Messages return ContextIO::MessageCollection objects which can be 
+iterated on. 
 
 The where method allows you to refine search results based on [available filters](http://context.io/docs/2.0/accounts/messages#get). 
 
@@ -163,7 +184,7 @@ You can mix date and non-date parameters.
 
 ```ruby
 account.messages.where(date_before: date_before, date_after: date_after, subject: 'subject of email', from: 'foo@email.com').each do |message|
-		puts "#{message.subject} #{message.date}"
+	puts "#{message.subject} #{message.date}"
 end
 ```
 
@@ -182,11 +203,21 @@ message.date # => 1361828599
 Time.at(message.date).strftime('%m-%d-%Y') # => 02-25-2013
 ```
 
+Be aware that received_at is the time when your IMAP account records the 
+message having arrived and indexed_at is when the message was the message
+was processed and indexed by the Context.io sync process.
+
+```ruby
+m.received_at #=> 2013-07-27 22:05:47 -0500
+m.indexed_at #=> 2013-07-27 22:13:00 -0500
+```
+
 #### Messages with Body Data
 
 By default, Context.io's API does not return message queries with body data. 
 
-You can include the body attribute in each individual message returned.
+You can include the body attribute in each individual message returned by
+adding `include_body: 1` to your `messages.where` query options.
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
@@ -194,7 +225,16 @@ account.messages.where(include_body: 1, limit: 1).each do |message|
 end
 ```
 
-If you are working with multipart messages, you will likely want to check each body part's content in turn.
+Emails that contain two or more body parts are called [multipart messages](https://en.wikipedia.org/wiki/MIME#Alternative). 
+
+'text/plain' and 'text/html' are common body part types for multipart
+messages.
+
+In the case a user is viewing email in a client that does not support HTML
+markup, the 'text/plain' body part type will render instead. 
+
+If you are working with multipart messages, you may want to check each 
+body part's content in turn. 
 
 ```ruby
 account.messages.where(include_body: 1, limit: 1).each do |message|
@@ -204,7 +244,8 @@ account.messages.where(include_body: 1, limit: 1).each do |message|
 end
 ```
 
-The include_body method queries the source IMAP box directly, which results in slower return times. 
+The include_body method queries the source IMAP box directly, which results 
+in slower return times. 
 
 ### Files 
 
@@ -213,33 +254,26 @@ The include_body method queries the source IMAP box directly, which results in s
 ```ruby
 message = account.messages[message_id]
 
+message.files.count #=> 2
+
+message.files.each do |file|
+
 if message.api_attributes['files'].count > 0
   
   message.api_attributes['files'].each do |file|
-  
-    p file
-    
-    # {"size"=>10812, 
-    #  "type"=>"application/pdf", 
-    #  "file_name"=>"My_File.pdf", 
-    #  "file_name_structure"=>[["My_File", "main"], [".pdf", "ext"]], 
-    #  "body_section"=>"2", 
-    #  "content_disposition"=>"attachment", 
-    #  "file_id"=>"61ea094526358abe24000005", 
-    #  "is_tnef_part"=>false, 
-    #  "supports_preview"=>true, 
-    #  "main_file_name"=>"Nadine_Henson", 
-    #  "is_embedded"=>false, 
-    #  "resource_url"=>"https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/62ea0935c6358abe24030004"}
-        
-    puts file['file_id'] # => 61ea094526358abe24000005
-    puts file['file_name'] # => My_File.pdf
-    puts file['resource_url'] # => https://api.context.io/2.0/accounts/5135fd6af89c484f4c040106/files/61ea094526358abe24000005
-  end
+		puts file['size'] #=> 10812
+  	puts file['type'] #=> "application/pdf"
+		puts file['file_name'] #=> "My_File.pdf"
+		puts file['file_name_structure'] #=> [["My_File", "main"], [".pdf", "ext"]]
+		puts file['file_id'] #=> "examplefileid12345678910"
+		puts file['resource_url'] #=> "http://url.to/s3_file"
+	end
 end
 ```
 
-The file['resource_url'] url is a S3 backed temporary link. It is intended to be used promptly after being called. Do not store off this link. Instead, store off the message_id and request on demand.
+The file['resource_url'] url is a S3 backed temporary link. It is intended 
+to be used promptly after being called. Do not store off this link. Instead, 
+store off the message_id and request on demand.
 
 
 ### On Laziness
@@ -253,7 +287,7 @@ require 'contextio'
 
 contextio = ContextIO.new('your_api_key', 'your_api_secret')
 
-account = contextio.accounts['1234'] # No request made here.
+account = contextio.accounts['exampleaccountid12345678'] # No request made here.
 account.last_name # Request made here.
 account.first_name # No request made here.
 ```
@@ -266,8 +300,8 @@ docs](http://rubydoc.info/gems/contextio/frames) will trigger the request.
 
 ### On Requests and Methods
 
-There are some consistent mappings between the requests documented in the [API
-docs](http://context.io/docs/2.0/) and the methods implemented in the gem.
+There are some consistent mappings between the requests documented in the 
+[API docs](http://context.io/docs/2.0/) and the methods implemented in the gem.
 
 **For collections of resources:**
 
