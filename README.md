@@ -257,18 +257,14 @@ message = account.messages[message_id]
 message.files.count #=> 2
 
 message.files.each do |file|
-
-if message.api_attributes['files'].count > 0
-  
-  message.api_attributes['files'].each do |file|
-		puts file['size'] #=> 10812
-  	puts file['type'] #=> "application/pdf"
-		puts file['file_name'] #=> "My_File.pdf"
-		puts file['file_name_structure'] #=> [["My_File", "main"], [".pdf", "ext"]]
-		puts file['file_id'] #=> "examplefileid12345678910"
-		puts file['resource_url'] #=> "http://url.to/s3_file"
-	end
+	puts file['size'] #=> 10812
+ 	puts file['type'] #=> "application/pdf"
+	puts file['file_name'] #=> "My_File.pdf"
+	puts file['file_name_structure'] #=> [["My_File", "main"], [".pdf", "ext"]]
+	puts file['file_id'] #=> "examplefileid12345678910"
+	puts file['resource_url'] #=> "http://url.to/s3_file"
 end
+
 ```
 
 The file['resource_url'] url is a S3 backed temporary link. It is intended 
