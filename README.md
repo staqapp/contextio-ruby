@@ -3,6 +3,7 @@
 * [Homepage](https://github.com/contextio/contextio-ruby#readme)
 * [API Documentation](http://context.io/docs/2.0/)
 * [Gem Documentation](http://rubydoc.info/gems/contextio/frames)
+* [API Explorer](https://console.context.io/#explore)
 * [Sign Up](http://context.io)
 
 
@@ -11,8 +12,8 @@
 Provides a Ruby interface to [Context.IO](http://context.io). The general design
 was inspired by the wonderful [aws-sdk](https://github.com/aws/aws-sdk-ruby)
 gem. You start with an object that represents your account with Context.IO and
-then you deal with collections within that going forward (see the [Usage
-section](#usage)).
+then you deal with collections within that going forward (see the [Quick Start
+section](#quick start)).
 
 
 ## Install
@@ -63,6 +64,7 @@ account.messages.where(limit: 5).each do |message|
 end
 ```
 
+
 ### Primary Key Queries
 
 To grab some object you already know the primary key for, you'll use the `[]` 
@@ -81,6 +83,7 @@ account = contextio.accounts[some_account_id]
 message = account.messages[some_message_id]
 ```
 
+
 #### Message By Key
 
 ```ruby
@@ -89,7 +92,7 @@ message = account.messages[some_message_id]
 message.message_id # => "examplemessageid12345678"
 message.subject # => "My Email's Subject"
 message.from.class # => Hash
-message.from['email'] # => "from@domain.com"
+message.from['email'] # => "some@email.com"
 message.from['name'] # => "John Doe"
 
 message.delete # => true
@@ -112,8 +115,7 @@ message_part.type => "text/plain"
 message_part.content => "body content of text/plain body_part"
 ```
 
-You can determine how many body content types are available and iterate
-over each type. 
+You can determine how many body parts are available and iterate over each one.
 
 ```ruby
 message = account.messages[some_message_id]
@@ -128,11 +130,10 @@ message.body_parts.each do |part|
 end
 ```
 
+
 #### Account By Key
 
-You may have multiple email addresses associated with a given context.io 
-account. As a result, you need specify which email address or addresses 
-you are referencing ahead of querying for message collections. 
+You can specify an account id and get back information about that account.
 
 ```ruby
 account = contextio.accounts[some_account_id]
@@ -143,6 +144,7 @@ account.first_name # => "Bruno"
 account.suspended? # => False
 ```
 
+
 ### Message Collections
 
 #### Query Basics
@@ -150,21 +152,28 @@ account.suspended? # => False
 Queries to Messages return ContextIO::MessageCollection objects which can be 
 iterated on. 
 
-The where method allows you to refine search results based on [available filters](http://context.io/docs/2.0/accounts/messages#get). 
+The `where` method allows you to refine search results based on [available filters](http://context.io/docs/2.0/accounts/messages#get). 
 
 ```ruby
-account.messages #the 25 most recent messages by default, you can specify a higher limit
+#the 25 most recent messages by default, you can specify a higher limit
+account.messages 
 
-account.messages.where(limit: 50) #the 50 most recent messages
+#the 50 most recent messages
+account.messages.where(limit: 50) 
 
-account.messages.where(from: 'another@email.com') #recent messages sent to the account by another@email.com
+#recent messages sent to the account by some@email.com
+account.messages.where(from: 'some@email.com') 
 
-account.messages.where(from: 'third@email.com', subject: 'hello') #multiple parameters accepted in hash format
+#multiple parameters accepted in hash format
+account.messages.where(from: 'some@email.com', subject: 'hello') 
 
-account.messages.where(from: 'third@email.com', subject: '/h.llo/') #regexp accepted as a string like '/regexp/'
+#regexp accepted as a string like '/regexp/'
+account.messages.where(from: 'some@email.com', subject: '/h.llo/') 
 
-account.messages.where(from: 'third@email.com', subject: '/h.llo/i') #regexp options are supported, the /i case insensitive is often useful
+#regexp options are supported, the /i case insensitive is often useful
+account.messages.where(from: 'some@email.com', subject: '/h.llo/i') 
 ```
+
 
 #### Querying Dates
 
@@ -172,10 +181,8 @@ Pass dates in to message queries as Unix Epoch integers.
 
 ```ruby
 require 'active_support/all'
-date_before = (Time.now - 3.hours).to_i
-date_after = (Time.now - 5.hours).to_i
 
-account.messages.where(date_before: date_before, date_after: date_after).each do |message|
+account.messages.where(date_before: 3.hours.ago.to_i, date_after: 5.hours.ago.to_i).each do |message|
   puts "(#{message.date}) #{message.subject}"
 end
 ```
@@ -183,10 +190,14 @@ end
 You can mix date and non-date parameters.
 
 ```ruby
-account.messages.where(date_before: date_before, date_after: date_after, subject: 'subject of email', from: 'foo@email.com').each do |message|
-	puts "#{message.subject} #{message.date}"
-end
+account.messages.where(
+  date_before: 3.days.ago.to_i,
+  date_after: 4.weeks.ago.to_i,
+  subject: 'subject of email',
+  from: 'foo@email.com'
+)
 ```
+
 
 ### Individual Messages
 
@@ -199,18 +210,47 @@ message = account.messages.where(limit: 1).first
 
 message.class # => ContextIO::Message
 message.subject # => "subject of message"
-message.date # => 1361828599
-Time.at(message.date).strftime('%m-%d-%Y') # => 02-25-2013
-```
+message.from # => {"email"=>"some@email.com", "name"=>"John Doe"}
+message.to # => [{"email"=>"some@email.com", "name"=>"'John Doe'"}, {"email"=>"another@email.com", "name"=>"Jeff Mangum"}]
 
-Be aware that received_at is the time when your IMAP account records the 
-message having arrived and indexed_at is when the message was the message
-was processed and indexed by the Context.io sync process.
+
+#### Message Dates
+
+##### received_at
+
+`received_at` is the time when your IMAP account records the message 
+having arrived. It is returned as a Time object. 
 
 ```ruby
-m.received_at #=> 2013-07-27 22:05:47 -0500
-m.indexed_at #=> 2013-07-27 22:13:00 -0500
+m.received_at #=> 2013-04-19 08:12:04 -0500
+m.received_at.class #=> Time
 ```
+
+##### indexed_at
+
+`indexed_at` is the time when the message was processed and indexed 
+by the Context.io sync process.
+
+```ruby
+m.indexed_at #=> 2013-04-29 01:14:39 -0500
+m.received_at.class # => Time
+```
+
+##### date
+
+A message's date is set by the sender, extracted from the message's Date 
+header and is returned as a FixNum which can be converted into a Time 
+object. 
+
+```ruby
+message.date # => 1361828599
+Time.at(message.date) # => 2013-04-19 08:11:33 -0500
+Time.at(message.date).class # => Time
+```
+
+`message.date` is not reliable as it is easily spoofed. While it is made
+available, `received_at` and `indexed_at` are better choices.
+
 
 #### Messages with Body Data
 
@@ -247,6 +287,7 @@ end
 The include_body method queries the source IMAP box directly, which results 
 in slower return times. 
 
+
 ### Files 
 
 #### Files Per Message ID
@@ -254,17 +295,10 @@ in slower return times.
 ```ruby
 message = account.messages[message_id]
 
-message.files.count #=> 2
-
-message.files.each do |file|
-	puts file['size'] #=> 10812
- 	puts file['type'] #=> "application/pdf"
-	puts file['file_name'] #=> "My_File.pdf"
-	puts file['file_name_structure'] #=> [["My_File", "main"], [".pdf", "ext"]]
-	puts file['file_id'] #=> "examplefileid12345678910"
-	puts file['resource_url'] #=> "http://url.to/s3_file"
-end
-
+message.files.class # => ContextIO::FileCollection
+message.files.count # => 2
+message.files.map { |f| f.file_name } # => ["at_icon.png", "argyle_slides.png"]
+message.files.first.resource_url # => https://contextio_to_s3_redirect_url.io
 ```
 
 The file['resource_url'] url is a S3 backed temporary link. It is intended 
