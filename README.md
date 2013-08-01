@@ -89,11 +89,11 @@ message = account.messages[some_message_id]
 ```ruby
 message = account.messages[some_message_id]
 
-message.message_id #=> "examplemessageid12345678"
-message.subject #=> "My Email's Subject"
-message.from.class #=> Hash
+message.message_id 		#=> "examplemessageid12345678"
+message.subject 			#=> "My Email's Subject"
+message.from.class 		#=> Hash
 message.from['email'] #=> "some@email.com"
-message.from['name'] #=> "John Doe"
+message.from['name'] 	#=> "John Doe"
 
 message.delete #=> true
 ```
@@ -110,9 +110,9 @@ message = account.messages[some_message_id]
 
 message_part = message.body_parts.where(type: 'text/plain').first
 
-message_part.class #=> ContextIO::BodyPart
-message_part.type => "text/plain"
-message_part.content => "body content of text/plain body_part"
+message_part.class 		#=> ContextIO::BodyPart
+message_part.type 		#=> "text/plain"
+message_part.content #=> "body content of text/plain body_part"
 ```
 
 You can determine how many body parts are available and iterate over each one.
@@ -139,9 +139,9 @@ You can specify an account id and get back information about that account.
 account = contextio.accounts[some_account_id]
 
 account.email_addresses #=> ['some@email.com', 'another@email.com']
-account.id #=> "exampleaccountid12345678"
-account.first_name #=> "Bruno"
-account.suspended? #=> False
+account.id 							#=> "exampleaccountid12345678"
+account.first_name 			#=> "Bruno"
+account.suspended? 			#=> False
 ```
 
 
@@ -208,10 +208,10 @@ account.messages.where(limit: 1).class # ContextIO::MessageCollection
 
 message = account.messages.where(limit: 1).first 
 
-message.class #=> ContextIO::Message
+message.class 	#=> ContextIO::Message
 message.subject #=> "subject of message"
-message.from #=> {"email"=>"some@email.com", "name"=>"John Doe"}
-message.to #=> [{"email"=>"some@email.com", "name"=>"'John Doe'"}, {"email"=>"another@email.com", "name"=>"Jeff Mangum"}]
+message.from 		#=> {"email"=>"some@email.com", "name"=>"John Doe"}
+message.to 			#=> [{"email"=>"some@email.com", "name"=>"'John Doe'"}, {"email"=>"another@email.com", "name"=>"Jeff Mangum"}]
 
 
 #### Message Dates
@@ -222,7 +222,7 @@ message.to #=> [{"email"=>"some@email.com", "name"=>"'John Doe'"}, {"email"=>"an
 having arrived. It is returned as a Time object. 
 
 ```ruby
-m.received_at #=> 2013-04-19 08:12:04 -0500
+m.received_at				#=> 2013-04-19 08:12:04 -0500
 m.received_at.class #=> Time
 ```
 
@@ -243,8 +243,8 @@ header and is returned as a FixNum which can be converted into a Time
 object. 
 
 ```ruby
-message.date #=> 1361828599
-Time.at(message.date) #=> 2013-04-19 08:11:33 -0500
+message.date 								#=> 1361828599
+Time.at(message.date) 			#=> 2013-04-19 08:11:33 -0500
 Time.at(message.date).class #=> Time
 ```
 
@@ -295,10 +295,10 @@ in slower return times.
 ```ruby
 message = account.messages[message_id]
 
-message.files.class #=> ContextIO::FileCollection
-message.files.count #=> 2
+message.files.class 									#=> ContextIO::FileCollection
+message.files.count 									#=> 2
 message.files.map { |f| f.file_name } #=> ["at_icon.png", "argyle_slides.png"]
-message.files.first.resource_url #=> https://contextio_to_s3_redirect_url.io
+message.files.first.resource_url 			#=> https://contextio_to_s3_redirect_url.io
 ```
 
 The file['resource_url'] url is a S3 backed temporary link. It is intended 
