@@ -8,7 +8,8 @@
 * Add `in_reply_to` to `Message`'s lazy attributes. - Asa Wilson
 * Fix bug where `Hash`es with mixed `String`/`Symbol` keys would cause the OAuth
   gem to explode. - Ben Hamill
-* Add missing files association to `Message` class.
+* Add missing files association to `Message` class. - Ben Hamill
+* Add a ton of examples to the README to help new users. - Johnny Goodman
 
 ## 1.5.0
 
