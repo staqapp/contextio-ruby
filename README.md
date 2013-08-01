@@ -212,7 +212,7 @@ message.class 	#=> ContextIO::Message
 message.subject #=> "subject of message"
 message.from 		#=> {"email"=>"some@email.com", "name"=>"John Doe"}
 message.to 			#=> [{"email"=>"some@email.com", "name"=>"'John Doe'"}, {"email"=>"another@email.com", "name"=>"Jeff Mangum"}]
-
+```
 
 #### Message Dates
 
