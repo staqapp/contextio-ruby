@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+* Further README updates for clarity. - Johnny Goodman
+
 ## 1.6.0
 
 * Add `version` and `base_url` instance variables to API. - Dominik Gehl
