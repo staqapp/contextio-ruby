@@ -132,21 +132,11 @@ class ContextIO
     #
     # @return [Net::HTTP*] The response object from the request.
     def oauth_request(method, resource_path, params, headers=nil)
-      headers ||= { 'Accept' => 'application/json', 'User-Agent' => user_agent_string }
       normalized_params = params.inject({}) do |normalized_params, (key, value)|
         normalized_params[key.to_sym] = value
         normalized_params
       end
 
-      # The below array used to include put, too, but there is a weirdness in
-      # the oauth gem with PUT and signing requests. See
-      # https://github.com/oauth/oauth-ruby/pull/34#issuecomment-5862199 for
-      # some discussion on the matter. This is a work-around.
-      # if %w(post).include? method.to_s.downcase
-      #   token.request(method, path(resource_path), normalized_params, headers)
-      # else # GET, DELETE, HEAD, etc.
-      #   token.request(method, path(resource_path, normalized_params), nil, headers)
-      # end
       connection.send(method, path(resource_path), normalized_params, headers)
     end
 
@@ -180,22 +170,15 @@ class ContextIO
       "?#{URI.encode_www_form(params)}"
     end
 
-    # @!attribute [r] consumer
-    # @return [OAuth::Consumer] An Oauth consumer object for credentials
-    #   purposes.
-    def consumer
-      # @consumer ||= OAuth::Consumer.new(key, secret, @opts.merge(site: base_url))
-    end
-
-    # @!attribute [r] token
-    # @return [Oauth::AccessToken] An Oauth token object for credentials
-    #   purposes.
-    def token
-      # @token ||= OAuth::AccessToken.new(consumer)
-    end
-
+    # @!attribute [r] connection
+    # @return [Faraday::Connection] A handle on the Faraday connection object.
     def connection
-      @connection ||= Faraday.new(url: base_url)
+      @connection ||= Faraday::Connection.new(base_url) do |faraday|
+        faraday.headers['Accept'] = 'application/json'
+        faraday.headers['User-Agent'] = user_agent_string
+        faraday.request :url_encoded
+        faraday.adapter Faraday.default_adapter
+      end
     end
   end
 end
