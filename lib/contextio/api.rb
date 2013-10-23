@@ -94,7 +94,7 @@ class ContextIO
     #
     # @raise [API::Error] if the response code isn't in the 200 or 300 range.
     def request(method, resource_path, params = {})
-      response = oauth_request(method, resource_path, params)
+      response = oauth_request(method, resource_path, params, { 'Accept' => 'application/json' })
       body = response.body
       results = JSON.parse(body) unless response.body.nil? || response.body.empty?
 
@@ -112,7 +112,7 @@ class ContextIO
     end
 
     def raw_request(method, resource_path, params={})
-      response = oauth_request(method, resource_path, params, 'User-Agent' => user_agent_string)
+      response = oauth_request(method, resource_path, params)
 
       unless response.success?
         raise API::Error, "HTTP #{response.status} Error"
@@ -175,7 +175,6 @@ class ContextIO
     # @return [Faraday::Connection] A handle on the Faraday connection object.
     def connection
       @connection ||= Faraday::Connection.new(base_url) do |faraday|
-        faraday.headers['Accept'] = 'application/json'
         faraday.headers['User-Agent'] = user_agent_string
 
         faraday.request :oauth, consumer_key: key, consumer_secret: secret
