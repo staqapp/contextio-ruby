@@ -1,6 +1,6 @@
 require 'uri'
-require 'oauth'
 require 'json'
+require 'faraday'
 
 require 'contextio/api/url_builder'
 
@@ -97,11 +97,11 @@ class ContextIO
       body = response.body
       results = JSON.parse(body) unless response.body.empty?
 
-      if response.code =~ /[45]\d\d/
+      unless response.success?
         if results.is_a?(Hash) && results['type'] == 'error'
           message = results['value']
         else
-          message = response.message
+          message = "HTTP #{response.status} Error"
         end
 
         raise API::Error, message
@@ -142,11 +142,12 @@ class ContextIO
       # the oauth gem with PUT and signing requests. See
       # https://github.com/oauth/oauth-ruby/pull/34#issuecomment-5862199 for
       # some discussion on the matter. This is a work-around.
-      if %w(post).include? method.to_s.downcase
-        token.request(method, path(resource_path), normalized_params, headers)
-      else # GET, DELETE, HEAD, etc.
-        token.request(method, path(resource_path, normalized_params), nil, headers)
-      end
+      # if %w(post).include? method.to_s.downcase
+      #   token.request(method, path(resource_path), normalized_params, headers)
+      # else # GET, DELETE, HEAD, etc.
+      #   token.request(method, path(resource_path, normalized_params), nil, headers)
+      # end
+      connection.send(method, path(resource_path), normalized_params, headers)
     end
 
     # So that we can accept full URLs, this strips the domain and version number
@@ -183,14 +184,18 @@ class ContextIO
     # @return [OAuth::Consumer] An Oauth consumer object for credentials
     #   purposes.
     def consumer
-      @consumer ||= OAuth::Consumer.new(key, secret, @opts.merge(site: base_url))
+      # @consumer ||= OAuth::Consumer.new(key, secret, @opts.merge(site: base_url))
     end
 
     # @!attribute [r] token
     # @return [Oauth::AccessToken] An Oauth token object for credentials
     #   purposes.
     def token
-      @token ||= OAuth::AccessToken.new(consumer)
+      # @token ||= OAuth::AccessToken.new(consumer)
+    end
+
+    def connection
+      @connection ||= Faraday.new(url: base_url)
     end
   end
 end

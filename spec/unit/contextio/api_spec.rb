@@ -159,7 +159,7 @@ describe ContextIO::API do
       end
 
       it "raises an API error with the header message" do
-        expect { subject }.to raise_error(ContextIO::API::Error, 'Bad Request')
+        expect { subject }.to raise_error(ContextIO::API::Error, 'HTTP 400 Error')
       end
     end
   end
