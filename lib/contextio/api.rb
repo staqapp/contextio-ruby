@@ -130,8 +130,11 @@ class ContextIO
     # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] params
     #   A Hash of the query parameters for the action represented by this
     #   request.
+    # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] headers
+    #   A Hash of headers to be merged with the default headers for making
+    #   requests.
     #
-    # @return [Net::HTTP*] The response object from the request.
+    # @return [Faraday::Response] The response object from the request.
     def oauth_request(method, resource_path, params, headers=nil)
       normalized_params = params.inject({}) do |normalized_params, (key, value)|
         normalized_params[key.to_sym] = value
