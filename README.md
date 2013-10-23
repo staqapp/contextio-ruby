@@ -300,12 +300,12 @@ message = account.messages[message_id]
 message.files.class                   #=> ContextIO::FileCollection
 message.files.count                   #=> 2
 message.files.map { |f| f.file_name } #=> ["at_icon.png", "argyle_slides.png"]
-message.files.first.resource_url      #=> https://contextio_to_s3_redirect_url.io
+message.files.first.content_link      #=> https://contextio_to_s3_redirect_url
 ```
 
-The file['resource_url'] url is a S3 backed temporary link. It is intended
-to be used promptly after being called. Do not store off this link. Instead,
-store off the message_id and request on demand.
+The file['content_link'] url is a S3 backed temporary link. It is intended to be
+used promptly after being called. Do not store off this link. Instead, store off
+the message_id and request on demand.
 
 
 ### On Laziness
