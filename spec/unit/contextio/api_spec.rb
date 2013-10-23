@@ -122,9 +122,11 @@ describe ContextIO::API do
 
     context "with a good response" do
       before do
-        FakeWeb.register_uri(
+        WebMock.stub_request(
           :get,
-          'https://api.context.io/2.0/test',
+          'https://api.context.io/2.0/test'
+        ).to_return(
+          status: 200,
           body: JSON.dump('a' => 'b', 'c' => 'd')
         )
       end
@@ -136,10 +138,11 @@ describe ContextIO::API do
 
     context "with a bad response that has a body" do
       before do
-        FakeWeb.register_uri(
+        WebMock.stub_request(
           :get,
-          'https://api.context.io/2.0/test',
-          status: ['400', 'Bad Request'],
+          'https://api.context.io/2.0/test'
+        ).to_return(
+          status: 400,
           body: JSON.dump('type' => 'error', 'value' => 'nope')
         )
       end
@@ -151,10 +154,11 @@ describe ContextIO::API do
 
     context "with a bad response that has no body" do
       before do
-        FakeWeb.register_uri(
+        WebMock.stub_request(
           :get,
-          'https://api.context.io/2.0/test',
-          status: ['400', 'Bad Request']
+          'https://api.context.io/2.0/test'
+        ).to_return(
+          status: 400
         )
       end
 

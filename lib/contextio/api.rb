@@ -95,7 +95,7 @@ class ContextIO
     def request(method, resource_path, params = {})
       response = oauth_request(method, resource_path, params)
       body = response.body
-      results = JSON.parse(body) unless response.body.empty?
+      results = JSON.parse(body) unless response.body.nil? || response.body.empty?
 
       unless response.success?
         if results.is_a?(Hash) && results['type'] == 'error'
