@@ -114,8 +114,8 @@ class ContextIO
     def raw_request(method, resource_path, params={})
       response = oauth_request(method, resource_path, params, 'User-Agent' => user_agent_string)
 
-      if response.code =~ /[45]\d\d/
-        raise API::Error, response.message
+      unless response.success?
+        raise API::Error, "HTTP #{response.status} Error"
       end
 
       response.body
