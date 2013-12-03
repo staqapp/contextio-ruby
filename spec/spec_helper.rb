@@ -1,6 +1,6 @@
 require 'rspec'
 require 'pry'
-require 'fakeweb'
+require 'webmock/rspec'
 
 RSpec.configure do |rspec|
   rspec.run_all_when_everything_filtered = true
@@ -18,4 +18,4 @@ RSpec.configure do |rspec|
   end
 end
 
-FakeWeb.allow_net_connect = false
+WebMock.disable_net_connect!

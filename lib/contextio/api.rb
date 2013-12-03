@@ -1,6 +1,7 @@
 require 'uri'
-require 'oauth'
 require 'json'
+require 'faraday'
+require 'faraday_middleware'
 
 require 'contextio/api/url_builder'
 
@@ -93,15 +94,15 @@ class ContextIO
     #
     # @raise [API::Error] if the response code isn't in the 200 or 300 range.
     def request(method, resource_path, params = {})
-      response = oauth_request(method, resource_path, params)
+      response = oauth_request(method, resource_path, params, { 'Accept' => 'application/json' })
       body = response.body
-      results = JSON.parse(body) unless response.body.empty?
+      results = JSON.parse(body.to_s) unless response.body.to_s.empty?
 
-      if response.code =~ /[45]\d\d/
+      unless response.success?
         if results.is_a?(Hash) && results['type'] == 'error'
           message = results['value']
         else
-          message = response.message
+          message = "HTTP #{response.status} Error"
         end
 
         raise API::Error, message
@@ -111,10 +112,10 @@ class ContextIO
     end
 
     def raw_request(method, resource_path, params={})
-      response = oauth_request(method, resource_path, params, 'User-Agent' => user_agent_string)
+      response = oauth_request(method, resource_path, params)
 
-      if response.code =~ /[45]\d\d/
-        raise API::Error, response.message
+      unless response.success?
+        raise API::Error, "HTTP #{response.status} Error"
       end
 
       response.body
@@ -129,24 +130,18 @@ class ContextIO
     # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] params
     #   A Hash of the query parameters for the action represented by this
     #   request.
+    # @param [{String, Symbol => String, Symbol, Array<String, Symbol>}] headers
+    #   A Hash of headers to be merged with the default headers for making
+    #   requests.
     #
-    # @return [Net::HTTP*] The response object from the request.
+    # @return [Faraday::Response] The response object from the request.
     def oauth_request(method, resource_path, params, headers=nil)
-      headers ||= { 'Accept' => 'application/json', 'User-Agent' => user_agent_string }
       normalized_params = params.inject({}) do |normalized_params, (key, value)|
         normalized_params[key.to_sym] = value
         normalized_params
       end
 
-      # The below array used to include put, too, but there is a weirdness in
-      # the oauth gem with PUT and signing requests. See
-      # https://github.com/oauth/oauth-ruby/pull/34#issuecomment-5862199 for
-      # some discussion on the matter. This is a work-around.
-      if %w(post).include? method.to_s.downcase
-        token.request(method, path(resource_path), normalized_params, headers)
-      else # GET, DELETE, HEAD, etc.
-        token.request(method, path(resource_path, normalized_params), nil, headers)
-      end
+      connection.send(method, path(resource_path), normalized_params, headers)
     end
 
     # So that we can accept full URLs, this strips the domain and version number
@@ -179,18 +174,17 @@ class ContextIO
       "?#{URI.encode_www_form(params)}"
     end
 
-    # @!attribute [r] consumer
-    # @return [OAuth::Consumer] An Oauth consumer object for credentials
-    #   purposes.
-    def consumer
-      @consumer ||= OAuth::Consumer.new(key, secret, @opts.merge(site: base_url))
-    end
+    # @!attribute [r] connection
+    # @return [Faraday::Connection] A handle on the Faraday connection object.
+    def connection
+      @connection ||= Faraday::Connection.new(base_url) do |faraday|
+        faraday.headers['User-Agent'] = user_agent_string
 
-    # @!attribute [r] token
-    # @return [Oauth::AccessToken] An Oauth token object for credentials
-    #   purposes.
-    def token
-      @token ||= OAuth::AccessToken.new(consumer)
+        faraday.request :oauth, consumer_key: key, consumer_secret: secret
+        faraday.request :url_encoded
+
+        faraday.adapter Faraday.default_adapter
+      end
     end
   end
 end

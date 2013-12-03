@@ -3,6 +3,7 @@
 ## Unreleased
 
 * Further README updates for clarity. - Johnny Goodman
+* Convert to Faraday back-end for making requests. - Ben Hamill
 
 ## 1.6.0
 
