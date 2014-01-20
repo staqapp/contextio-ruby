@@ -49,7 +49,7 @@ class ContextIO
 
       sync_hashes = api.request(:get, "#{resource_url}/sync")
 
-      @sync_data = ContextIO::SourceSyncData.new(sync_hashes)
+      @sync_data = ContextIO::SourceSyncData.new(label, sync_hashes)
 
       return @sync_data
     end
