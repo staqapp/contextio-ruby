@@ -71,7 +71,7 @@ class ContextIO
 
       # Specify one or more constraints for limiting resources in this
       # collection. See individual classes in the
-      # {Context.IO docs}[http://context.io/docs/2.0/] for the list of valid constraints.
+      # [Context.IO docs](http://context.io/docs/2.0/) for the list of valid constraints.
       # Not all collections have valid where constraints at all.
       #
       # This can be chained at need and doesn't actually cause the API to get

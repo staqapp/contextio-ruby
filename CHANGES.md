@@ -4,8 +4,10 @@
 
 * Further README updates for clarity. - Johnny Goodman
 * Convert to Faraday back-end for making requests. - Ben Hamill
-* Fixed bug in `ContextIO::Source` that caused the `sync_data` method to always
+* Fix bug in `ContextIO::Source` that caused the `sync_data` method to always
   fail. - Dominik Gehl
+* Improve documentation for `ContextIO::API::ResourceCollection#where` to
+  include a link to the general API documentation. - Chris McNair
 
 ## 1.6.0
 
