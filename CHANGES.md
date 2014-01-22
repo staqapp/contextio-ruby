@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.7.0
 
 * Further README updates for clarity. - Johnny Goodman
 * Convert to Faraday back-end for making requests. - Ben Hamill
