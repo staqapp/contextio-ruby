@@ -2,7 +2,10 @@
 
 ## Unreleased
 
-* Fix bug in `ContextIO::Message#set_flags` that was failing, and also fixes the wrong api url it was trying to call. - [Paul Bonaud](https://github.com/popox)
+* Fix bug in `ContextIO::Message#set_flags` that was failing, and also fixes the
+  wrong api url it was trying to call. - [Paul Bonaud](https://github.com/popox)
+* Spruce up README, add CONTRIBUTING and RELEASING guides and add projections
+  file. - Ben Hamill
 
 ## 1.7.0
 
