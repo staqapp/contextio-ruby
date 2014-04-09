@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.7.1
 
 * Fix bug in `ContextIO::Message#set_flags` that was failing, and also fixes the
   wrong api url it was trying to call. - [Paul Bonaud](https://github.com/popox)
