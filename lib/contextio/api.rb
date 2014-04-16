@@ -187,16 +187,7 @@ class ContextIO
       return block.call(response) if response.success?
 
       parsed_body = parse_json(response.body)
-
-      message = "HTTP #{response.status} Error"
-
-      if parsed_body.is_a?(Hash)
-        if parsed_body['type'] == 'error'
-          message = parsed_body['value']
-        elsif parsed_body.has_key?('success') && !parsed_body['success']
-          message = parsed_body['feedback_code']
-        end
-      end
+      message = determine_best_error_message(parsed_body) || "HTTP #{response.status} Error"
 
       raise API::Error, message
     end
@@ -211,6 +202,24 @@ class ContextIO
       return JSON.parse(document.to_s)
     rescue JSON::ParserError => e
       return nil
+    end
+
+    # Given a parsed JSON body from an error response, figures out if it can
+    # pull useful information therefrom.
+    #
+    # @param [Hash] parsed_body A Hash parsed from a JSON document that may
+    #   describe an error condition.
+    #
+    # @return [String, Nil] If it can, it will return a human-readable
+    #   error-describing String. Otherwise, nil.
+    def determine_best_error_message(parsed_body)
+      return unless parsed_body.respond_to?(:[])
+
+      if parsed_body['type'] == 'error'
+        return parsed_body['value']
+      elsif parsed_body.has_key?('success') && !parsed_body['success']
+        return parsed_body['feedback_code']
+      end
     end
   end
 end
