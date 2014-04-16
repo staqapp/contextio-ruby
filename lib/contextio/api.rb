@@ -95,30 +95,18 @@ class ContextIO
     # @raise [API::Error] if the response code isn't in the 200 or 300 range.
     def request(method, resource_path, params = {})
       response = oauth_request(method, resource_path, params, { 'Accept' => 'application/json' })
-      body = response.body
-      results = JSON.parse(body.to_s) unless response.body.to_s.empty?
 
-      unless response.success?
-        if results.is_a?(Hash) && results['type'] == 'error'
-          message = results['value']
-        else
-          message = "HTTP #{response.status} Error"
-        end
-
-        raise API::Error, message
+      with_error_handling(response) do |response|
+        parse_json(response.body)
       end
-
-      results
     end
 
     def raw_request(method, resource_path, params={})
       response = oauth_request(method, resource_path, params)
 
-      unless response.success?
-        raise API::Error, "HTTP #{response.status} Error"
+      with_error_handling(response) do |response|
+        response.body
       end
-
-      response.body
     end
 
     private
@@ -185,6 +173,44 @@ class ContextIO
 
         faraday.adapter Faraday.default_adapter
       end
+    end
+
+    # Errors can come in a few shapes and we want to detect them and extract the
+    # useful information. If no errors are found, it calls the provided block
+    # and passes the response through.
+    #
+    # @param [Faraday::Response] response A response object from making a request to the
+    #   API with Faraday.
+    #
+    # @raise [API::Error] if the response code isn't in the 200 or 300 range.
+    def with_error_handling(response, &block)
+      return block.call(response) if response.success?
+
+      parsed_body = parse_json(response.body)
+
+      message = "HTTP #{response.status} Error"
+
+      if parsed_body.is_a?(Hash)
+        if parsed_body['type'] == 'error'
+          message = parsed_body['value']
+        elsif parsed_body.has_key?('success') && !parsed_body['success']
+          message = parsed_body['feedback_code']
+        end
+      end
+
+      raise API::Error, message
+    end
+
+    # Parses JSON if there's valid JSON passed in.
+    #
+    # @param [String] document A string you suspect may be a JSON document.
+    #
+    # @return [Hash, Array, Nil] Either a parsed version of the JSON document or
+    #   nil, if the document wasn't valid JSON.
+    def parse_json(document)
+      return JSON.parse(document.to_s)
+    rescue JSON::ParserError => e
+      return nil
     end
   end
 end
