@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+* Improve error handling for better trouble shooting. - Ben Hamill
+
 ## 1.7.1
 
 * Fix bug in `ContextIO::Message#set_flags` that was failing, and also fixes the

@@ -152,6 +152,22 @@ describe ContextIO::API do
       end
     end
 
+    context "with a bad response that has a different body" do
+      before do
+        WebMock.stub_request(
+          :get,
+          'https://api.context.io/2.0/test'
+        ).to_return(
+          status: 400,
+          body: JSON.dump('success' => false, 'feedback_code' => 'nope')
+        )
+      end
+
+      it "raises an API error with the body message" do
+        expect { subject }.to raise_error(ContextIO::API::Error, 'nope')
+      end
+    end
+
     context "with a bad response that has no body" do
       before do
         WebMock.stub_request(
