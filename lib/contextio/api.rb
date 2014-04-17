@@ -109,6 +109,8 @@ class ContextIO
       end
     end
 
+    attr_reader :raw_response
+
     private
 
     # Makes a request signed for OAuth, encoding parameters correctly, etc.
@@ -129,7 +131,7 @@ class ContextIO
         normalized_params
       end
 
-      connection.send(method, path(resource_path), normalized_params, headers)
+      @raw_response = connection.send(method, path(resource_path), normalized_params, headers)
     end
 
     # So that we can accept full URLs, this strips the domain and version number
