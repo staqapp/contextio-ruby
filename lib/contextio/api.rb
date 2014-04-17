@@ -218,7 +218,7 @@ class ContextIO
       if parsed_body['type'] == 'error'
         return parsed_body['value']
       elsif parsed_body.has_key?('success') && !parsed_body['success']
-        return parsed_body['feedback_code']
+        return [parsed_body['feedback_code'], parsed_body['connectionLog']].compact.join("\n")
       end
     end
   end
