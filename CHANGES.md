@@ -1,6 +1,6 @@
 # Changes
 
-## Unreleased
+## 1.7.2
 
 * Improve error handling for better trouble shooting. - Ben Hamill
 
