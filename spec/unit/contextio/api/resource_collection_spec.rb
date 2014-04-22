@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/api/resource_collection'
 
 class SingularHelper

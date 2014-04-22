@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/api/url_builder'
 
 describe ContextIO::API::URLBuilder do

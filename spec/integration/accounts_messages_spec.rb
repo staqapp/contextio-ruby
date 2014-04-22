@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio'
 
 describe "A Message created from an Account" do

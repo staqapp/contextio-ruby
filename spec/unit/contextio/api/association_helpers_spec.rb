@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/api/association_helpers'
 
 describe "ContextIO::API::AssociationHelpers" do

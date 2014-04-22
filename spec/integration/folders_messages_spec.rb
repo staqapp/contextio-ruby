@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio'
 
 describe "A MessageCollection created from a Folder" do

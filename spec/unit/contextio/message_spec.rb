@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/message'
 
 describe ContextIO::Message do

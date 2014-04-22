@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/account'
 
 describe ContextIO::Account do
