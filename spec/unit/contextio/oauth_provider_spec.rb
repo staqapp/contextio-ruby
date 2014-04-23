@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/oauth_provider'
 
 describe ContextIO::OAuthProvider do

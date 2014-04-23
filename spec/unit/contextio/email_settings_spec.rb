@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/email_settings'
 
 describe ContextIO::EmailSettings do

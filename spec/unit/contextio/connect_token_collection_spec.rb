@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/connect_token_collection'
 
 describe ContextIO::ConnectTokenCollection do

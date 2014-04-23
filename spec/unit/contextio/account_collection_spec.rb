@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/account_collection'
 
 describe ContextIO::AccountCollection do

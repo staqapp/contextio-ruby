@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/source'
 
 describe ContextIO::Source do

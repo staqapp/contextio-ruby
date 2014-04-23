@@ -1,4 +1,3 @@
-require 'spec_helper'
 require 'contextio/version'
 
 describe ContextIO do
