@@ -119,6 +119,22 @@ describe ContextIO::API do
   describe "#request" do
     subject { ContextIO::API.new(nil, nil).request(:get, 'test') }
 
+    context "with a timeout response" do
+      before do
+        WebMock.stub_request(
+          :get,
+          'https://api.context.io/2.0/test'
+        ).to_timeout.then.to_return(
+          status: 200,
+          body: JSON.dump('yep' => 'noap'),
+        )
+      end
+
+      it "parses the JSON response" do
+        expect { ContextIO::API.new(nil, nil).request(:get, 'test') }.to raise_error(Faraday::Error::TimeoutError)
+      end
+    end
+
     context "with a good response" do
       before do
         WebMock.stub_request(
