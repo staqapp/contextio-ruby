@@ -15,7 +15,8 @@ class ContextIO
     lazy_attributes :date, :folders, :addresses, :subject, :list_help,
                     :list_unsubscribe, :message_id, :email_message_id,
                     :gmail_message_id, :gmail_thread_id, :person_info,
-                    :date_received, :date_indexed, :in_reply_to
+                    :date_received, :date_indexed, :in_reply_to, :references
+
     private :date_received, :date_indexed
 
     def received_at

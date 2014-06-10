@@ -1,5 +1,9 @@
 # Changes
 
+## Unreleased
+
+* Add 'references' to lazy_attributes in message.rb - Dylan Stamat
+
 ## 1.7.2
 
 * Improve error handling for better trouble shooting. - Ben Hamill
