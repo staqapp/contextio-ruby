@@ -3,10 +3,10 @@
 require File.expand_path('../lib/contextio/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.name          = "contextio-modernfaraday"
+  gem.name          = "contextio"
   gem.version       = ContextIO.version
-  gem.summary       = 'Provides interface to Context.IO - with more relaxed faraday dependency'
-  gem.description   = 'Provides Ruby interface to Context.IO - with more relaxed faraday dependency'
+  gem.summary       = 'Provides interface to Context.IO'
+  gem.description   = 'Provides Ruby interface to Context.IO'
   gem.license       = 'MIT'
   gem.authors       = ['Ben Hamill']
   gem.email         = %w(ben@benhamill.com)
